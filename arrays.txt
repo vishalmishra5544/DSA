@@ -1,0 +1,30 @@
+//q2
+pair<long long,long long> solve(long long a[],int p,int q){
+pair<long long,long long> t1,t2;
+  int min,max;
+    if(p==q){ 
+      return make_pair(a[p],a[p]);
+    }
+    if(p+1==q) {
+  
+       if(a[p]>a[q]){
+        min=a[q];max=a[p];
+       }
+       else min=a[p],max=a[q];
+       return make_pair(min,max);
+    }
+    int mid=(p+q)/2;
+    t1=solve(a,p,mid);
+    t2=solve(a,mid+1,q);
+    if(t1.first>t2.first){min=t2.first;}
+    else min=t1.first;
+    if(t1.second>t2.second){max=t1.second;}
+    else max=t2.second;
+    return  make_pair(min,max);
+}
+pair<long long, long long> getMinMax(long long a[], int n) {
+    int p=0,q=n-1;
+    return solve(a,p,q);
+}
+
+//q3

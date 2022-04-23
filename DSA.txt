@@ -1,0 +1,475 @@
+//Mathematics
+//finding number of digits in a number
+int numOfDigits(int n){
+return floor(log10(n))+1;
+}
+//factorial
+int fact(int n){
+int res=1;
+for(int i=n;i>=1;i--)
+  res=res*i;
+return res;  
+}
+//palindrome
+int palindrome(int n){
+int res=n,rev=0;
+while(n>0){
+ rev=rev*10+n%10;
+ n=n/10;
+}
+return (res==rev);
+}
+//gcd or hcf
+int gcd(int a,int b){
+while(a!=b){
+if(a>b) a=a-b;
+if(b>a) b=b-a;
+}
+//peak element
+  public:
+    int findPeak(int arr[],int n,int l,int r){
+        int mid=l+(r-l)/2;
+        if((mid==n-1||arr[mid]>=arr[mid+1])&&(mid==0||arr[mid-1]<=arr[mid])){
+           return mid;
+       }else if(mid<n-1&&arr[mid]<arr[mid+1]){
+           findPeak(arr,n,mid+1,r);
+       }else if(mid>0 && arr[mid-1]>arr[mid]){
+           findPeak(arr,n,l,mid-1);
+       }
+    }
+    int peakElement(int arr[], int n)
+    {
+       // Your code here
+       int l=0,r=n-1;
+       return findPeak(arr,n,l,r);
+       }
+return a;
+}
+//lcm
+int lcm(int a,int b){
+return (a*b)/(gcd(a,b));
+}
+//check for prime
+bool prime(int n){
+if(n==1) return false;
+if(n==2||n==3) return true;
+if(n%2==0||n%3==0) return false;
+for(int i=5;i*i<=n;i=i+6){
+ if(n%i==0||n%(i+2)==0) return false;
+}
+return true;
+}
+//prime factors
+void primeFactors(int n){
+while(n%2==0){
+n=n/2;
+cout<<2<<endl;
+}
+while(n%3==0){
+n=n/3;
+cout<<3<<endl;
+}
+for(int i=5;i*i<=n;i=i+6){
+ while(n%i==0){
+ n=n/i;
+ cout<<i<<endl;
+ }
+ while(n%(i+2)==0){
+ n=n/(i+2);
+ cout<<(i+2)<<endl;
+ }
+}
+if(n>3)
+ cout<<n<<endl;
+}
+//All divisors of a number
+void allDivisors(int n){
+for(int i=1;i*i<=n;i++){
+ if(n%i==0) cout<<i<<endl;
+}
+for(;i>=1;i--){
+ if(n%i==0) cout<<n/i<<endl;
+}
+}
+//Sieve of erathosthenes //Prints all prime numbers till n;
+void sieve(int n){
+vector<bool> sieve(n+1,true);
+for(int i=2;i*i<=n;i++){
+ if(sieve[i]==true){
+  for(int j=i*i;j<=n;j++){
+  sieve[i]=false;
+  }
+ }
+}
+for(int i=2;i<=n;i++){
+ if(sieve[i]==true) cout<<i<<endl;
+}
+}
+ // Function to check if given number n is a power of two.
+    bool isPowerofTwo(long long n){
+        
+        // Your code here    
+        return (n>0)&&((n&(n-1))==0);
+        
+    }
+// getting first set bit
+unsigned int getFirstSetBit(int n)
+    {
+       return log2(n^(n&(n-1)))+1;
+    }
+//Function to find the first position with different bits.
+    int posOfRightMostDiffBit(int m, int n)
+    {
+        // Your code here
+        int i=m^n,res=-1;
+        res=(log2(i^(i&(i-1)))+1);
+        if(res>-1) return res;
+        else return -1;
+    }
+// Function to check if Kth bit is set or not.
+    bool checkKthBit(int n, int k)
+    {
+        // Your code here
+        // It can be a one liner logic!! Think of it!!
+        return n&(1<<k);
+    }
+//count set bit in an integer
+ int setBits(int N) {
+        // Write Your Code here
+        int lookup[256]={0};
+        for(int i=1;i<256;i++)
+            lookup[i]=(i&1)+lookup[i/2];
+        int res=0;
+        while(N>0){
+            res=res+lookup[N&0xff];
+            N=N>>8;
+        }
+       return res;
+    }
+//count set bit from 1 to n
+//method-1-DP LOOKUP
+int lookup[n+1]={0};
+for(int i=1;i<n;i++)
+    lookup[i]=(i&1)+lookup[i/2];
+int res=0;
+for(int i=n;i>=1;i--){
+    res=res+lookup[n&0xff];
+ }
+return res;
+//method-2-o(logn)
+ int countSetBits(int n){
+        n++;
+        int countsetbits=n/2,pairs=0,setbits=0,remainingsetbits=0;
+        int powerof2=2;
+        while(powerof2<=n){
+        pairs=n/powerof2;
+        setbits=(pairs/2)*powerof2;
+        remainingsetbits=(pairs&1)?n%powerof2:0;
+        countsetbits=countsetbits+setbits+remainingsetbits;
+        powerof2=powerof2<<1;
+        }
+    return countsetbits;
+    }
+ // Function to find number of bits needed to be flipped to convert A to B
+    int countBitsFlip(int a, int b){
+        
+        // Your logic her
+        int n=a^b;
+        return __builtin_popcount(n);
+        
+    }
+//Function to check if the number is sparse or not.
+    bool isSparse(int n)
+    {
+        // Your code
+        int flag=0;
+        while(n>0){ 
+            if(flag==2) return 0;
+            if(n&1==1) flag+=1;
+            else flag=0;  
+            n=n>>1;
+        }
+        if(flag==2) return 0;
+        return 1;
+    }
+//longest consecutive ones
+int maxConsecutiveOnes(int N)
+    {
+        // code here
+         int n=N,flag=0,maxlen=0;
+        while(n>0){ 
+            if(n&1==1){  flag+=1;maxlen=max(maxlen,flag);}
+            else flag=0;  
+            n=n>>1;
+        }
+      return maxlen;
+    }
+//binary to gray code
+ string binToGrey(string B) {
+        // code here
+        string g;
+        g.push_back(B[0]);
+        for(int i=1;i<B.length();i++){
+            char res=(B[i-1]==B[i])?'0':'1';
+            g.push_back(res);
+            }
+        return g;
+    }
+// gray code to binary    
+    string greyToBin(string G) {
+        // code here
+        string b="";
+        b.push_back(G[0]);
+        for(int i=1;i<G.length();i++){
+         char res=(b[i-1]==G[i])?'0':'1';
+          b.push_back(res);
+        }
+        return b;
+    }
+ //Function to swap odd and even bits.
+    unsigned int swapBits(unsigned int n)
+    {
+    	// Your code here
+    for(int i=0;i<32;i=i+2){//since int is 32 bit and check for i and i+1 th at a time
+    int ithbit=(n>>i)&1;//get ith bit
+    int iplus1thbit=(n>>(i+1))&1;//get i+1 th bit
+    n=n-(ithbit<<i)-(iplus1thbit<<(i+1))+(ithbit<<(i+1))+(iplus1thbit<<i);//remove ith bit and i+1 th bit and addnew swapped values of ith and i+1 th bit
+    }
+    return n;
+    }
+//Maximum AND value of any pair in an array.
+int checkBits(int * arr,int n,int pattern){
+        int count=0;
+        for(int i=0;i<n;i++){
+            if((arr[i]&pattern)==pattern)//if there is a num in arr which has his bit set then do count++
+                count++;// so if two or more such num present then this bit can be included in our pattern or final res.
+        }
+        return count;
+    }
+    // Function for finding maximum AND value.
+    int maxAND (int arr[], int N)
+    {
+        // Your code here
+        int res=0,setbit,count=0;
+        for(int i=31;i>=0;i--){
+            setbit=res|(1<<i); //set i th bit and add res or pattern(a number which will have set bits only when two such num in arr are present having this bit set) till now to check if this bit can be included or not
+            count=checkBits(arr,N,setbit);// check if this setbit can be included or not
+            if(count>=2)//means there are 2 numbers having this bit set thus on doing their AND this bit will be included else not
+                res=res|(1<<i);//include this setbit
+            
+        }
+        return res;
+    }
+//Finding majority element(element appearing greater than N/2) 
+//using moore's voting algo-O(n)
+ int majorityElement(int arr[], int size)
+    {        
+        // your code here
+        int major=arr[0],count=0;
+        for(int i=0;i<size;i++){
+            if(major==arr[i]){
+                count++;
+            }else count--;
+            if(count==0){
+                major=arr[i];
+                count=1;
+            } 
+        }
+        count=0;
+        for(int i=0;i<size;i++){
+            if(arr[i]==major)
+             count++;
+        }
+        if(count>size/2)
+         return major;
+        else return -1;      
+       
+    }
+//second max in array (but ensure largest should not be equal to second largest)
+ int print2largest(int arr[], int arr_size)
+    {
+    	//code here.
+    	int largest=arr[0],secondlargest=-1;
+    	for(int i=1;i<arr_size;i++){
+    	    if(arr[i]>largest){ secondlargest=largest;largest=arr[i];}
+    	    else if(arr[i]>secondlargest &&arr[i]!=largest){secondlargest=arr[i];}
+    	}
+      return secondlargest;	
+    }
+//find max value of(a[i]-i)-(a[j]-j) such that i!=j
+ int maxVal(int a[], int n) {
+        int maxval=INT_MIN,minval=INT_MAX;
+        for(int i=0;i<n;i++){
+            if((a[i]-i)>maxval) maxval=(a[i]-i);
+            if((a[i]-i)<minval) minval=(a[i]-i);
+        }
+     return maxval-minval;
+    }
+//reverse array in groups
+public:
+void reverse(vector<long long>& arr, int n,int i,int k){
+    int low=i,high=min(i+k-1,n-1);
+    while(low<high){
+        swap(arr[low],arr[high]); 
+        low++,high--;
+    }
+}
+    //Function to reverse every sub-array group of size k.
+    void reverseInGroups(vector<long long>& arr, int n, int k){
+        // code here
+        for(int i=0;i<n;i+=(k)){
+            reverse(arr,n,i,k);
+        }
+    }
+//Rotate array by d
+ public:
+    void reverseArr(int arr[], int n,int low,int high){
+        while(low<high){
+        swap(arr[low],arr[high]); 
+        low++,high--;
+      }
+   }
+    //Function to rotate an array by d elements in counter-clockwise direction. 
+    void rotateArr(int arr[], int d, int n){
+        // code here
+        if(d>n){
+            d=d-n;
+        }
+        reverseArr(arr,n,0,d-1);
+        reverseArr(arr,n,d,(n-1));
+        reverseArr(arr,n,0,n-1);
+        
+    }
+//Maximum occurred integer-(given n ranges find max appearing element in the ranges given)
+ public:
+    // L and R are input array
+    // maxx : maximum in R[]
+    // n: size of array
+    // arr[] : declared globally with size equal to maximum in L[] and R[]
+    //Function to find the maximum occurred integer in all ranges.
+    int maxOccured(int L[], int R[], int n, int maxx){
+    
+        // Your code here
+        int arr[1000000];
+        memset(arr,0,sizeof arr);
+        for(int i=0;i<n;i++){
+            arr[L[i]]++;//mark start of ith range as 1
+            arr[R[i]+1]--;//mark end of ith range as -1;
+        }
+        int maxOccurrences=arr[0],maxAppearingNumber=0;
+        for(int i=1;i<1000000;i++){//prefix sum to get max occuring value (no of ranges in which it appears)of all numbers from 0 to 100000 
+            arr[i]=arr[i]+arr[i-1];
+            if(maxOccurrences<arr[i]){
+                maxOccurrences=arr[i];
+                maxAppearingNumber=i;
+            }
+        }
+        return maxAppearingNumber;
+    }
+//wave array
+public:
+    // arr: input array
+    // n: size of array
+    //Function to sort the array into a wave-like array.
+    void convertToWave(vector<int>& arr, int n){
+        
+        // Your code here
+        for(int i=1;i<n;i+=2){
+            swap(arr[i],arr[i-1]);
+        }
+        
+    }
+//frequencies of limited range array elements (in o(1) aux space)
+public:
+  //Function to count the frequency of all elements from 1 to N in the array.
+  void frequencyCount(vector<int>& arr,int n, int P)
+  {
+    int expectedPos, pos=0;
+    while (pos<n)
+    {
+        expectedPos = arr[pos]-1;
+        if (arr[pos] >0 && arr[pos]<=n && arr[expectedPos]>0)
+        {
+            arr[pos] = arr[expectedPos];
+            arr[expectedPos] = -1;
+        }
+        else if (arr[pos] >0 && arr[pos]<=n)
+        {
+            arr[expectedPos]--;
+            arr[pos++] = 0;
+        }
+        else
+        {
+            pos++;
+        }
+    }
+    for (int i=0;i<n;i++)
+    { if(arr[i]>0) arr[i]=0;
+        arr[i]=abs(arr[i]);    
+    } 
+ }
+// equilibrium point
+ public:
+    // Function to find equilibrium point in the array.
+    // a: input array
+    // n: size of array
+    int equilibriumPoint(long long arr[], int n) {
+    
+        // Your code here
+        
+        for(int i=1;i<n;i++){
+            arr[i]=arr[i]+arr[i-1]; 
+       }
+       for(int i=0;i<n;i++){
+           if(i==0){
+               if(arr[n-1]-arr[0]==0) return 1;
+           }
+           if(arr[i-1]==(arr[n-1]-arr[i-1]-(arr[i]-arr[i-1]))){
+               return i+1;
+           }
+       }
+       return -1;
+    }
+//Leaders in an array
+ //Function to find the leaders in the array.
+    public:
+    vector<int> leaders(int a[], int n){
+        // Code here
+        int lastGreater=a[n-1];
+        vector<int> v;
+        v.push_back(a[n-1]);
+        for(int i=n-2;i>=0;i--){
+           if(a[i]>=lastGreater){ lastGreater=a[i]; v.push_back(a[i]);}
+        }
+        int l=0,r=v.size()-1;
+        while(l<r){
+            swap(v[l],v[r]);
+            l++,r--;
+        }
+        return v;
+    }
+//smallest positive missing number -o(n) time & o(1) space
+ public:
+    //Function to find the smallest positive number missing from the array.
+    int missingNumber(int arr[], int n) 
+    { 
+        // Your code here
+       int find1=0;
+       for(int i=0;i<n;i++){
+           if(arr[i]==1){
+               find1=1;
+               break;
+           }
+       }
+       if(find1==0) return 1;//as 1 is first missing no
+       for(int i=0;i<n;i++){
+           if(arr[i]<=0||arr[i]>n) arr[i]=1;
+       }
+       for(int i=0;i<n;i++){
+           arr[(arr[i]-1)%n]+=n;
+       }
+       for(int i=0;i<n;i++){
+           if(arr[i]<=n) return i+1;
+       }
+    return n+1;
+    }

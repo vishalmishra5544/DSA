@@ -1,0 +1,81 @@
+//q1
+ int setBits(int N) {
+        // Write Your Code here
+        int lookup[256]={0};
+        for(int i=1;i<256;i++)
+            lookup[i]=(i&1)+lookup[i/2];
+        int res=0;
+        while(N>0){
+            res=res+lookup[N&0xff];
+            N=N>>8;
+        }
+       return res;
+    }
+//q2 find the only two non repeating num in 2n+2 size array
+ vector<int> singleNumber(vector<int> nums) 
+    {
+        // Code here.
+        int exor=0,exor1=0,exor2=0;
+        for(int i=0;i<nums.size();i++){
+            exor=exor^nums[i];
+        }
+        int rightmostbit=exor&(~(exor-1));
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]&rightmostbit){
+                exor1=exor1^nums[i];
+            }else exor2=exor2^nums[i];
+        }
+        vector<int> ans;
+        int largest=max(exor1,exor2);
+        int smallest=min(exor1,exor2);
+        ans.push_back(smallest);
+        ans.push_back(largest);
+        return ans;
+    }
+//q3 Function to find number of bits needed to be flipped to convert A to B
+    int countBitsFlip(int a, int b){
+        
+        // Your logic her
+        int n=a^b;
+        return __builtin_popcount(n);
+        
+    }
+//q4 count set bit from 1 to n
+//method-1-DP LOOKUP
+int lookup[n+1]={0};
+for(int i=1;i<n;i++)
+    lookup[i]=(i&1)+lookup[i/2];
+int res=0;
+for(int i=n;i>=1;i--){
+    res=res+lookup[n&0xff];
+ }
+return res;
+//method-2-o(logn)
+ int countSetBits(int n){
+        n++;
+        int countsetbits=n/2,pairs=0,setbits=0,remainingsetbits=0;
+        int powerof2=2;
+        while(powerof2<=n){
+        pairs=n/powerof2;
+        setbits=(pairs/2)*powerof2;
+        remainingsetbits=(pairs&1)?n%powerof2:0;
+        countsetbits=countsetbits+setbits+remainingsetbits;
+        powerof2=powerof2<<1;
+        }
+    return countsetbits;
+    }
+//q5 Function to check if given number n is a power of two.
+    bool isPowerofTwo(long long n){
+        
+        // Your code here    
+        return (n>0)&&((n&(n-1))==0);
+        
+    }
+//q6 find position of only set bit
+int findPosition(int N) {
+        // code here
+        int rightmost=N&(~(N-1));
+        int noofsetbits=__builtin_popcount(N);
+        if(N<=0||noofsetbits>1||noofsetbits==0) return -1;
+        else return floor(log2(rightmost)+1);
+    }
