@@ -473,3 +473,213 @@ public:
        }
     return n+1;
     }
+//Rearrange Array Alternately
+public:
+    // This function wants you to modify the given input
+    // array and no need to return anything
+    // arr: input array
+    // n: size of array
+    //Function to rearrange  the array elements alternately.
+    void rearrange(long long *arr, int n) 
+    { 
+    	
+    	// Your code here
+    /*//when arr elements differ by 1
+    int max_ele=arr[n-1],min_ele=arr[0],i=0;
+    	while(i<n){
+    	    if(i%2!=0){
+    	     arr[i]=min_ele;
+    	    i++;
+    	    min_ele++;
+    	    }
+    	    else{
+        	 arr[i]=max_ele;
+        	 i++;
+        	 max_ele--;
+    	    }
+    	}
+    	*/ 
+    	int maxindex=n-1,minindex=0,maxelement=arr[n-1]+1;
+    	for(int i=0;i<n;i++){
+    	    if(i%2==0){
+    	    arr[i]=arr[i]+((arr[maxindex]%maxelement)*maxelement);
+    	    maxindex--;
+    	    }else{
+    	        arr[i]=arr[i]+((arr[minindex]%maxelement)*maxelement);
+    	        minindex++;
+    	    }
+    	}
+    	for(int i=0;i<n;i++){
+    	    arr[i]=arr[i]/maxelement;
+    	}
+    }
+//Rearrange an array with o(1) extra space
+public:
+    // arr: input array
+    // n: size of array
+    //Function to rearrange an array so that arr[i] becomes arr[arr[i]]
+    //with O(1) extra space.
+    void arrange(long long arr[], int n) {
+        // Your code here
+        for(int i=0;i<n;i++){
+            arr[i]+=(arr[arr[i]]%n)*n;
+        }
+        for(int i=0;i<n;i++){
+            arr[i]=arr[i]/n;
+        }
+    }
+//Maximum Index
+public:
+        
+    // A[]: input array
+    // N: size of array
+    // Function to find the maximum index difference.
+    int maxIndexDiff(int arr[], int N) 
+    { 
+        // Your code here
+        int LMin[N],RMax[N];
+        LMin[0]=arr[0];
+        for(int i=1;i<N;i++){
+            LMin[i]=min(arr[i],LMin[i-1]);
+        }
+        RMax[N-1]=arr[N-1];
+        for(int i=N-2;i>=0;i--){
+            RMax[i]=max(arr[i],RMax[i+1]);
+        }
+        int i=0,j=0,maxDiff=-1;
+        while(i<N&&j<N){
+            if(LMin[i]<=RMax[j]){
+                maxDiff=max(maxDiff,j-i);
+                j++;
+            }else i++;
+        }
+        return maxDiff;
+    }
+//// Function to find the trapped water between the blocks.
+    public:
+    long long trappingWater(int arr[], int n){
+        // code here
+    int lmax[n],rmax[n];
+        long long water=0,maxstorableht=0;
+        lmax[0]=arr[0];
+        for(int i=1;i<n;i++){
+           lmax[i]=max(lmax[i-1],arr[i]);
+        }
+        rmax[n-1]=arr[n-1];
+        for(int i=n-2;i>=0;i--){
+            rmax[i]=max(rmax[i+1],arr[i]);
+        }
+        for(int i=1;i<n-1;i++){
+            maxstorableht=min(lmax[i],rmax[i]);
+            if(maxstorableht-arr[i]>0)
+              water+=maxstorableht-arr[i];
+        }
+        return water;
+    }
+//public:
+//Function to find the days of buying and selling stock for max profit.
+vector<vector<int> > stockBuySell(vector<int> price, int n){
+vector<vector<int>> ans;
+        vector<int> v;
+        int i = 0;
+        while (i < n - 1) {
+ 
+        // Find Local Minima
+        // Note that the limit is (n-2) as we are
+        // comparing present element to the next element
+        while ((i < n - 1) && (price[i + 1] <= price[i]))
+            i++;
+ 
+        // If we reached the end, break
+        // as no further solution possible
+        if (i == n - 1)
+            break;
+ 
+        // Store the index of minima
+        int buy = i++;
+ 
+        // Find Local Maxima
+        // Note that the limit is (n-1) as we are
+        // comparing to previous element
+        while ((i < n) && (price[i] >= price[i - 1]))
+            i++;
+ 
+        // Store the index of maxima
+        int sell = i - 1;
+        v.clear();
+        v.push_back(buy);
+        v.push_back(sell);
+        ans.push_back(v);
+        //if(i==n-1)break;
+       }
+       return ans;
+    }
+//check if array is sorted or not
+public:
+    bool arraySortedOrNot(int arr[], int n) {
+        // code here
+       for(int i=n-1;i>0;i--){
+           if(arr[i]-arr[i-1]<0){      
+             return false;
+           }
+        }
+        return true;
+    }
+//check if array is rotated or not
+public:	
+	int findKRotation(int arr[], int n) {
+	    // code here
+	    int count=0;
+	   for(int i=n-1;i>0;i--){
+	       if(arr[i]-arr[i-1]<0) count=i;
+	    }
+	    return count;
+	}
+//kadane's algo -maxsubarraysum
+public:
+    // arr: input array
+    // n: size of array
+    //Function to find the sum of contiguous subarray with maximum sum.
+    long long maxSubarraySum(int arr[], int n){
+        
+        // Your code here
+        int maxsum=INT_MIN,currsum=0;
+        for(int i=0;i<n;i++){
+            currsum+=arr[i];
+            maxsum=max(maxsum,currsum);
+            if(currsum<0) currsum=0;
+        }
+        return maxsum;
+        
+    }
+//longest subarray with atmost k even elements (use sliding window concept)
+int main()
+ {
+	//code
+	int t,n,k;
+	cin>>t;
+	while(t--){
+	    cin>>n>>k;
+	    int arr[n];
+	    for(int i=0;i<n;i++){
+	      cin>>arr[i];
+	      if(arr[i]%2==0)
+	         arr[i]=1;
+	      else
+	         arr[i]=0;
+	    }
+	    int sum=0,count=0,maxcount=0;
+	    for(int i=0;i<n;i++){
+	        if((sum+arr[i])<=k){
+	            sum+=arr[i];
+	            count++;
+	        }else if(sum!=0){
+	            sum=sum-arr[i-count]+arr[i];
+	        }
+	        maxcount=max(count,maxcount);
+	    }
+	    cout<<maxcount<<'\n';
+	    
+	}
+	return 0;
+}
