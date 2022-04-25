@@ -363,6 +363,7 @@ class Solution
        return (josephus(n-1,k)+k-1)%n+1;//adjustments as k%n +1 is treated as 1st in every call.and here ordering are from 1 to N
     }
 };
+
 // lucky numbers
 bool myFun(int n, int x)
     {
@@ -375,6 +376,91 @@ bool myFun(int n, int x)
     bool isLucky(int n) {
         return myFun(n, 2);
     }
+//Power of Numbers - given N,R(reverse of N) find N power R  (fast exponentiation)
+ public:
+    //You need to complete this fucntion
+    
+    long long power(int N,int R)
+    {
+       //Your code here
+       long long int res=1,base=N;
+       while(R>0){
+           if(R&1){
+           res=(res*base)%1000000007;
+           }
+           base=(base*base)%1000000007;
+           R=R>>1;
+       }
+       return res;
+        
+    }
+//power set using recursion -print in lexicographically order with duplicates also
+	public:
+	  vector<string> ans;
+	  multimap<string,int> a;
+	  void powerSet(string &s,int i,string curr=""){
+	       if(i==s.length()){ 
+	           //a[curr]++;
+	           a.insert(pair<string,int>(curr,1));
+	           return;
+	       }
+	       
+	       powerSet(s,i+1,curr+s[i]);
+	       powerSet(s,i+1,curr);
+	   }
+	  
+		vector<string> AllPossibleStrings(string s){
+		    // Code here
+		    int i=0;
+		    powerSet(s,i,"");
+		    a.erase("");
+		    for(auto itr=a.begin();itr!=a.end();itr++)
+		       ans.push_back(itr->first);
+		    return ans;
+		}
+
+//Possible words from phone digits
+public:
+    vector<string> ans;
+    map<int,string> mp;
+    map<string,int> res;
+    void possible(int a[],int n,string curr,int i){
+        if(i==n){
+            res[curr]++;
+            return;
+        }
+        int digit=a[i];
+        int len=mp[digit].length();
+        for(int j=0;j<len;j++){ //for this digit check its alphabet string and iterate over it by including one at a time and recursively calling for next digit's string and repeat till last digit in input array a is reached thus when i==n return.
+        string temp=mp[digit];
+        possible(a,n,curr+temp[j],i+1);
+        
+        }
+    }
+    //Function to find list of all words possible by pressing given numbers.
+    vector<string> possibleWords(int a[], int N)
+    {
+        //Your code here
+  //store mapping of digits with alphabets
+   mp.insert({0,""});
+   mp.insert(make_pair(1,""));
+   mp.insert(make_pair(2,"abc"));
+   mp.insert(make_pair(3,"def"));
+   mp.insert(make_pair(4,"ghi"));
+   mp.insert(make_pair(5,"jkl"));
+   mp.insert(make_pair(6,"mno"));
+   mp.insert(make_pair(7,"pqrs"));
+   mp.insert(make_pair(8,"tuv"));
+   mp.insert(make_pair(9,"wxyz"));
+   
+        possible(a,N,"",0);
+        for(auto itr=res.begin();itr!=res.end();itr++)
+           ans.push_back(itr->first);
+        return ans;
+    }
+
+
+
 ARRAYS:
 //Finding majority element(element appearing greater than N/2) 
 //using moore's voting algo-O(n)
@@ -828,4 +914,52 @@ int main()
         }
         int circular_sum=arr_sum+normalSubarraySum(arr,n);//wrap up sum(max circular sum)=total arr sum-middle elements sum
         return max(circular_sum,normal_sum);//max of( wrap up sum,non-wrap up sum or std sum)
+    }
+
+
+SEARCHING:
+//search an element in an array  - linear search
+  public:
+    // Function to search x in arr
+    // arr: input array
+    // X: element to be searched for
+    int search(int arr[], int N, int X)
+    {
+       for(int i=0;i<N;i++)
+         if(arr[i]==X) return i;
+         
+       return -1;
+    }
+//Searching an element in a sorted array
+ public:
+    // Function to find element in sorted array
+    // arr: input array
+    // N: size of array
+    // K: element to be searche
+    int searchInSorted(int arr[], int N, int K) 
+    { 
+    
+       // Your code here
+       return (binary_search(arr,arr+N,K)==1)?1:-1;
+       
+    }
+//Count the zeroes
+int countZeroes(int arr[], int n) {
+        // code here
+    int left = 0;
+        int right = n-1;
+        
+        while(left <= right){
+            int mid = left + (right - left)/2;
+            
+            if(arr[mid] == 0){
+                if(mid == 0 || arr[mid-1] != arr[mid] )
+                    return n-mid;
+                else 
+                    right = mid - 1;
+            }
+            else 
+                left = mid + 1;
+        }
+        return 0;
     }
