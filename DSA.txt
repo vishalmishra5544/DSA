@@ -963,3 +963,83 @@ int countZeroes(int arr[], int n) {
         }
         return 0;
     }
+//Square root of a number
+public:
+    long long int floorSqrt(long long int x) 
+    {
+        // Your code goes here 
+        long long int last,i=1,mid,low=1,high;
+       while(i<x){
+                last=i;
+                if(last*last==x) return last;
+                i=i*2;
+            
+        }
+        high=last;
+        while(low<=high){
+            mid=low+(high-low)/2;
+            if(mid*mid==x) return mid;
+            else if(mid*mid>x) high=mid-1;
+            else {last=mid;low=mid+1;}
+        }
+      return last;
+    
+    }
+//left most and right most index - first and last occurrence of x in v
+ public:
+    pair<long,long> indexes(vector<long long> v, long long x)
+    {
+        // code here
+        bool find=binary_search(v.begin(),v.end(),x);
+        if(find==true){
+        auto last=upper_bound(v.begin(),v.end(),x);
+        auto first=lower_bound(v.begin(),v.end(),x);
+        return make_pair(first-v.begin(),last-v.begin()-1);
+        }
+        return make_pair(-1,-1);
+    }
+//Floor in a sorted array
+ public:
+    // Function to find floor of x
+    // n: size of vector
+    // x: element whose floor is to find
+    int findFloor(vector<long long> v, long long n, long long x){
+        
+        // Your code here
+        return upper_bound(v.begin(),v.end(),x)-v.begin()-1;
+        
+    }
+//Minimum Number in a sorted rotated array  (distinct and without duplicates)
+public:
+    //Function to find the minimum element in sorted and rotated array.
+    int minNumber(int arr[], int low, int high)
+    {
+        // Your code here
+        int mid,len=high-low+1;
+        while(low<=high){
+            mid=low+(high-low)/2;
+            if(mid==0) return arr[mid];
+            if(arr[mid]>arr[mid+1]) return arr[mid+1];
+            if(arr[mid-1]>arr[mid]) return arr[mid];
+            else if(arr[mid]>arr[high]) low=mid+1;
+            else high=mid-1;
+        }
+        
+        
+    }
+// with duplicates
+// Function to find minimum element
+int findMin(int arr[], int low, int high)
+{
+    while(low < high)
+    {
+        int mid = low + (high - low)/2;
+        if (arr[mid] == arr[high])
+            high--;
+        else if(arr[mid] > arr[high])
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return arr[high];
+}
