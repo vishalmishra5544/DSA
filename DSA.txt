@@ -1043,3 +1043,56 @@ int findMin(int arr[], int low, int high)
     }
     return arr[high];
 }
+//Two Repeated Elements
+public:
+    //Function to find two repeated elements. num are from 1 to N range and total N+2
+    vector<int> twoRepeated (int arr[], int n) {
+        // Your code here
+       vector<int> res;
+       for(int i=0;i<n+2;i++){
+           if((arr[(arr[i]%(n+1))]/(n+1))<1){
+               arr[(arr[i]%(n+1))]+=(n+1);
+           }else res.push_back(arr[i]%(n+1));
+       }
+       return res;
+    }
+//Roof Top
+ public:
+    //Function to find maximum number of consecutive steps 
+    //to gain an increase in altitude with each step.
+    int maxStep(int arr[], int n)
+    {
+       //Your code here
+       int steps=0,msteps=0;
+       for(int i=1;i<n;i++){
+           if(arr[i]>arr[i-1]){
+               steps+=1;
+               msteps=max(msteps,steps);
+           }else{steps=0;}
+       }
+       return msteps;
+    }
+//Maximum Water Between Two Buildings
+  public:
+    int maxArea(int h[],int n){
+        int ht=0,l=0,area=0,i=0,j=n-1,maxarea=0;
+        //we move towards height which is greater for max area using 2 pointers
+        while(i<j){
+                ht=min(h[i],h[j]);
+                l=(j-i-1);
+                area=ht*l;
+                maxarea=max(maxarea,area);
+                if(h[i]<h[j]){
+                    i++; 
+                }else if(h[j]<h[i]){
+                    j--;
+                }else i++,j--;
+            }
+      return maxarea;
+    }
+    int maxCandy(int h[], int n) 
+    { 
+        // Your code goes here
+            return maxArea(h,n);
+       
+    } 
