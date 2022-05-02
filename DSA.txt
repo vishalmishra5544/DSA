@@ -1246,9 +1246,9 @@ SORTING:
     {
         // code here
         
-        if(low<high){
+        if(low<high){//using lomuto partition
             int pivotIdx=partition(arr,low,high);
-            quickSort(arr,low,pivotIdx-1);
+            quickSort(arr,low,pivotIdx-1);//in horae's partition it is quickSort(arr,low,pivotIdx); rest same;
             quickSort(arr,pivotIdx+1,high);
         }
         return;
@@ -1268,4 +1268,204 @@ SORTING:
        }
        swap(arr[j+1],arr[high]);
        return j+1;
+    }
+    int hoare(int arr[],int low,int high){
+        int pivot=arr[low],i=low,j=high;
+        while(1){
+             do{i++;}while(arr[i]<pivot);
+             do{j--;}while(arr[j]>pivot);
+             if(i>=j) return j;
+             swap(arr[i],arr[j]);   
+         }
+    }
+//Binary Array Sorting
+ public:
+    
+    // A[]: input array
+    // N: input array
+     
+    //Function to sort the binary array.
+    void binSort(int arr[], int n)
+    {
+       //Your code here
+       
+       /**************
+        * No need to print the array
+        * ************/
+        int j=n-1;
+       for(int i=0;i<n;i++){
+           while(i<=j){
+           if(arr[i]==1){swap(arr[i],arr[j]);j--;}
+           else break;
+           }
+       }
+    }
+// count Inversions -o(nlogn) time and o(n) space
+public:
+    // arr[]: Input Array
+    // N : Size of the Array arr[]
+    long long int countAndMerge(long long int arr[],long long int low,long long int mid,long long int high){
+        long long int n1=mid-low+1,n2=high-mid;
+        long long int l[n1],r[n2];
+        for(int i=0;i<n1;i++){
+            l[i]=arr[low+i];
+        }
+        for(int i=0;i<n2;i++){
+            r[i]=arr[mid+1+i];
+        }
+        long long int i=0,j=0,k=low;
+        long long int res=0;
+        while(i<n1&&j<n2){
+            if(l[i]<=r[j]){arr[k]=l[i];k++,i++;}
+            else{arr[k]=r[j];k++,j++;res+=(n1-i);//count pairs of inversion}
+        }
+        while(i<n1){arr[k]=l[i];i++,k++;}
+        while(j<n2){arr[k]=r[j];j++,k++;}
+        return res;
+    }
+    long long int invCount(long long int arr[],long long int low,long long int high){
+        long long int inv_count=0;
+        if(low<high){
+            long long int mid=low+(high-low)/2;
+            inv_count+=invCount(arr,low,mid);
+            inv_count+=invCount(arr,mid+1,high);
+            inv_count+=countAndMerge(arr,low,mid,high);
+        }
+        return inv_count;
+    }
+    // Function to count inversions in the array.
+    long long int inversionCount(long long arr[], long long N)
+    {        // Your Code Here
+        return invCount(arr,0,N-1);        
+    }
+//
+
+public:
+    //arr1,arr2 : the arrays
+    // n, m: size of arrays
+    //Function to return a list containing the union of the two arrays. 
+    vector<int> findUnion(int arr1[], int arr2[], int n, int m)
+    {
+        //Your code here
+        //return vector with correct order of elements
+        int i=0,j=0,k=0;
+        vector<int> unionArr;
+        while(i<n&&j<m){
+            if(i>0&&arr1[i]==arr1[i-1]){ i++;continue;}
+            if(j>0&&arr2[j]==arr2[j-1]){ j++; continue;}
+            if(arr1[i]<arr2[j]){
+             unionArr.push_back(arr1[i]);i++;
+            }else if(arr1[i]>arr2[j]){
+                 unionArr.push_back(arr2[j]);j++; 
+            }else{unionArr.push_back(arr1[i]); i++,j++;}
+        }
+        while(i<n){            
+          if(arr1[i]!=arr1[i-1]){ unionArr.push_back(arr1[i]);i++;}
+          else i++;         
+        }
+        while(j<m){             
+          if(arr2[j]!=arr2[j-1]){ unionArr.push_back(arr2[j]);j++;}
+          else j++;
+        }        
+        return unionArr;
+    }
+//Intersection of two unsorted arrays
+public:
+    // Function to return the count of the number of elements in
+    // the intersection of two arrays.
+    int NumberofElementsInIntersection(int a[], int b[], int n, int m) {
+        // Your code goes here
+        unordered_set<int> hash;
+        int low=n>m?m:n,max=n<m?m:n;
+        int *arr1,*arr2;
+        int count=0;
+        if(low==n){arr1=a,arr2=b;}
+        else{arr1=b,arr2=a;}
+        for(int i=0;i<low;i++){
+            hash.insert(arr1[i]);
+        }
+        for(int i=0;i<max;i++){
+            if(hash.find(arr2[i])!=hash.end()){count++; hash.erase(arr2[i]);}
+            
+        }
+        return count;
+    }
+//count the number of possible triangles
+ public:
+    //Function to count the number of possible triangles.
+    int findNumberOfTriangles(int arr[], int n)
+    {
+        // code here
+        int count=0;
+        sort(arr,arr+n);
+        for(int i=n-1;i>=1;i--){
+            int l=0,r=i-1;
+            while(l<r){
+                if(arr[l]+arr[r]>arr[i]&&arr[l]+arr[i]>arr[i]&&arr[i]+arr[r]>arr[l]){
+                count+=r-l;r--;
+                }else l++;
+            }
+        }
+        return count;
+    }
+//find triplets with zero sum -o(n2) time and o(1) space
+public:
+    //Function to find triplets with zero sum.
+    bool findTriplets(int arr[], int n)
+    { 
+        //Your code here
+        int count=0;
+        sort(arr,arr+n);
+        for(int i=n-1;i>=1;i--){
+            int l=0,r=i-1;
+            while(l<r){
+                if(arr[i]+arr[l]+arr[r]==0){count+=1;l++;r--;return count //as we just need atleast 1 such triplet here otherwise sum all such pairs if asked;}
+                else if(arr[i]+arr[l]+arr[r]<0) l++;
+                else r--;
+            }
+        } 
+        return count;
+    }
+//Three way partitioning    //USE DNF concept
+public: 
+    //Function to partition the array around the range such 
+    //that array is divided into three parts.
+    void threeWayPartition(vector<int>& arr,int a, int b)
+    {
+        // code here 
+        int h=arr.size()-1,l=0,i=0; 
+        while(i<=h){
+            if(arr[i]<a&&arr[i]<b){swap(arr[i],arr[l]);l++;i++;}
+            else if (arr[i]>b){swap(arr[h],arr[i]);h--;}
+            else i++;
+        }
+    }
+
+//Counting Sort
+public:
+    //Function to arrange all letters of a string in lexicographical 
+    //order using Counting Sort.
+    int charArr[26]={0};
+    string countSort(string arr){
+        // code here
+        for(int i=0;i<arr.length();i++){
+            charArr[abs('a'-arr[i])]+=1;
+        }
+        string s="";
+        for(int i=0;i<26;i++){
+            while(charArr[i]>=1){s.push_back('a'+i);charArr[i]+=-1;}
+        }
+        return s;
+    }
+// Sort an array of 0s,1s and 2s - DNF
+public:
+    void sort012(int arr[], int n)
+    {
+        // coode here 
+        int h=n-1,l=0,i=0; 
+        while(i<=h){
+            if(arr[i]==0){swap(arr[i],arr[l]);l++;i++;}
+            else if (arr[i]==2){swap(arr[h],arr[i]);h--;}
+            else i++;//if arr[i]==1
+        }
     }
