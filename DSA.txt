@@ -1469,3 +1469,314 @@ public:
             else i++;//if arr[i]==1
         }
     }
+//Sort by Absolute Difference
+public:    
+    // A[]: input array
+    // N: size of array
+    static bool mycomparator(pair<int,pair<int,int>> a ,pair<int,pair<int,int>> b){
+        if(a.first!=b.first){
+            return a.first<b.first;
+        }else{
+            return a.second.first<b.second.first;
+        }
+    }
+    //Function to sort the array according to difference with given number.
+    void sortABS(int arr[],int n, int k)
+    {
+       //Your code here
+      /* //METHOD-1 using maps
+       multimap<int,int> m;
+       for(int i=0;i<n;i++){
+           m.insert(make_pair(abs(arr[i]-k),arr[i]));
+       }
+       int i=0;
+       for(auto it=m.begin();it!=m.end();it++){
+           arr[i]=(*it).second;i++;
+       }
+       */
+      //METHOD -2 using sort + vector of pairs 
+       vector<pair<int,pair<int,int>>> v;
+       for(int i=0;i<n;i++)
+         v.push_back(make_pair(abs(arr[i]-k),make_pair(i,arr[i])));
+       sort(v.begin(),v.end(),mycomparator);
+       int i=0;
+       for(auto it=v.begin();it!=v.end();it++){
+           arr[i]=(*it).second.second;i++;
+       }
+    }
+//Minimum difference pair  -we need to find mindiff b/w adj element pair  -o(nlogn) time
+public:
+   	int  minimum_difference(vector<int>nums){
+   	    // Code here
+   	  sort(nums.begin(),nums.end());
+   	  int l=0,minDiff=INT_MAX,currDiff=0;
+   	  while(l<nums.size()-1){
+   	      currDiff=nums[l+1]-nums[l];
+   	      if(currDiff<minDiff) minDiff=currDiff;
+   	      l++;
+   	  }
+   	  return minDiff;
+   	}
+//Kth smallest element  --using quickselect algo-O(N) on avg and o(n2) in worst case time.
+public:
+    // arr : given array
+    // l : starting index of the array i.e 0
+    // r : ending index of the array i.e size-1
+    int partition(int arr[],int l,int r){
+       int pivot=arr[r],s=l,i;
+        for(i=l;i<=r-1;i++){
+            if(arr[i]<=pivot){
+                swap(arr[i],arr[s]);
+                s++;
+            }
+        }
+        swap(arr[r],arr[s]);
+        return s;
+        
+    }
+    // k : find kth smallest element and return using this function
+    int kthSmallest(int arr[], int l, int r, int k) {
+        //code here
+       
+        while(l<=r){
+            int p1=rand()%(r-l+1); //without this RANDOM PIVOT SELECTION TLE happens
+            swap(arr[r],arr[l+p1]);
+            int pivotIdx=partition(arr,l,r);
+            if(pivotIdx==(k-1)) return arr[pivotIdx];
+            else if(pivotIdx>(k-1)){ r=pivotIdx-1;}
+            else {l=pivotIdx+1;}
+        }
+        return -1;
+        
+        /*
+        // If k is smaller than number of elements in array
+    if (k > 0 && k <= r - l + 1) {
+        // Partition the array around last element and get
+        // position of pivot element in sorted array
+        int pos = partition(arr, l, r);
+ 
+        // If position is same as k
+        if (pos == k - 1)
+            return arr[pos];
+        if (pos > k - 1) // If position is more, recur for left subarray
+            return kthSmallest(arr, l, pos - 1, k);
+ 
+        // Else recur for right subarray
+        return kthSmallest(arr, pos + 1, r, k - pos + l - 1);
+    }
+ 
+    // If k is more than number of elements in array
+    return INT_MAX;
+    */
+    }
+//Number of Pairs  -x^y>y^x
+public:
+    
+    // X[], Y[]: input arrau
+    // M, N: size of arrays X[] and Y[] respectively
+   long long int count(int X[],int M,int Y[],int N,int NoOfY[],int x){
+        if(x==0) return 0;
+        if(x==1) return NoOfY[0];
+        long long int ans=0;
+        auto idx=upper_bound(Y,Y+N,x)-Y;
+        ans=(N-idx);
+        ans+=(NoOfY[0]+NoOfY[1]);
+        if(x==2) return ans-=(NoOfY[3]+NoOfY[4]);
+        if(x==3) return ans+=(NoOfY[2]);
+        return ans;
+    }
+    //Function to count number of pairs such that x^y is greater than y^x.
+    long long countPairs(int X[], int Y[], int M, int N)
+    {
+       //Your code here
+      long long int ans=0;
+      int NoOfY[5]={0};
+      for(int i=0;i<N;i++){
+          if(Y[i]<5){
+              NoOfY[Y[i]]++;
+          }
+      }
+      sort(Y,Y+N);
+      for(int i=0;i<M;i++){
+          ans=ans+count(X,M,Y,N,NoOfY,X[i]);
+      }
+      return ans;
+    }
+//Merge without extra space  -gap method.
+ //Function to merge the arrays.
+        void merge(long long arr1[], long long arr2[], int n, int m) 
+        { 
+            // code here
+            int gap=ceil((float)(n+m)/2);
+            int ptr1,ptr2;
+            while(gap>0){
+                ptr1=0,ptr2=gap;
+                while(ptr2<(n+m)){
+                    if(ptr1<n&&ptr2<n&&arr1[ptr1]>arr1[ptr2]){ swap(arr1[ptr1],arr1[ptr2]);}
+                    else if(ptr1>(n-1)&&ptr1<(n+m)&&ptr2>(n-1)&&ptr2<(n+m)&&arr2[ptr1-n]>arr2[ptr2-n]){swap(arr2[ptr1-n],arr2[ptr2-n]);}
+                    else if(ptr1<n&&ptr2>(n-1)&&ptr2<(n+m)&&arr1[ptr1]>arr2[ptr2-n]){swap(arr1[ptr1],arr2[ptr2-n]);}
+                    ptr1++,ptr2++;
+                }
+                if(gap==1) gap=0;
+                else gap=ceil((float)gap/2);
+            }
+        } 
+ 
+//Nearly sorted 
+public:
+    //Function to return the sorted array.
+    vector <int> nearlySorted(int arr[], int n, int k){
+        // Your code here
+        vector<int> res;
+        int size=(n==k)?k:(k+1);
+        priority_queue<int,vector<int>,greater<int>> heap(arr,arr+size);
+      
+     for(int i=size;i<n;i++){
+      res.push_back(heap.top());
+      heap.pop();  
+      heap.push(arr[i]);
+      
+      }
+      while(heap.empty()==false){
+      res.push_back(heap.top());
+       heap.pop();
+       
+      }
+      return res;
+    }
+
+//Minimum platforms
+ public:
+    //Function to find the minimum number of platforms required at the
+    //railway station such that no train waits.
+    int findPlatform(int arr[], int dep[], int n)
+    {
+    	// Your code here
+    	/*//method-1 using heap -o(nlogn)time and o(n)space
+    	vector<pair<int,int>> v(n);
+    	for(int i=0;i<n;i++){
+    	    v[i]=make_pair(arr[i],dep[i]);
+    	}
+    	sort(v.begin(),v.end());
+    	int res=1;
+    	priority_queue<int,vector<int>,greater<int>> heap;
+    	heap.push(v[0].second);
+    	for(int i=1;i<n;i++){
+    	    if(heap.top()>=v[i].first){
+    	        heap.push(v[i].second);
+    	        res++;
+    	    }else heap.pop();
+    	    heap.push(v[i].second);
+    	}
+    	return res;
+    	*/
+    	//method-2 o(nlogn)time and o(1) space
+    	sort(arr,arr+n);
+    	sort(dep,dep+n);
+    	int arrival=1,departure=0;
+    	int count=1,res=1;
+    	while(arrival<n&&departure<n){
+    	    if(arr[arrival]<=dep[departure]){count++;res=max(res,count);arrival++;}
+    	    else{count--;departure++;}
+    	}
+    	return res;
+    }
+
+MATRIX:
+//Addition of two square matrices
+ void Addition(vector<vector<int> >& matrixA, vector<vector<int>>&matrixB) {
+        // Code here
+        for(int i=0;i<matrixA.size();i++){
+            for(int j=0;j<matrixA.size();j++){
+                matrixA[i][j]=matrixA[i][j]+matrixB[i][j];
+            }
+        }
+    }
+//Sum of upper and lower triangle
+public:
+    //Function to return sum of upper and lower triangles of a matrix.
+    vector<int> sumTriangles(const vector<vector<int> >& matrix, int n)
+    {
+        // code here
+        int upper=0,low=0;
+        vector<int> v;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                upper=upper+matrix[i][j];
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<=i;j++){
+                low=low+matrix[i][j];
+            }
+        }
+        v.push_back(upper);
+        v.push_back(low);
+        return v;
+    }
+//Multiply matrices
+void multiply(int a[][100], int b[][100], int c[][100], int n)
+{
+      //add code here.
+      for(int i=0;i<n;i++){
+       for(int j=0;j<n;j++){
+            c[i][j]=0;
+           for(int k=0;k<n;k++){
+               c[i][j]+=a[i][k]*b[k][j];
+           }
+       }
+      }
+}
+//Print matrix in snake pattern
+public:
+    //Function to return list of integers visited in snake pattern in matrix.
+    vector<int> snakePattern(vector<vector<int> > matrix)
+    {   
+        // code here
+        vector<int> v;
+        int j=0;
+        for(int i=0;i<matrix.size();i++){
+            if(i%2==0){
+                for(int j=0;j<matrix.size();j++){
+                    v.push_back(matrix[i][j]);
+                }
+            }else{
+              for(int j=matrix.size()-1;j>=0;j--){
+                    v.push_back(matrix[i][j]);
+                }  
+            }
+        }
+        return v;
+    }
+//Transpose of matrix
+public:  
+    //Function to find transpose of a matrix.
+    void transpose(vector<vector<int> >& matrix, int n)
+    { 
+        // code here 
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                swap(matrix[i][j],matrix[j][i]);
+            }
+        }
+    }
+//Rotate by 90 degree
+public:
+    //Function to rotate matrix anticlockwise by 90 degrees.
+    void rotateby90(vector<vector<int> >& matrix, int n) 
+    { 
+        // code here 
+        //transpose
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                swap(matrix[i][j],matrix[j][i]);
+            }
+        }
+        //swap rows i, n-i
+        for(int i=0;i<((n/2));i++){
+            for(int j=0;j<n;j++){
+                swap(matrix[i][j],matrix[n-i-1][j]);
+            }
+        }
+        
+    } 
