@@ -1780,3 +1780,229 @@ public:
         }
         
     } 
+//Determinant of a matrix
+int determinantOfMatrix(vector<vector<int> > matrix, int n)
+    {
+        int det = 0; // the determinant value will be stored here
+        if (matrix.size() == 1)
+        {
+            return matrix[0][0]; // no calculation needed
+        }
+        else if (matrix.size() == 2)
+        {
+            det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
+            return det;
+        }
+        else
+        {
+            for (int p = 0; p < matrix[0].size(); p++)
+            {
+                vector<vector<int>> TempMatrix;
+                for (int i = 1; i < matrix.size(); i++)
+                {
+                    vector<int> TempRow;
+                    for (int j = 0; j < matrix[i].size(); j++)
+                    {
+                        if (j != p)
+                        {
+                            TempRow.push_back(matrix[i][j]);
+                        }
+                    }
+                    if (TempRow.size() > 0)
+                    TempMatrix.push_back(TempRow);
+                }
+                det = det + matrix[0][p] * pow(-1, p) * determinantOfMatrix(TempMatrix,matrix.size());
+            }
+            return det;
+        }
+   }
+//Boundary traversal of matrix
+public:
+    //Function to return list of integers that form the boundary 
+    //traversal of the matrix in a clockwise manner.
+    vector<int> boundaryTraversal(vector<vector<int> > matrix, int n, int m) 
+    {
+        // code here
+        
+    vector<int> v;
+    for(int i=0;i<1;i++){
+     for(int j=0;j<m;j++)
+      v.push_back(matrix[i][j]);
+     }
+     if(n==1)return v;
+    for(int i=1;i<n;i++){
+     for(int j=m-1;j<m;j++)
+      v.push_back(matrix[i][j]);
+    }
+    if(m==1) return v;
+    for(int i=n-1;i<n;i++){
+     for(int j=m-2;j>=0;j--)
+      v.push_back(matrix[i][j]);  
+    }
+    if(n==2) return v;
+    for(int i=n-2;i>=1;i--){
+     for(int j=0;j<1;j++)
+      v.push_back(matrix[i][j]);
+    }
+    return v;
+    }
+//Spirally traversing a matrix
+public: 
+    //Function to return a list of integers denoting spiral traversal of matrix.
+    vector<int> spirallyTraverse(vector<vector<int> > matrix, int row, int col) 
+    {
+        // code here 
+        vector<int> v;
+        int u=0,r=col-1,l=0,d=row-1;
+        while((u<=d)&&(l<=r)){
+            for(int i=l;i<=r;i++)
+              v.push_back(matrix[u][i]);
+            if((d-u+1)==1) return v;
+            u++;
+            for(int i=u;i<=d;i++)
+               v.push_back(matrix[i][r]);
+            if((r-l+1)==1) return v;
+            r--;
+            for(int i=r;i>=l;i--)
+              v.push_back(matrix[d][i]);
+            if((d-u+1)<2) return v;
+            d--;
+            for(int i=d;i>=u;i--)
+              v.push_back(matrix[i][l]);
+            l++;
+            
+        }
+      return v;  
+    }
+//Search in a row-column sorted matrix
+ public:
+    //Function to search a given number in row-column sorted matrix.
+    bool search(vector<vector<int> > matrix, int n, int m, int x) 
+    {
+        // code here 
+        int l=m-1,d=0;
+        if((x<matrix[0][0])||(x>matrix[n-1][m-1])) return false;
+        while((d<n)&&(l>=0)){
+            if(matrix[d][l]<x) d++;
+            else if(matrix[d][l]>x) l--;
+            else return true;
+        }
+        return false;
+    }
+//Boolean Matrix
+ public:
+    //Function to modify the matrix such that if a matrix cell matrix[i][j]
+    //is 1 then all the cells in its ith row and jth column will become 1.
+    void booleanMatrix(vector<vector<int> > &matrix)
+    {
+        // code here 
+        /*
+        int r=matrix.size(),c=matrix[0].size();
+        bool r0=false,c0=false;
+        int row[r],col[c];
+        memset(row,0,sizeof row);
+        memset(col,0,sizeof col);
+        for(int i=0;i<r;i++){
+            for(int j=0;j<c;j++){
+                if(matrix[i][j]==1){row[i]=1;col[j]=1;}
+            }
+        }
+         for(int i=0;i<r;i++){
+            for(int j=0;j<c;j++){
+                if((row[i]==1)||(col[j]==1)){matrix[i][j]=1;}
+            }
+        }
+        */
+        //method 2 use 0th row and 0th col of matrix as row[],col[] arrays
+        int r=matrix.size(),c=matrix[0].size();
+        bool r0=false,c0=false;
+        //for(int i=0;i<r;i++){}
+        //for(int i=0;i<c;i++){if(matrix[i][0]==1) c0=true;}
+        for(int i=0;i<r;i++){
+            for(int j=0;j<c;j++){
+                if(i==0&&matrix[i][j]==1) r0=true;
+                if(j==0&&matrix[i][j]==1) c0=true;
+                if(matrix[i][j]==1){
+                    matrix[0][j]=1;//like in col[j] mark 1
+                    matrix[i][0]=1;//like in row[i] mark 1
+                }
+            }
+        }
+         for(int i=1;i<r;i++){
+            for(int j=1;j<c;j++){
+                if((matrix[i][0]==1)||(matrix[0][j]==1)){matrix[i][j]=1;}
+            }
+        }
+        if(r0==1){ for(int i=0;i<c;i++) matrix[0][i]=1;}
+        if(c0==1){ for(int j=0;j<r;j++) matrix[j][0]=1;}
+        
+    }
+//Make matrix Beautiful  -makes rows sum and col sums same throughout the matrix
+class Solution
+{
+    public:
+    //Function to find minimum number of operations that are required 
+    //to make the matrix beautiful.
+    int findMinOpeartion(vector<vector<int> > matrix, int n)
+    {
+        // code here 
+        vector<int> sumRow(n,0);
+        vector<int> sumCol(n,0);
+    // Calculate sumRow[] and sumCol[] array
+    int maxSum = 0;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j) {
+            sumRow[i] += matrix[i][j];
+            sumCol[i] += matrix[j][i];
+            maxSum = max(maxSum, sumRow[i]);
+        maxSum = max(maxSum, sumCol[i]);
+        }
+    // Find maximum sum value in either row or in column
+    
+   /* for (int i = 0; i < n; ++i) {
+        maxSum = max(maxSum, sumRow[i]);
+        maxSum = max(maxSum, sumCol[i]);
+    }*/
+    int count = 0;
+    for (int i = 0, j = 0; i < n && j < n;) {
+        // Find minimum increment required in either row or
+        // column
+        int diff
+            = min(maxSum - sumRow[i], maxSum - sumCol[j]);
+        // Add difference in corresponding cell, sumRow[]
+        // and sumCol[] array
+        matrix[i][j] += diff;
+        sumRow[i] += diff;
+        sumCol[j] += diff;
+        // Update the count variable
+        count += diff;
+        // If ith row satisfied, increment ith value for
+        // next iteration
+        if (sumRow[i] == maxSum)
+            ++i;
+        // If jth column satisfied, increment jth value for
+        // next iteration
+        if (sumCol[j] == maxSum)
+            ++j;
+    }
+    for(int i=0;i<n;i++){for(int j=0;j<n;j++){ cout<<matrix[i][j]<<" ";}cout<<"\n";}
+    return count;
+    } 
+};
+int main()
+{
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        vector<vector<int> > matrix (n,vector<int>(n));
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                cin>>matrix[i][j];
+        Solution ob;
+        cout << ob.findMinOpeartion(matrix, n) << endl;
+    }
+    return 0;
+}
