@@ -2006,3 +2006,92 @@ int main()
     }
     return 0;
 }
+
+
+
+HASHING:
+//Non-Repeating Element
+ public:
+    int firstNonRepeating(int arr[], int n) 
+    { 
+        // Complete the function
+        unordered_map<int,pair<int,int>> mp;
+        int count=0,j=0,res=0;
+        for(int i=0;i<n;i++){
+            auto id=mp.find(arr[i]);
+            if(id!=mp.end()){mp[arr[i]].second+=1;}
+            else{j=i;count=1;mp.insert(make_pair(arr[i],make_pair(j,count)));}
+            
+        }
+        j=INT_MAX;
+        for(auto i:mp){
+            if(i.second.second==1){
+                if(i.second.first<j){j=i.second.first,res=i.first;}
+            }
+        }
+        return res;
+        
+    } 
+//First repeating element
+ public:
+    // Function to return the position of the first repeating element.
+    int firstRepeated(int arr[], int n) {
+        // code here
+        unordered_map<int,pair<int,int>> mp;
+        int count=0,j=0,res=0;
+        for(int i=0;i<n;i++){
+            auto id=mp.find(arr[i]);
+            if(id!=mp.end()){mp[arr[i]].second+=1;}
+            else {j=i;count=1;mp.insert(make_pair(arr[i],make_pair(j,count)));}
+            
+        }
+        j=INT_MAX;
+        for(auto i:mp){
+            if(i.second.second>1){
+                if(i.second.first<j){j=i.second.first,res=i.first;}
+            }
+        }
+        return (j==INT_MAX)?-1:(j+1);
+    }
+//Union of two arrays
+ public:
+  //Function to return the count of number of elements in union of two arrays.
+    int doUnion(int a[], int n, int b[], int m)  {
+        //code here
+        unordered_set<int> hash;
+        for(int i=0;i<n;i++){
+            hash.insert(a[i]);
+        }
+        for(int i=0;i<m;i++){
+            hash.insert(b[i]);
+        }
+        return hash.size();
+    }
+//key pair (two sum)
+public:	
+	// Function to check if array has 2 elements
+	// whose sum is equal to the given value
+	bool hasArrayTwoCandidates(int arr[], int n, int x) {
+	    // code here
+	    unordered_set<int> h;
+	    for(int i=0;i<n;i++){
+	        if(h.find((x-arr[i]))!=h.end()) return true;
+	        h.insert(arr[i]);
+	    }
+	    return false;
+	}
+//check if two arrays are equal or not
+ public:
+    //Function to check if two arrays are equal or not.
+    bool check(vector<ll> A, vector<ll> B, int N) {
+        //code here
+        unordered_map<int,int> h;
+        for(int i=0;i<A.size();i++){
+            h[A[i]]++;
+        }
+        for(int i=0;i<B.size();i++){
+            if(h[B[i]]<=0) return false;
+            h[B[i]]--;
+        }
+        return true;
+    }
