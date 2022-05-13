@@ -2095,3 +2095,144 @@ public:
         }
         return true;
     }
+//subarray with 0 sum
+public:
+    //Complete this function
+    //Function to check whether there is a subarray present with 0-sum or not.
+    bool subArrayExists(int arr[], int n)
+    {
+        //Your code 
+       unordered_set<int> h;
+       long long int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=arr[i];
+            if(sum==0) return true;
+            else if(h.find(sum)!=h.end()) return true;
+            else{ h.insert(sum);}
+        }
+        return false;
+    }
+//winner of an election
+public:
+    //Function to return the name of candidate that received maximum votes.
+    vector<string> winner(string arr[],int n)
+    {
+        // Your code here
+        // Return the string containing the name and an integer
+        // representing the number of votes the winning candidate got
+        vector<string> v;
+        unordered_map<string,int> h;
+        for(int i=0;i<n;i++){
+            h[arr[i]]++;
+        }
+        int maxi=INT_MIN;
+        string key;
+        //int val;
+        for(auto i:h){
+            if(i.second>maxi){ key=i.first;maxi=i.second;}
+            else if(i.second==maxi){ key=min(key,i.first);maxi=i.second;}
+        }
+        string res=to_string(maxi);
+        v.push_back(key);
+        v.push_back(res);
+        return v;
+    }
+//subarray range with given sum
+public:
+    //Function to count the number of subarrays which adds to the given sum.
+    int subArraySum(int arr[], int n, int sum)
+    {
+        //Your code here
+        unordered_map<int,int> m;
+        int presum=0,res=0;
+        for(int i=0;i<n;i++){
+            presum+=arr[i];
+            if(presum==sum)res++;
+            if(m.find(presum-sum)!=m.end()){res+=m[presum-sum];}
+            m[presum]++;
+        }
+        return res;
+    }
+//Positive Negative Pair
+ public:
+    //Function to return list containing all the pairs having both
+    //negative and positive values of a number in the array.
+    vector <int> findPairs(int arr[], int n) 
+    {
+        // code here
+        vector<int> v;
+        unordered_map<int,int> h;
+        for(int i=0;i<n;i++){
+            if(h.find(-1*arr[i])!=h.end()){h[-1*arr[i]]--;v.push_back(-1*abs(arr[i]));v.push_back(abs(arr[i]));}
+           else h[arr[i]]++;
+        }
+        return v;
+    }
+//Zero sum subarrays
+ public:
+    //Function to count subarrays with sum equal to 0.
+    ll findSubarray(vector<ll> arr, int n ) {
+        //code here
+        unordered_map<long long int,long long int> m;
+        long long int presum=0,res=0,sum=0;
+        for(int i=0;i<n;i++){
+            presum+=arr[i];
+            if(presum==sum)res++;
+            if(m.find(presum-sum)!=m.end()){res+=m[presum-sum];}
+            m[presum]++;
+        }
+        return res;
+    }
+//Subarrays with equal 1s and 0s
+public:
+    //Function to count subarrays with 1s and 0s.
+    long long int countSubarrWithEqualZeroAndOne(int arr[], int n)
+    {
+        //Your code here
+        unordered_map<long long int,long long int> m;
+        long long int presum=0,res=0,sum=0;
+        for(int i=0;i<n;i++){
+            if(arr[i]==0)arr[i]=-1;
+            presum+=arr[i];
+            if(presum==sum)res++;
+            if(m.find(presum-sum)!=m.end()){res+=m[presum-sum];}
+            m[presum]++;
+        }
+        return res;        
+    }
+//sort an array according to the other
+public:
+    // A1[] : the input array-1
+    // N : size of the array A1[]
+    // A2[] : the input array-2
+    // M : size of the array A2[]    
+    //Function to sort an array according to the other array.
+    vector<int> sortA1ByA2(vector<int> A1, int N, vector<int> A2, int M) 
+    {
+        //Your code here
+        unordered_map<int,int> h;
+        vector<int> v;
+        for(int i=0;i<N;i++){
+            h[A1[i]]++;
+        }
+        for(int i=0;i<M;){
+            while(h[A2[i]]>0){
+                v.push_back(A2[i]);
+                h[A2[i]]--;
+            }
+            i++;
+        }
+        vector<int> res;
+        for(auto it=h.begin();it!=h.end();){
+           while((*it).second>0){
+                res.push_back((*it).first);
+                (*it).second--;
+            }
+            it++;  
+        }
+        sort(res.begin(),res.end());
+        for(int i=0;i<res.size();i++){
+            v.push_back(res[i]);
+        }
+        return v;
+    }
