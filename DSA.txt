@@ -2236,3 +2236,222 @@ public:
         }
         return v;
     }
+//Sorting Elements of an Array by Frequency
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<algorithm>
+using namespace std;
+bool comp(pair<int,int>a,pair<int,int>b){
+    if(a.second>b.second) return true;
+    else if(a.second==b.second){if(a.first<b.first) return true;else return false;}
+    else return false;
+}
+int main()
+ {
+	//code
+	int t;
+	cin>>t;
+	while(t--){
+	    int n,t;
+	    cin>>n;
+	    unordered_map<int,int> h;
+	    vector<pair<int,int>> v;
+	    for(int i=0;i<n;i++){
+	        cin>>t;
+	        h[t]++;
+	    }
+	    for(auto it:h){
+	       v.push_back({it.first,it.second});
+	    }
+	    sort(v.begin(),v.end(),comp);
+	    for(auto it:v){
+	        int temp=it.second;
+	        while(temp--)
+	         cout<<it.first<<" ";
+	    }
+	   cout<<"\n";
+	}
+	return 0;
+}
+//Longest consecutive subsequence -o(n)time&space
+public:
+    // arr[] : the input array
+    // N : size of the array arr[]
+    //Function to return length of longest subsequence of consecutive integers.
+    int findLongestConseqSubseq(int arr[], int N)
+    {
+      //Your code here
+      int count=0,maxi=INT_MIN;
+      unordered_set<int> h;
+       for(int i=0;i<N;i++){
+          h.insert(arr[i]);
+      }
+      for(int i=0;i<N;i++){
+          if(h.find(arr[i]-1)==h.end()){
+              int j=arr[i];
+              while(h.find(j+1)!=h.end()){count++;j++;}
+              count++;
+              maxi=max(count,maxi);
+          }
+          count=0;
+      }
+      if(maxi==INT_MIN) return 1;
+      return maxi;
+    }
+//Naive Pattern searching
+bool searchPattern(string str, string pat)
+{
+    // your code here
+    int len=0,cnt=0;
+    for(int i=0;i<str.length();i++){
+        len=i;
+        for(int j=0;j<pat.length()&&cnt<pat.length();j++){
+            if(str[len]==pat[j]){len++;cnt++;}
+            else {cnt=0;break;}
+        }
+        if(cnt==pat.length()) return true;
+    }
+    return false;
+}
+//Binary string (cnt of all substrings that should start and end with 1)
+public:
+    //Function to count the number of substrings that start and end with 1.
+    long binarySubstring(int n, string a){
+        
+        // Your code here
+        //m-1
+        /*long cnt=0;
+        int j=0;
+        for(int i=0;i<a.length();i++){
+            if(a[i]=='1'){
+                j=i+1;
+                while(j<a.length()){
+                    if(a[j]=='1')cnt++;
+                    j++;
+                }
+            }
+        }
+        return cnt;
+        */
+//m-2 return no of ways to form pair of 1's as count 
+      long count=0;
+      for(int i=0;i<a.length();i++){
+          if(a[i]=='1') count++;
+      }
+      return count*(count-1)/2;
+    }
+
+
+//Implement strstr
+//Function to locate the occurrence of the string x in the string s.
+int strstr(string str, string pat)
+{
+     //Your code here
+      int len=0,cnt=0;
+    for(int i=0;i<str.length();i++){
+        len=i;
+        for(int j=0;j<pat.length()&&cnt<pat.length();j++){
+            if(str[len]==pat[j]){len++;cnt++;}
+            else {cnt=0;break;}
+        }
+        if(cnt==pat.length()) return i;
+    }
+    return -1;
+}
+
+//Anagram
+public:
+    //Function is to check whether two strings are anagram of each other or not.
+    bool isAnagram(string a, string b){
+        
+        // Your code here
+        unordered_map<int,int> h;
+        if(a.length()!=b.length()) return false;
+        for(int i=0;i<a.length();i++){
+            h[a[i]]++;
+        }
+        for(int i=0;i<b.length();i++){
+            if(h.find(b[i])==h.end()) return false;
+            h[b[i]]--;
+            if(h[b[i]]<=0) h.erase(b[i]);
+        }
+        return true;
+    }
+
+//Check if string is rotated by two places
+ public:
+    //Function to check if a string can be obtained by rotating
+    //another string by exactly 2 places.
+    
+    void reverseArr(string &arr,int n, int low,int high){
+          n=arr.length();
+        while(low<high){
+        swap(arr[low],arr[high]); 
+        low++,high--;
+      }
+    }
+    //Function to rotate an array by d elements in counter-clockwise direction. 
+    string rotateArr(string &arr, int d, int n){
+        // code here
+         n=arr.length();
+        if(d>n){
+            d=d-n;
+        }
+        reverseArr(arr,n,0,d-1);
+        reverseArr(arr,n,d,(n-1));
+        reverseArr(arr,n,0,n-1);
+        return arr;
+    }
+    bool isRotated(string str1, string str2)
+    {
+        // Your code here
+        string copy=str1;
+        if(str2==rotateArr(str1,2,str1.length())) return true; //counterclockwise rotation
+        else if(str2==rotateArr(copy,str1.length()-2,str1.length())) return true;//clockwise rotation
+        else return false;
+    }
+
+//Check if strings are rotations of each other or not
+ public:
+    /*
+    //Function to check if two strings are rotations of each other or not.
+     void reverseArr(string &arr,int n, int low,int high){
+          n=arr.length();
+        while(low<high){
+        swap(arr[low],arr[high]); 
+        low++,high--;
+      }
+    }
+    //Function to rotate an array by d elements in counter-clockwise direction. 
+    string rotateArr(string &arr, int d, int n){
+        // code here
+         n=arr.length();
+        if(d>n){
+            d=d-n;
+        }
+        reverseArr(arr,n,0,d-1);
+        reverseArr(arr,n,d,(n-1));
+        reverseArr(arr,n,0,n-1);
+        return arr;
+    }
+    bool areRotations(string str1,string str2)
+    {
+        // Your code here
+        string copy1,copy2;
+        for(int i=0;i<str1.length();i++){
+        copy1=str1;
+        copy2=str1;
+        if(str2==rotateArr(copy1,i,str1.length())) return true; //counterclockwise rotation
+        else if(str2==rotateArr(copy2,str1.length()-i,str1.length())) return true;//clockwise rotation
+        }
+        return false;
+    }
+    */
+    //method2
+    bool areRotations(string str1,string str2){
+        if(str1.length()!=str2.length()) return false;
+        string r=str1+str1;
+        if(r.find(str2)!=-1) return true;
+        else return false;
+    }

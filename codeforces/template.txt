@@ -7,6 +7,6 @@ cin>>t;
 while(t--){
 
 }
-
+}
 return 0;
 }
