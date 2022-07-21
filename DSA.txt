@@ -25,6 +25,8 @@ while(a!=b){
 if(a>b) a=a-b;
 if(b>a) b=b-a;
 }
+return a;
+}
 //peak element
   public:
     int findPeak(int arr[],int n,int l,int r){
@@ -2299,6 +2301,8 @@ public:
       if(maxi==INT_MIN) return 1;
       return maxi;
     }
+
+STRINGS:
 //Naive Pattern searching
 bool searchPattern(string str, string pat)
 {
@@ -2694,4 +2698,746 @@ public:
             if(patt.find(str[i])!=string::npos) return i;
         }
         return -1;
+    }
+//Smallest window in a string containing all the characters of another string
+string Minimum_Window(string s, string t)
+{
+//sliding window -o(s) time and o(1) space.
+    int m[256] = { 0 };
+
+    // Answer
+    int ans = INT_MAX; // length of ans
+    int start = 0; // starting index of ans
+    int count = 0;
+  
+    // creating map
+    for (int i = 0; i < t.length(); i++) {
+        if (m[t[i]] == 0)
+            count++;
+        m[t[i]]++;
+    }
+
+    // References of Window
+    int i = 0;
+    int j = 0;
+
+    // Traversing the window
+    while (j < s.length()) {
+        // Calculations
+        m[s[j]]--;
+        if (m[s[j]] == 0)
+            count--;
+
+        // Condition matching
+        if (count == 0) {
+            while (count == 0) {
+                // Sorting ans
+                if (ans > j - i + 1) {
+                    ans = min(ans, j - i + 1);
+                    start = i;
+                }
+                // Sliding I
+                // Calculation for removing I
+
+                m[s[i]]++;
+                if (m[s[i]] > 0)
+                    count++;
+
+                i++;
+            }
+        }
+        j++;
+    }
+
+    if (ans != INT_MAX)
+        return s.substr(start, ans);
+    else
+        return "-1";
+}
+
+//Nth number made of prime digits
+public:
+    //Function to find nth number made of only prime digits.
+    int primeDigits(int n)
+    {
+        //code here
+        int rem=0;
+        string res="";
+        while(n){
+            rem=n%4;
+            switch(rem){
+                case 1:res.push_back('2'); break;
+                case 2: res.push_back('3');break;
+                case 3:res.push_back('5'); break;
+                case 0: res.push_back('7');break;
+            }
+            if(n%4==0) n--;
+            n=n/4;
+        }
+        reverse(res.begin(),res.end());
+        return stoi(res);
+        
+    }
+//The Modified String
+public:
+    //Function to find minimum number of characters which Ishaan must insert  
+    //such that string doesn't have three consecutive same characters.
+    int modified (string a)
+    {
+        // Your code here
+        int chars[26]={0};
+        int flag=0,res=0,pos=0,count=1;
+        string str2;
+        for(int i=1;i<a.length();i++){
+            if(a[i-1]==a[i]){
+                count++;
+                if(count==3){ 
+                res++;
+                count=1;
+                }
+            }
+            else count=1;
+        }
+        return res;
+    }
+//Case-specific Sorting of Strings
+public:
+    //Function to perform case-specific sorting of strings.
+    string caseSort(string str, int n)
+    {
+        // your code here
+        int low[26]={0},up[26]={0};
+        int l=0,u=0;
+        for(int i=0;i<str.length();i++){
+            if(int(str[i])>=65&&int(str[i])<=90) up[str[i]-'A']++;
+            else if(int(str[i])>=97&&int(str[i])<=122) low[str[i]-'a']++;
+        }
+        //string res="";
+        for(int i=0;i<str.length();i++){
+            if(int(str[i])>=65&&int(str[i])<=90){
+                while(up[u]==0){u++;}
+                str[i]=char('A'+u);
+                up[u]--;
+                if(up[u]==0) u++;
+            }
+            else if(int(str[i])>=97&&int(str[i])<=122){
+                while(low[l]==0) l++;
+                str[i]=char('a'+l);
+                low[l]--;
+                if(low[l]==0) l++;
+            }
+        }
+        return str;
+    }
+
+//Lexicographic Rank Of A String
+
+// Construct a count array where value at every index
+// contains count of smaller characters in whole string
+void populateAndIncreaseCount(int* count, string str)
+{
+	int i,MAX_CHAR=256;
+
+	for (i = 0; str[i]; ++i)
+		++count[str[i]];
+
+	for (i = 1; i < MAX_CHAR; ++i)
+		count[i] += count[i - 1];
+}
+
+// Removes a character ch from count[] array
+// constructed by populateAndIncreaseCount()
+void updatecount(int* count, char ch)
+{
+	int i,MAX_CHAR=256;;
+	for (i = ch; i < MAX_CHAR; ++i)
+		--count[i];
+}
+// A function to find rank of a string in all permutations
+// of characters
+int findRank(string str)
+{
+	int len = strlen(str);
+	int mul = fact(len);
+	int rank = 1, i,MAX_CHAR=256;;
+
+	// all elements of count[] are initialized with 0
+	int count[MAX_CHAR] = { 0 };
+
+	// Populate the count array such that count[i]
+	// contains count of characters which are present
+	// in str and are smaller than i
+	populateAndIncreaseCount(count, str);
+
+	for (i = 0; i < len; ++i) {
+		mul /= len - i;
+
+		// count number of chars smaller than str[i]
+		// from str[i+1] to str[len-1]
+		rank += count[str[i] - 1] * mul;
+
+		// Reduce count of characters greater than str[i]
+		updatecount(count, str[i]);
+	}
+
+	return rank;
+}
+
+//Rabin Karp - Pattern Searching
+ public:
+        vector <int> search(string pat, string txt)
+        {
+            //code here.
+            vector<int> res;
+            int q=INT_MAX,h=1,d=256,p=0,t=0;
+            int m=pat.length(),n=txt.length();
+            for(int i=0;i<m-1;i++){
+                h=(h*d)%q;
+            }
+            for(int i=0;i<=m-1;i++){
+                p=(p*d+pat[i])%q;
+                t=(t*d+txt[i])%q;
+            }
+            for(int i=0;i<=n-m;i++){
+               if(p==t){
+                 bool flag=true;
+                 for(int j=0;j<m;j++){
+                     if(txt[i+j]!=pat[j]){flag=false;break;}
+                 }
+                 if(flag==true) res.push_back(i+1);
+               }
+               if(i<n-m){
+                   t=(d*(t-txt[i]*h)+txt[i+m])%q;
+                   if(t<0) t=t+q;
+               }
+            }
+            if(res.size()<1) res.push_back(-1);
+            return res;
+        }
+
+// Pattern Search KMP
+// Prints occurrences of txt[] in pat[]
+// Fills lps[] for given patttern pat[0..M-1]
+void computeLPSArray(char* pat, int M, int* lps)
+{
+    // length of the previous longest prefix suffix
+    int len = 0;
+
+    lps[0] = 0; // lps[0] is always 0
+
+    // the loop calculates lps[i] for i = 1 to M-1
+    int i = 1;
+    while (i < M) {
+        if (pat[i] == pat[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        }
+        else // (pat[i] != pat[len])
+        {
+            // This is tricky. Consider the example.
+            // AAACAAAA and i = 7. The idea is similar
+            // to search step.
+            if (len != 0) {
+                len = lps[len - 1];
+
+                // Also, note that we do not increment
+                // i here
+            }
+            else // if (len == 0)
+            {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+void KMPSearch(char* pat, char* txt)
+{
+    int M = strlen(pat);
+    int N = strlen(txt);
+
+    // create lps[] that will hold the longest prefix suffix
+    // values for pattern
+    int lps[M];
+
+    // Preprocess the pattern (calculate lps[] array)
+    computeLPSArray(pat, M, lps);
+
+    int i = 0; // index for txt[]
+    int j = 0; // index for pat[]
+    while (i < N) {
+        if (pat[j] == txt[i]) {
+            j++;
+            i++;
+        }
+
+        if (j == M) {
+            printf("Found pattern at index %d ", i - j);
+            j = lps[j - 1];
+        }
+
+        // mismatch after j matches
+        else if (i < N && pat[j] != txt[i]) {
+            // Do not match lps[0..lps[j-1]] characters,
+            // they will match anyway
+            if (j != 0)
+                j = lps[j - 1];
+            else
+                i = i + 1;
+        }
+    }
+}
+//Check if a String is Subsequence of Other
+public:
+    bool isSubSequence(string A, string B) 
+    {
+        // code here
+        if(A.length()>B.length()) return false;
+        int i=0,j=0;
+        while(j<B.length()&&i<A.length()){
+            if(A[i]==B[j]){i++,j++;}
+            else j++;
+        }
+        if(i==A.length()) return true;
+        else return false;
+    }
+
+
+LINKEDLISTS:
+//01.Count nodes of linked list
+//public:
+    //Function to count nodes of a linked list.
+    int getCount(struct Node* head){
+    
+        //Code here
+        if(head==NULL) return 0;
+        Node *p=head;
+        int count=0;
+        while(p!=NULL&&p->next!=NULL){
+            count++;
+            p=p->next;
+        }
+    return count+1;
+    }
+
+//02.Linked List Insertion
+ public:
+    //Function to insert a node at the beginning of the linked list.
+    Node *insertAtBegining(Node *head, int x) {
+       // Your code here
+       if(head==NULL){head=new Node(x);return head;}
+       Node *n=new Node(x);
+       n->next=head;
+       return n;
+       
+    }  
+    //Function to insert a node at the end of the linked list.
+    Node *insertAtEnd(Node *head, int x)  {
+       // Your code here
+       if(head==NULL){head=new Node(x);return head;}
+       Node *n=new Node(x);
+       Node *t=head;
+       while(t->next!=NULL) t=t->next;
+       t->next=n;
+       return head;
+    }
+
+//03.Doubly linked list Insertion at given position
+void addNode(Node *head, int pos, int x)
+{
+   // Your code here
+   int count=0;
+   Node *n=new Node(x);
+   Node * t=head;
+   while(count!=pos){
+       t=t->next;
+       count++;
+   }
+   if(t->next==NULL){t->next=n;n->prev=t; return;}
+   n->next=t->next;
+   n->prev=t;
+   t->next=n;
+   n->next->prev=n;
+   return;
+   
+}
+//04.Insert in Middle of Linked List
+//Function to insert a node in the middle of the linked list.
+Node* insertInMiddle(Node* head, int x)
+{
+	// Code here
+	Node * slow=NULL;
+	Node * fast=NULL;
+	Node * n=new Node(x);
+	if(head==NULL){head=n; return head;}
+	slow=head;
+	fast=head;
+	while(fast!=NULL&&fast->next!=NULL&&fast->next->next!=NULL){
+	    slow=slow->next;
+	    fast=fast->next->next;
+	}
+	n->next=slow->next;
+   	slow->next=n; 
+	return head;
+}
+
+//05.Identical Linked Lists
+//Function to check whether two linked lists are identical or not. 
+bool areIdentical(struct Node *head1, struct Node *head2)
+{
+    // Code here
+    Node *h1=head1;
+    Node *h2=head2;
+    while(h1!=NULL&&h2!=NULL&&h1->data==h2->data){
+        h1=h1->next;
+        h2=h2->next;
+    }
+    if(h1==NULL&&h2==NULL) return true;
+    else return false;    
+}
+
+//06.Delete without head pointer
+ public:
+    //Function to delete a node without any reference to head pointer.
+    void deleteNode(Node *del)
+    {
+       // Your code here
+       del->data=del->next->data;
+       Node *t=del->next;
+       del->next=del->next->next;
+       t->next=NULL;
+       delete t;
+    }
+//07. Remove duplicate element from sorted Linked List
+//Function to remove duplicates from sorted linked list.
+Node *removeDuplicates(Node *head)
+{
+ // your code goes here
+ Node *t=head;
+ Node *q=head;
+ while(t!=NULL&&t->next!=NULL){
+     if(t->next!=NULL&&t->data!=t->next->data){t=t->next;}
+     else if(t->next!=NULL&&t->data==t->next->data){
+         q=t->next;
+         t->next=t->next->next;
+         q->next=NULL;
+         delete q;
+     }
+ }
+ return head;
+}
+
+//08.Remove duplicates from an unsorted linked list
+public:
+    //Function to remove duplicates from unsorted linked list.
+    Node * removeDuplicates( Node *head) 
+    {
+     // your code goes here
+     unordered_set<int> h;
+     Node * curr=head;
+     Node * prev=NULL;
+     while(curr!=NULL){
+         if(h.find(curr->data)!=h.end()){prev->next=curr->next;delete curr;}
+         else{ 
+             h.insert(curr->data);
+             prev=curr;
+         }
+         curr=prev->next;
+     }
+     return head;
+    }
+//09.Merge two sorted linked lists
+//Function to merge two sorted linked list.
+Node* sortedMerge(Node* head1, Node* head2)  
+{  
+    // code here
+    if(head1==NULL)return head2;
+    if(head2==NULL)return head1;
+    Node *head=NULL;
+    Node *tail=NULL;
+    if(head1->data<=head2->data){
+        head=tail=head1;
+        head1=head1->next;
+    }
+    else {
+        head=tail=head2;
+        head2=head2->next;
+    }
+    while(head1!=NULL&&head2!=NULL){
+        if(head1->data<=head2->data){
+            tail->next=head1;
+            tail=head1;
+            head1=head1->next;
+        }
+        else{
+            tail->next=head2;
+            tail=head2;
+            head2=head2->next;
+        }
+    }
+    if(head1==NULL){
+        tail->next=head2;
+    }else{
+        tail->next=head1;
+    }
+    return head;    
+}  
+//10.Nth node from end of linked list
+//Function to find the data of nth node from the end of a linked list.
+int getNthFromLast(Node *head, int n)
+{
+       // Your code here
+       if(head==NULL||n<=0)return -1;
+       Node *first=head;
+       Node *second=head;
+       for(int i=1;i<=n;i++){
+           if(first==NULL) return -1;
+           first=first->next;
+       }
+       while(first!=NULL){
+           first=first->next;
+           second=second->next;
+       }
+       return second->data;    
+}
+//11.Swap Kth nodes from ends
+Node *swapkthnode(Node* head, int num, int K)
+{
+ // Count nodes in linked list
+	int n = num,k=K;        
+	// Check if k is valid
+	if (n < k)
+		return head;
+	// If x (kth node from start) and y(kth node from end)
+	// are same
+	if (2 * k - 1 == n)
+		return head;
+	// Find the kth node from the beginning of the linked
+	// list. We also find previous of kth node because we
+	// need to update next pointer of the previous.
+	Node* x = head;
+	Node* x_prev = NULL;
+	for (int i = 1; i < k; i++) {
+		x_prev = x;
+		x = x->next;
+	}
+	// Similarly, find the kth node from end and its
+	// previous. kth node from end is (n-k+1)th node from
+	// beginning
+	Node* y = head;
+	Node* y_prev = NULL;
+	for (int i = 1; i < n - k + 1; i++) {
+		y_prev = y;
+		y = y->next;
+	}
+	// If x_prev exists, then new next of it will be y.
+	// Consider the case when y->next is x, in this case,
+	// x_prev and y are same. So the statement "x_prev->next
+	// = y" creates a self loop. This self loop will be
+	// broken when we change y->next.
+	if (x_prev)
+		x_prev->next = y;
+	// Same thing applies to y_prev
+	if (y_prev)
+		y_prev->next = x;
+	// Swap next pointers of x and y. These statements also
+	// break self loop if x->next is y or y->next is x
+	Node* temp = x->next;
+	x->next = y->next;
+	y->next = temp;
+	// Change head pointers when k is 1 or n
+	if (k == 1)
+		head = y;
+	if (k == n)
+		head = x;
+	return head;
+}
+//12.Reverse a linked list
+public:
+    //Function to reverse a linked list.
+    struct Node* reverseList(struct Node *head)
+    {
+        // code here
+        // return head of reversed list
+        if(head==NULL)return head;
+        Node *curr=head;
+        Node *prev=NULL;
+        Node *next=head->next;
+        while(curr->next!=NULL){
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            next=next->next;
+        }
+        curr->next=prev;
+        head=curr;
+        return head;
+    }
+//13.Detect Loop in linked list
+public:
+    //Function to check if the linked list has a loop.
+    bool detectLoop(Node* head)
+    {
+        // your code here
+        if(head==NULL)return false;
+        Node *next=NULL;
+        Node *temp=new Node(10);//dummy node;
+        Node *curr=head;
+        while(curr!=NULL){
+            if(curr->next==NULL)return false;
+            next=curr->next;
+            if(curr->next==temp)return true;
+            else  curr->next=temp;
+            curr=next;
+        }
+
+    }
+//14.Find length of Loop
+//Function to find the length of a loop in the linked list.
+int countNodesinLoop(struct Node *head)
+{
+    // Code here
+    if(head==NULL)return 0;
+    Node *fast=head,*slow=head;
+    while(slow!=NULL&&fast!=NULL&&fast->next!=NULL){//floyd cycle detec == slow,fast pointer concept
+        fast=fast->next->next;
+        slow=slow->next;
+        if(slow==fast){//here both pointers doesn't meet at start of loop but meet at any node in loop and then to find length of loop we count until that nodes comes again
+            int count=1;
+            Node *temp=slow;
+            while(temp->next!=slow){
+                count++;
+                temp=temp->next;
+            }
+            return count;
+        }
+    }
+    return 0;
+}
+//15.Remove loop in Linked List
+int detectAndRemoveLoop(struct Node* list)
+{
+    struct Node *slow_p = list, *fast_p = list;
+
+    // Iterate and find if loop exists or not
+    while (slow_p && fast_p && fast_p->next) {
+        slow_p = slow_p->next;
+        fast_p = fast_p->next->next;
+
+        /* If slow_p and fast_p meet at some point then there
+           is a loop */
+        if (slow_p == fast_p) {
+            removeLoop(slow_p, list);
+
+            /* Return 1 to indicate that loop is found */
+            return 1;
+        }
+    }
+
+    /* Return 0 to indicate that there is no loop*/
+    return 0;
+}
+
+/* Function to remove loop.
+ loop_node --> Pointer to one of the loop nodes
+ head -->  Pointer to the start node of the linked list */
+void removeLoop(struct Node* loop_node, struct Node* head)
+{
+    struct Node* ptr1 = loop_node;
+    struct Node* ptr2 = loop_node;
+
+    // Count the number of nodes in loop
+    unsigned int k = 1, i;
+    while (ptr1->next != ptr2) {
+        ptr1 = ptr1->next;
+        k++;
+    }
+
+    // Fix one pointer to head
+    ptr1 = head;
+
+    // And the other pointer to k nodes after head
+    ptr2 = head;
+    for (i = 0; i < k; i++)
+        ptr2 = ptr2->next;
+
+    /*  Move both pointers at the same pace,
+      they will meet at loop starting node */
+    while (ptr2 != ptr1) {
+        ptr1 = ptr1->next;
+        ptr2 = ptr2->next;
+    }
+
+    // Get pointer to the last node
+    while (ptr2->next != ptr1)
+        ptr2 = ptr2->next;
+
+    /* Set the next node of the loop ending node
+      to fix the loop */
+    ptr2->next = NULL;
+}
+
+//16.Rotate a Linked List
+public:
+    //Function to rotate a linked list.
+    Node* rotate(Node* head, int k)
+    {
+        // Your code here
+        Node *t=head,*n=head;
+        while(t!=NULL&&k>1){
+            t=t->next;
+            n=t;
+            k--;
+        }
+        if(t==NULL)return head;
+        while(n!=NULL&&n->next!=NULL){
+            n=n->next;
+        }
+        n->next=head;
+        head=t->next;
+        t->next=NULL;
+        return head;
+    }
+//17.Add two numbers represented by linked lists
+ public:
+    struct Node* addAtBegin(struct Node * head,int x){
+        if(head==NULL){Node *n=new Node(x);head=n;return head;}
+        Node *n=new Node(x);
+        n->next=head;
+        return n;
+    }
+    struct Node* reverseLL(struct Node* head){
+        if(head==NULL)return head;
+        Node *curr=head;
+        Node *prev=NULL;
+        Node *next=head->next;
+        while(curr->next!=NULL){
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            next=next->next;
+        }
+        curr->next=prev;
+        head=curr;
+        return head;
+    }
+    //Function to add two numbers represented by linked list.
+    struct Node* addTwoLists(struct Node* first, struct Node* second)
+    {
+        // code here
+        Node *ans=NULL;
+        first=reverseLL(first);
+        second=reverseLL(second);
+        int carry=0;
+        while(first!=NULL||second!=NULL||carry==1){
+            int newVal=carry;
+            if(first!=NULL){newVal+=first->data;first=first->next;}
+            if(second!=NULL){newVal+=second->data;second=second->next;}
+            carry=newVal/10;
+            newVal=newVal%10;
+            ans=addAtBegin(ans,newVal);
+        }
+        return ans;
     }
