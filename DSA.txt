@@ -3441,3 +3441,229 @@ public:
         }
         return ans;
     }
+
+//18.Pairwise swap of nodes in LinkeList
+public:
+    Node* pairWiseSwap(struct Node* head) 
+    {
+        // The task is to complete this method
+        if(head==NULL||head->next==NULL)return head;
+        Node *prev=head,*curr=head->next,*last=NULL;
+        head=head->next;
+        while(prev!=NULL&&prev->next!=NULL&&curr!=NULL){
+            prev->next=curr->next;
+            curr->next=prev;
+            if(last!=NULL)last->next=curr;
+            last=prev;
+            prev=prev->next;
+            if(prev!=NULL&&prev->next!=NULL) curr=prev->next;            
+        }
+        return head;
+    }
+
+//19.Check if Linked List is Palindrome
+public:
+    struct Node* reverseLL(struct Node* head){
+        if(head==NULL)return head;
+        Node *curr=head;
+        Node *prev=NULL;
+        Node *next=head->next;
+        while(curr->next!=NULL){
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            next=next->next;
+        }
+        curr->next=prev;
+        head=curr;
+        return head;
+    }
+    //Function to check whether the list is palindrome.
+    bool isPalindrome(Node *head)
+    {
+        //Your code here
+        if(head==NULL) return false;
+        Node *slow=head,*fast=head;
+        while(fast!=NULL&&fast->next!=NULL&&fast->next->next!=NULL){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        if(fast->next==NULL){//odd length
+            slow->next=reverseLL(slow->next);
+            Node * rev=slow->next;
+            fast=head;
+            while(fast!=slow){
+                if(fast->data!=rev->data) return false;
+                fast=fast->next;rev=rev->next;
+            }
+        }
+        else {//even length
+            slow->next=reverseLL(slow->next);
+            Node * rev=slow->next;
+            fast=head;
+            while(fast!=slow->next){
+                if(fast->data!=rev->data) return false;
+                fast=fast->next;rev=rev->next;
+            }
+        }
+        return true;
+    }
+//20.Merge Sort for Linked List
+/*
+Merge sort is often preferred for sorting a linked list. The slow random-access performance of a linked list makes some other algorithms (such as quicksort) perform poorly, and others (such as heapsort) completely impossible.
+*/
+public:
+    Node* findMid(Node* head){
+        if(head==NULL) return head;
+        Node *slow=head,*fast=head;
+        while(fast!=NULL&&fast->next!=NULL&&fast->next->next!=NULL){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        return slow;
+    }
+    Node* merge(Node* l1,Node* l2){
+        if(l1==NULL) return l2;
+        if(l2==NULL)return l1;
+        Node *head=NULL,*tail=NULL;
+        if(l1->data<=l2->data){head=tail=l1;l1=l1->next;}
+        else {head=tail=l2;l2=l2->next;}
+        while(l1!=NULL&&l2!=NULL){
+            if(l1->data<=l2->data){tail->next=l1;tail=l1;l1=l1->next;}
+            else if(l1->data>l2->data){tail->next=l2;tail=l2;l2=l2->next;}
+        }
+        if(l1==NULL&&l2!=NULL){tail->next=l2;}
+        if(l1!=NULL&&l2==NULL){tail->next=l1;}
+        return head;
+    }
+    //Function to sort the given linked list using Merge Sort.
+    Node* mergeSort(Node* head) {
+        // your code here
+        if(head==NULL) return head;
+        if(head->next==NULL) return head;
+        Node * mid=findMid(head);
+        Node *head2=mid->next;
+        mid->next=NULL;
+        Node *l1= mergeSort(head);
+        Node *l2= mergeSort(head2);
+        head=merge(l1,l2);
+        return head;
+    }
+//21.Given a linked list of 0s, 1s and 2s, sort it.
+  public:
+    //Function to sort a linked list of 0s, 1s and 2s.
+    Node* segregate(Node *head) {
+        
+        // Add code here
+        if(head==NULL) return NULL;
+        Node *zero=NULL,*one=NULL,*t=head,*two=NULL,*z=NULL,*to=NULL,*o=NULL;
+        while(t!=NULL){
+            if(t->data==0){if(zero==NULL){z=zero=t;}else{zero->next=t;zero=t;} t=zero->next;zero->next=NULL;}
+            else if(t->data==2){if(two==NULL){to=two=t;}else{two->next=t;two=t;} t=two->next;two->next=NULL;}
+            else if(t->data==1){if(one==NULL){o=one=t;}else{one->next=t;one=t;} t=one->next;one->next=NULL;}
+            
+        }
+        if(z!=NULL) head=z; else if(o!=NULL) head=o;else if(to!=NULL) head=to;
+        if(zero!=NULL){if(o!=NULL)zero->next=o; else if(to!= NULL) zero->next=to; else zero->next=NULL;}
+        if(one!=NULL){ if(to!=NULL)one->next=to;else one->next=NULL;}
+        if(two!=NULL) two->next=NULL;
+        return head;
+    }
+//22.Merge Sort on Doubly Linked List
+Node *findMidDoubly(Node* head){
+    if(head==NULL){return head;}
+    Node *slow=head,*fast=head;
+    while(fast!=NULL&&fast->next!=NULL&&fast->next->next!=NULL){
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    return slow;
+    
+}
+Node *mergeDoubly(Node* l1,Node* l2){
+    if(l1==NULL) return l2;
+    if(l2==NULL) return l1;
+    Node *head=NULL,*tail=NULL;
+    if(l1->data<=l2->data){head=tail=l1;l1->prev=NULL;l1=l1->next;}
+    else if(l1->data>l2->data){head=tail=l2;l2->prev=NULL;l2=l2->next;}
+    while(l1!=NULL&&l2!=NULL){
+        if(l1->data<=l2->data){tail->next=l1;l1->prev=tail;tail=l1;l1=l1->next;}
+        else if(l1->data>l2->data){tail->next=l2;l2->prev=tail;tail=l2;l2=l2->next;}
+    }
+    if(l1!=NULL&&l2==NULL){tail->next=l1;l1->prev=tail;}
+    if(l1==NULL&&l2!=NULL){tail->next=l2;l2->prev=tail;}
+    return head;
+}
+//Function to sort the given doubly linked list using Merge Sort.
+struct Node *sortDoubly(struct Node *head)
+{
+	// Your code here
+	if(head==NULL||head->next==NULL)return head;
+	Node *mid=findMidDoubly(head);
+	Node *head2=mid->next;
+	mid->next=NULL;
+	head2->prev=NULL;
+	Node *l1=sortDoubly(head);
+	Node *l2=sortDoubly(head2);
+	head=mergeDoubly(l1,l2);
+	return head;
+} 
+//23.Merge K sorted linked lists
+ public:
+    Node* merge(Node* l1,Node* l2){
+        if(l1==NULL) return l2;
+        if(l2==NULL)return l1;
+        Node *head=NULL,*tail=NULL;
+        if(l1->data<=l2->data){head=tail=l1;l1=l1->next;}
+        else {head=tail=l2;l2=l2->next;}
+        while(l1!=NULL&&l2!=NULL){
+            if(l1->data<=l2->data){tail->next=l1;tail=l1;l1=l1->next;}
+            else if(l1->data>l2->data){tail->next=l2;tail=l2;l2=l2->next;}
+        }
+        if(l1==NULL&&l2!=NULL){tail->next=l2;}
+        if(l1!=NULL&&l2==NULL){tail->next=l1;}
+        return head;
+    }
+    //Function to merge K sorted linked list.
+    Node * mergeKLists(Node *arr[], int K)
+    {
+           // Your code here
+           int i=0,j;
+           if(K>1) j=1;
+           else return arr[0];
+           while(j<K){
+               arr[i]=merge(arr[i],arr[j]);
+               j++;
+           }
+           return arr[0];
+    }
+//24.Intersection Point in Y Shapped Linked Lists
+//Function to find intersection point in Y shaped Linked Lists.
+int intersectPoint(Node* head1, Node* head2)
+{
+    // Your Code Here
+    Node *t=head1,*p=NULL;
+    int c1=0,c2=0;
+    while(t!=NULL){
+        t=t->next;
+        c1++;
+    }
+    t=head2;
+    while(t!=NULL){
+        t=t->next;
+        c2++;
+    }
+    int extra=abs(c1-c2);
+    if(c1>=c2){t=head1;p=head2;}
+    else{t=head2;p=head1;}
+    while(extra>0){
+        t=t->next;
+        extra--;
+    }
+    while(t!=NULL&&p!=NULL&&t!=p){
+       t=t->next;p=p->next; 
+    }
+    if(t!=NULL&&p!=NULL) return t->data;
+    else return -1;    
+}
+//25.
