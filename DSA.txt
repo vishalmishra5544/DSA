@@ -3666,4 +3666,165 @@ int intersectPoint(Node* head1, Node* head2)
     if(t!=NULL&&p!=NULL) return t->data;
     else return -1;    
 }
-//25.
+//25.Clone a linked list with next and random pointer
+public:
+    Node *copyList(Node *head)
+    {
+        //Write your code here
+        Node *h=NULL,*p=head,*n=NULL;
+        while(p!=NULL){//add duplicate nodes to every original node
+            n=new Node(p->data);
+            n->next=p->next;
+            p->next=n;
+            p=p->next->next;
+        }
+        p=head;
+        while(p!=NULL&&p->next!=NULL){//position arb of duplicates
+          p->next->arb=(p->arb!=NULL)?(p->arb->next):NULL;
+          p=p->next->next;
+        }
+        p=head;
+        h=p->next;
+        n=p->next;
+        while(p!=NULL&&n!=NULL){//seperate duplicate list & original list
+            p->next=(p->next!=NULL)?p->next->next:NULL;
+            n->next=(n->next!=NULL)?n->next->next:NULL;
+            p=p->next;
+            n=n->next;
+        }
+        return h;
+    }
+//26.LRU Cache
+//--later--\\
+
+STACK:
+//01.Implement stack using array
+//Function to push an integer into the stack.
+void MyStack :: push(int x)
+{
+    // Your Code
+    if(top>=999)return;
+    else top++;
+    arr[top]=x;
+    return;
+    
+}
+
+//Function to remove an item from top of the stack.
+int MyStack :: pop()
+{
+    // Your Code
+    if(top<0)return -1;
+    int res=arr[top];
+    top--;
+    return res;
+}
+//02.Implement Stack using Linked List
+//Function to push an integer into the stack.
+//trick is linked list grows like stack and not like normal way (one after another node)
+void MyStack ::push(int x) 
+{
+    // Your code
+    StackNode *n=new StackNode(x);
+    if(top==NULL){top=n;n=NULL;delete n;}
+    else{n->next=top;top=n;}
+    return;
+    
+}
+
+//Function to remove an item from top of the stack.
+int MyStack ::pop() 
+{
+    // Your Code
+    if(top==NULL)return -1;
+    StackNode *t=top;
+    int res=t->data;
+    top=top->next;
+    delete t;
+    return res;
+}
+//03.Operations on Stack
+//IT IS JAVA BASED QUESTION
+// Function to insert element to stack
+    public static void insert(Stack<Integer> st, int x)
+    {
+        // Your code here
+        st.push(x);        
+    }
+    
+    // Function to pop element from stack
+    public static void remove(Stack<Integer> st)
+    {
+        int x =st.pop(); // Your code here        
+    }
+    
+    // Function to return top of stack
+    public static void headOf_Stack(Stack<Integer> st)
+    {
+        int x =st.peek(); // Your code here
+        System.out.println(x + " ");
+    }
+    
+    // Function to find the element in stack
+    public static void find(Stack<Integer> st, int val)
+    {    
+        if(/*Your code here*/st.contains(val)){
+            System.out.println("Yes");
+        }
+        else{
+            System.out.println("No");
+        }        
+    }
+//06.Parenthesis Checker
+public:
+    //Function to check if brackets are balanced or not.
+    bool ispar(string x)
+    {
+        // Your code here
+        if(x.length()%2!=0) return false;
+        stack<char> st;
+        for(int i=0;i<x.length();i++){
+            if(x[i]=='{'||x[i]=='['||x[i]=='('){st.push(x[i]);}
+            else if(st.empty()==true&&(x[i]=='}'||x[i]==']'||x[i]==')')){return false;}
+            else if(x[i]=='}'){if(st.top()!='{') return false; else st.pop();}
+            else if(x[i]==']'){if(st.top()!='[') return false; else st.pop();}
+            else if(x[i]==')'){if(st.top()!='(') return false; else st.pop();}
+        }
+        if(st.empty()==true) return true;
+        else return false;
+    }
+//07.Implement two stacks in an array
+//Function to push an integer into the stack1.
+void twoStacks :: push1(int x)
+{
+ if(top1+1==top2)return;
+ top1++;
+ arr[top1]=x;
+}
+   
+//Function to push an integer into the stack2.
+void twoStacks ::push2(int x)
+{
+ if(top1+1==top2) return;
+ top2--;
+ arr[top2]=x;
+}
+   
+//Function to remove an element from top of the stack1.
+int twoStacks ::pop1()
+{
+  if(top1==-1)return -1;
+  int res=arr[top1];
+  top1--;
+  return res;
+}
+
+//Function to remove an element from top of the stack2.
+int twoStacks :: pop2()
+{
+  if(top2==size) return -1;
+  int res=arr[top2];
+  top2++;
+  return res;
+}
+//08.Get min at pop
