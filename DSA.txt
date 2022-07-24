@@ -3828,3 +3828,45 @@ int twoStacks :: pop2()
   return res;
 }
 //08.Get min at pop
+//Function to push all the elements into the stack.
+stack<int> _push(int arr[],int n)
+{  //put all min in stack
+   // your code here
+   stack<int> res;
+   int mini=INT_MAX;
+   for(int i=0;i<n;i++){
+       mini=min(mini,arr[i]);
+       res.push(mini);
+   }
+   return res;
+}
+
+//Function to print minimum value in stack each time while popping.
+void _getMinAtPop(stack<int>s)
+{   //pop items in stack,stack contains all min
+    // your code here
+    while(s.size()>0){
+        cout<<s.top()<<" ";
+        s.pop();
+    }  
+}
+//09.Delete middle element of a stack
+public:
+    //Function to delete middle element of a stack.
+    void deleteFun(stack<int>&st,int sizeOfStack,int count){
+        if(count<=0){st.pop(); return;}
+        int temp=st.top();
+        st.pop();
+        count--;
+        deleteFun(st, sizeOfStack-1,count);
+        st.push(temp);
+        return;
+    }
+    void deleteMid(stack<int>&st, int sizeOfStack)
+    {
+        // code here..
+        if(sizeOfStack<=0) return;
+        int count=(sizeOfStack%2!=0)?(sizeOfStack-(ceil(sizeOfStack+1)/2)):(sizeOfStack-(ceil(sizeOfStack)/2));
+        deleteFun(st,sizeOfStack,count);
+        return;
+    }
