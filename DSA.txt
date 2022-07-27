@@ -3870,3 +3870,449 @@ public:
         deleteFun(st,sizeOfStack,count);
         return;
     }
+//10.Infix to Postfix
+ int prec(char c){
+       if(c=='^'){return 3;}
+       else if(c=='/'||c=='*'){return 2;}
+       else if(c=='+'||c=='-'){return 1;}
+       else{return -1;}
+   }
+   string infixToPostfix(string s) {
+       // Your code here
+       stack<char> st;
+       string ans;
+       for(int i=0;i<s.length();i++){
+           if(s[i]>='a' && s[i]<='z' || s[i]>='A' && s[i]<='Z'){
+               ans+=s[i]; //add the character by concatenation
+           }
+           else if(s[i]=='('){
+               st.push(s[i]);
+           }
+           else if(s[i]==')'){
+               while(st.top()!='('){
+                   ans+=st.top();
+                   st.pop();
+               }
+               st.pop();
+           }
+           else{
+               while(!st.empty() && prec(s[i])<=prec(st.top())){
+                   ans+=st.top();
+                   st.pop();
+               }
+               st.push(s[i]);
+           }
+       }
+       while(!st.empty()){
+           ans+=st.top();
+           st.pop();
+       }
+       return ans;
+   }
+//11.Evaluation of Postfix Expression
+ public:
+    int calc(int a,int b,char c){
+        if(c=='/') return a/b;
+        else if(c=='*') return a*b;
+        else if(c=='+') return a+b;
+        else if(c=='-') return a-b;
+        else if(c=='^') return pow(a,b);
+    }
+    //Function to evaluate a postfix expression.
+    int evaluatePostfix(string S)
+    {
+        // Your code here
+        stack<int > st;
+        int res=0;
+        for(int i=0;i<S.length();i++){
+            res=0;
+            char c=S[i];
+            if(c=='/'||c=='*'||c=='+'||c=='-'||c=='^'){
+                int op1=st.top();st.pop();int op2=st.top();st.pop();
+                res=calc(op2,op1,c);
+                st.push(res);
+            }
+            else {st.push(int(c-48));}
+        }
+        res=st.top();
+        st.pop();
+        return res;
+    }
+//12.Stock span problem
+void calculateSpan(int price[], int n, int S[])
+{
+    // Create a stack and push index of first
+    // element to it
+    stack<int> st;
+    st.push(0);
+
+    // Span value of first element is always 1
+    S[0] = 1;
+
+    // Calculate span values for rest of the elements
+    for (int i = 1; i < n; i++) {
+        // Pop elements from stack while stack is not
+        // empty and top of stack is smaller than
+      // price[i]
+        while (!st.empty() && price[st.top()] <= price[i])
+            st.pop();
+
+        // If stack becomes empty, then price[i] is
+        // greater than all elements on left of it,
+        // i.e., price[0], price[1], ..price[i-1].  Else
+        // price[i] is greater than elements after
+        // top of stack
+        S[i] = (st.empty()) ? (i + 1) : (i - st.top());
+
+        // Push this element to stack
+        st.push(i);
+    }
+}
+//13.Next Greater Element
+public:
+    void reverse(vector<long long> &res){
+        int i=0,j=res.size()-1;
+        while(i<j){
+            swap(res[i],res[j]);
+            i++;j--;
+        }
+    }
+    //Function to find the next greater element for each element of the array.
+    vector<long long> nextLargerElement(vector<long long> arr, int n){
+        // Your code here
+        vector<long long> res;
+        res.push_back(-1);
+        stack<int> st;
+        st.push(n-1);
+        long long int nextgreater;
+        for(int i=n-2;i>=0;i--){
+            while(st.empty()!=true&&arr[i]>=arr[st.top()]){
+                st.pop();
+            }
+            nextgreater=(st.empty()==true)?(-1):arr[st.top()];
+            res.push_back(nextgreater);
+            st.push(i);
+        }
+        reverse(res);
+        return res;
+    }
+//14.Maximum Rectangular Area in a Histogram
+public:
+    vector<int> nextSmaller(long long int arr[],int n){
+        stack<int> st;
+        st.push(-1);
+        vector<int > res(n);
+        for(int i=n-1;i>=0;i--){
+            int curr=arr[i];
+            while(st.top()!=-1&&curr<=arr[st.top()]){st.pop();}
+            res[i]=st.top();
+            st.push(i);
+        }
+        return res;
+    }
+     vector<int> prevSmaller(long long int arr[],int n){
+        stack<int> st;
+        st.push(-1);
+        vector<int > res(n);
+        for(int i=0;i<n;i++){
+            int curr=arr[i];
+            while(st.top()!=-1&&curr<=arr[st.top()]){st.pop();}
+            res[i]=st.top();
+            st.push(i);
+        }
+        return res;
+    }
+    //Function to find largest rectangular area possible in a given histogram.
+    long long getMaxArea(long long arr[], int n)
+    {
+        // Your code here
+        vector<int> next,prev;
+        next=nextSmaller(arr,n);
+        prev=prevSmaller(arr,n);
+        long long int length,area,height,res=INT_MIN,right;
+        for(int i=0;i<n;i++){
+            if(next[i]==-1){right=n;}
+            else right=next[i];
+            length=right-prev[i]-1;//when prev[i] is -1 then it is handled implicitly eg 6,2 prev =-1,-1 next=1,-1 so for element 2 right=2 as it is -1 so len=2-(-1)-1==2 ,hei=2,area=4;
+            height=arr[i];
+            area=length*height;
+            res=max(res,area);
+        }
+        return res;
+    }
+//15.The Celebrity Problem
+public:
+    //Function to find if there is a celebrity in the party or not.
+    int celebrity(vector<vector<int> >& M, int n) 
+    {
+        // code here 
+        stack<int> st;
+        for(int i=0;i<n;i++){//push all indexes (id)
+            st.push(i);            
+        }
+        while(st.size()>1){//pick top 2 ele and check if a knows b--> b is possible candidate and a is not a celebrity else vice versa
+            int a=st.top();st.pop();
+            int b=st.top();st.pop();
+            if(M[a][b]==1) st.push(b);
+            else st.push(a);
+        }
+        int rem=st.top();//possible candidate
+        for(int i=0;i<n;i++){//check rem's column
+            if(M[rem][i]==1) return -1;
+        }
+        for(int i=0;i<n;i++){//check other's acquaintance with rem
+            if(M[i][rem]!=1&&i!=rem)return -1;
+        }
+        return rem;
+    }
+//16.Maximum of minimum for every window size
+void printMaxOfMin(int arr[], int n)
+{
+// Used to find previous and next smaller
+    stack<int> s; 
+
+    // Arrays to store previous and next smaller
+    int left[n+1];  
+    int right[n+1]; 
+
+    // Initialize elements of left[] and right[]
+    for (int i=0; i<n; i++)
+    {
+        left[i] = -1;
+        right[i] = n;
+    }
+
+    // Fill elements of left[] using logic discussed on
+    // https://www.cdn.geeksforgeeks.org/next-greater-element/
+    for (int i=0; i<n; i++)
+    {
+        while (!s.empty() && arr[s.top()] >= arr[i])
+            s.pop();
+
+        if (!s.empty())
+            left[i] = s.top();
+
+        s.push(i);
+    }
+
+    // Empty the stack as stack is 
+// going to be used for right[]
+    while (!s.empty())
+        s.pop();
+// Fill elements of right[] using same logic
+    for (int i = n-1 ; i>=0 ; i-- )
+    {
+        while (!s.empty() && arr[s.top()] >= arr[i])
+            s.pop();
+
+        if(!s.empty())
+            right[i] = s.top();
+
+        s.push(i);
+    }
+
+    // Create and initialize answer array
+    int ans[n+1];
+    for (int i=0; i<=n; i++)
+        ans[i] = 0;
+
+    // Fill answer array by comparing minimums of all
+    // lengths computed using left[] and right[]
+    for (int i=0; i<n; i++)
+    {
+        // length of the interval
+        int len = right[i] - left[i] - 1;
+
+        // arr[i] is a possible answer for this length 
+        // 'len' interval, check if arr[i] is more than
+        // max for 'len'
+        ans[len] = max(ans[len], arr[i]);
+    }
+
+    // Some entries in ans[] may not be filled yet. Fill 
+    // them by taking values from right side of ans[]
+    for (int i=n-1; i>=1; i--)
+        ans[i] = max(ans[i], ans[i+1]);
+
+    // Print the result
+    for (int i=1; i<=n; i++)
+        cout << ans[i] << " ";
+}
+
+QUEUE:
+//01.Implement Queue using array
+/* 
+
+The structure of the class is
+class MyQueue {
+private:
+    int arr[100005];
+    int front;
+    int rear;
+
+public :
+    MyQueue(){front=0;rear=0;}
+    void push(int);
+    int pop();
+};
+ */
+
+//Function to push an element x in a queue.
+void MyQueue :: push(int x)
+{
+        // Your Code
+        if(rear>=100005)return;
+        arr[rear]=x;
+        rear++;
+        return;
+}
+
+//Function to pop an element from queue and return that element.
+int MyQueue :: pop()
+{
+        // Your Code
+        if(front==rear)return -1;
+        int res=arr[front];
+        front++;
+        return res;
+        
+}
+//02.Operations on Queue
+public:
+    // Function to insert element into the queue
+    void insert(queue<int> &q, int k){
+        // Your code here
+        q.push(k);
+    }
+    
+    // Function to find frequency of an element
+    // return the frequency of k
+    int findFrequency(queue<int> &q, int k){
+        // Your code here
+        int res=0,n=q.size();
+        for(int i=0;i<n;i++){
+            if(q.front()==k)res++;
+            q.push(q.front());
+            q.pop();
+        }
+        return res;
+    }
+//03.Implement Queue using Linked List
+/* Structure of a node in Queue
+struct QueueNode
+{
+    int data;
+    QueueNode *next;
+    QueueNode(int a)
+    {
+        data = a;
+        next = NULL;
+    }
+};
+
+And structure of MyQueue
+struct MyQueue {
+    QueueNode *front;
+    QueueNode *rear;
+    void push(int);
+    int pop();
+    MyQueue() {front = rear = NULL;}
+}; */
+
+//Function to push an element into the queue.
+void MyQueue:: push(int x)
+{
+        // Your Code
+        QueueNode *node=new QueueNode(x);
+        if(front==NULL){front=node;rear=node; return;}
+        if(rear!=NULL){rear->next=node;rear=rear->next;}
+}
+
+//Function to pop front element from the queue.
+int MyQueue :: pop()
+{
+        // Your Code 
+        QueueNode *n=front;
+        if(front==NULL)return -1;
+        int res=n->data;
+        front=n->next;
+        delete n;
+        return res;
+}
+//04.Queue Reversal
+//Function to reverse the queue.v
+void fun(queue<int> &q){
+    if(q.empty()==true)return;
+    int temp=q.front();
+    q.pop();
+    fun(q);
+    q.push(temp);
+}
+queue<int> rev(queue<int> q)
+{
+    // add code here
+    fun(q);
+    return q;
+    
+}
+//05.Queue using two Stacks
+/* The structure of the class is
+class StackQueue{
+private:   
+    // These are STL stacks ( http://goo.gl/LxlRZQ )
+    stack<int> s1;
+    stack<int> s2;
+public:
+    void push(int);
+    int pop();
+}; */
+
+//Function to push an element in queue by using 2 stacks.
+void StackQueue :: push(int x)
+{
+    // Your Code
+        while(s2.empty()!=true){s1.push(s2.top());s2.pop();}
+        s2.push(x);
+        while(s1.empty()!=true){s2.push(s1.top());s1.pop();}
+    
+}
+
+//Function to pop an element from queue by using 2 stacks.
+int StackQueue :: pop()
+{
+        // Your Code  
+        if(s2.empty()==true)return -1;
+        int res=s2.top();
+        s2.pop();
+        return res;
+}
+//06. Stack using two queues
+/* The structure of the class is
+class QueueStack{
+private:
+    queue<int> q1;
+    queue<int> q2;
+public:
+    void push(int);
+    int pop();
+};
+ */
+
+//Function to push an element into stack using two queues.
+void QueueStack :: push(int x)
+{
+        // Your Code
+        while(q2.empty()!=true){q1.push(q2.front());q2.pop();}
+        q2.push(x);
+        while(q1.empty()!=true){q2.push(q1.front());q1.pop();}
+}
+
+//Function to pop an element from stack using two queues. 
+int QueueStack :: pop()
+{
+        // Your Code 
+        if(q2.empty()==true)return -1;
+        int res=q2.front();
+        q2.pop();
+        return res;
+}
