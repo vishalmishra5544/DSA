@@ -4316,3 +4316,967 @@ int QueueStack :: pop()
         q2.pop();
         return res;
 }
+//07.Generate Binary Numbers
+//Function to generate binary numbers from 1 to N using a queue.
+vector<string> generate(int N)
+{
+	// Your code here
+	/*
+	//m-1 o(nlogn)
+	vector<string> ans;
+	string res="";
+	while(N>0){
+	    int curr=N;
+	    res="";
+	    while(curr>0){
+	      res=res+to_string(curr&1); 
+	      curr=curr>>1;
+	    }
+	    reverse(res.begin(),res.end());
+	    ans.push_back(res);
+	    N--;
+	}
+	reverse(ans.begin(),ans.end());
+	return ans;
+	*/
+	//m-2 -o(n)
+	vector<string> ans;
+	queue<string> q;
+	q.push("1");
+	while(N--){
+	    string temp=q.front();
+	    ans.push_back(temp);
+	    q.pop();
+	    q.push(temp+"0");
+	    q.push(temp+"1");
+	}
+	return ans;	
+}
+//08.Reverse First K elements of Queue
+void funRev(queue<int> &q,int k){
+    if(k<=0)return;
+    int temp=q.front();
+    q.pop();
+    k--;
+    funRev(q,k);
+    q.push(temp);
+    return;
+}
+// User function Template for C++
+// Function to reverse first k elements of a queue.
+queue<int> modifyQueue(queue<int> q, int k) {
+    // add code here.
+    funRev(q,k);
+    int rem=q.size()-k;
+    while(rem--){
+        q.push(q.front());
+        q.pop();
+    }
+    return q;
+}
+//09.Circular tour
+public:
+  
+    //Function to find starting point where the truck can start to get through
+    //the complete circle without exhausting its petrol in between.
+    int tour(petrolPump p[],int n)
+    {
+       //Your code here
+       int start=0,curr_petrol=0,prev_petrol=0;
+       for(int i=0;i<n;i++){
+           curr_petrol+=p[i].petrol-p[i].distance;
+           if(curr_petrol<0){
+               start=i+1; // if pi fails then no one form p0 to pi can be start so check from i+1 and add all petrol till now as prev and do curr=o for new start and lastly check if prev+curr petrol>=0 then possible else -1
+               prev_petrol+=curr_petrol;
+               curr_petrol=0;               
+           }
+       }
+       return ((curr_petrol+prev_petrol)>=0)?start:-1;
+    }
+
+DEQUE:
+//01.Deque Implementations
+// dq : deque in which element is to be pushed
+// x : element to be pushed
+
+// Function to push element x to the back of the deque.
+void push_back_pb(deque<int> &dq, int x) {
+    // Your code here
+    dq.push_back(x);
+}
+
+// Function to pop element from back of the deque.
+void pop_back_ppb(deque<int> &dq) {
+    if (!dq.empty())/*Your code here*/dq.pop_back();
+        else return;
+}
+
+// Function to return element from front of the deque.
+int front_dq(deque<int> &dq) {
+    if (!dq.empty())/*Your code here*/return dq.front();
+        else return -1;
+}
+
+// Function to push element x to the front of the deque.
+void push_front_pf(deque<int> &dq, int x) {
+    // Your code here
+    dq.push_front(x);
+}
+//02.Maximum of all subarrays of size k
+public:
+    //Function to find maximum of each subarray of size k.
+    vector <int> max_of_subarrays(int *arr, int n, int k)
+    {
+        // your code here
+        vector<int> ans;
+        deque<int> dq;//will store index of  max of window in front
+        for(int i=0;i<k;i++){//first window
+            while(!dq.empty()&&arr[i]>=arr[dq.back()]){
+                dq.pop_back();
+            }
+            dq.push_back(i);
+        }
+        for(int i=k;i<n;i++){//remaining windows
+            ans.push_back(arr[dq.front()]);//ans of previous window
+            while(!dq.empty()&&dq.front()<=i-k){dq.pop_front();}
+            while(!dq.empty()&&arr[i]>=arr[dq.back()]){
+                dq.pop_back();
+            }
+            dq.push_back(i);
+        }
+        ans.push_back(arr[dq.front()]);//ans of last window
+        return ans;
+    }
+
+
+TREES:
+//01.Preorder Traversal
+//Function to return a list containing the preorder traversal of the tree.
+void funPreOrder(Node* root,vector<int> &ans){
+   if(root==NULL)return;
+   ans.push_back(root->data);
+   funPreOrder(root->left,ans);
+   funPreOrder(root->right,ans);
+}
+vector <int> preorder(Node* root)
+{
+  // Your code here
+  vector<int> ans;
+  funPreOrder(root,ans);
+  return ans;
+}
+//02.Inorder Traversal
+public:
+    // Function to return a list containing the inorder traversal of the tree.
+    void funInOrder(Node* root,vector<int> &ans){
+       if(root==NULL)return;
+       funInOrder(root->left,ans);
+       ans.push_back(root->data);
+       funInOrder(root->right,ans);
+    }
+    vector <int> inOrder(Node* root)
+    {
+      // Your code here
+      vector<int> ans;
+      funInOrder(root,ans);
+      return ans;
+    }
+//03.Postorder Traversal
+//Function to return a list containing the postorder traversal of the tree.
+ void funPostOrder(Node* root,vector<int> &ans){
+       if(root==NULL)return;
+       funPostOrder(root->left,ans);
+       funPostOrder(root->right,ans);
+       ans.push_back(root->data);
+    }
+    vector <int> postOrder(Node* root)
+    {
+      // Your code here
+      vector<int> ans;
+      funPostOrder(root,ans);
+      return ans;
+    }
+//04.Height of Binary Tree
+public:
+    //Function to find the height of a binary tree.
+    int height(struct Node* node){
+        // code here 
+      if(node==NULL)return 0;
+      else return(max(height(node->left),height(node->right)))+1;
+    }
+//05.Determine if Two Trees are Identical
+public:
+    //Function to check if two trees are identical.
+    bool isIdentical(Node *r1, Node *r2)
+    {
+        //Your Code here
+        if(r1==NULL&&r2==NULL){return true;}
+        else if(r1!=NULL&&r2!=NULL){
+                if(r1->data==r2->data){
+                    if(isIdentical(r1->left,r2->left)){
+                     return isIdentical(r1->right,r2->right);   
+                    }else return false;
+                }else return false;
+        }
+        else return false;
+    }
+//06.Children Sum Parent
+ public:
+    //Function to check whether all nodes of a tree have the value 
+    //equal to the sum of their child nodes.
+    int isSumProperty(Node *root)
+    {
+     // Add your code here
+     if(root==NULL) return 1;//true
+     if(root!=NULL&&root->left==NULL&&root->right==NULL) return 1;//true
+     int sum=0;
+     if(root->left!=NULL){sum+=root->left->data;}
+     if(root->right!=NULL){sum+=root->right->data;}
+     return (root->data==sum&&isSumProperty(root->left)&&isSumProperty(root->right));//check data==sum and left and right subtrees also hold this then only true overall.
+    }
+//07.Level order traversal
+ public:
+    //Function to return the level order traversal of a tree.
+    vector<int> levelOrder(Node* node)
+    {
+      //Your code here
+      vector<int> ans;
+      if(node==NULL)return ans;
+      queue<Node*> q;
+      q.push(node);
+      while(!q.empty()){
+          Node *temp=q.front();
+          q.pop();
+          ans.push_back(temp->data);
+          if(temp->left!=NULL)q.push(temp->left);
+          if(temp->right!=NULL)q.push(temp->right);
+      }
+      return ans;
+    }
+//08.Level order traversal Line by Line
+//Function to return the level order traversal line by line of a tree.
+vector<vector<int>> levelOrder(Node* node)
+{
+  //Your code here
+  vector<vector<int>> res;
+   vector<int> ans;
+  if(node==NULL)return res;
+  queue<Node*> q;
+  q.push(node);
+  int levelnodes;
+  while(!q.empty()){
+      levelnodes=q.size();//means this time it has to process this much(q.size()) number of items which are in this level.valid for every next level elements 
+      ans.erase(ans.begin(),ans.end());
+      while(!q.empty()&&levelnodes>0){
+          Node *temp=q.front();
+          q.pop();
+          ans.push_back(temp->data);
+          if(temp->left!=NULL)q.push(temp->left);
+          if(temp->right!=NULL)q.push(temp->right);
+          levelnodes--;
+      }
+      res.push_back(ans);
+  }
+  return res;
+}
+//09.Level order traversal in spiral form
+//Function to return a list containing the level order traversal in spiral form.
+vector<int> findSpiral(Node *node)
+{
+    //Your code here
+   vector<int> ans;
+   vector<int> res;
+  if(node==NULL)return ans;
+  queue<Node*> q;
+  q.push(node);
+  int levelnodes;
+  int flag=1;//1 means tedha  0 means sidha
+  while(!q.empty()){
+      levelnodes=q.size();//means this time it has to process this much(q.size()) number of items which are in this level.valid for every next level elements 
+      if(flag==1){
+          ans.erase(ans.begin(),ans.end());
+          while(!q.empty()&&levelnodes>0){
+              Node *temp=q.front();
+              q.pop();
+              ans.push_back(temp->data);
+              if(temp->left!=NULL)q.push(temp->left);
+              if(temp->right!=NULL)q.push(temp->right);
+              levelnodes--;
+          }
+          for(int i=ans.size()-1;i>=0;i--){
+              res.push_back(ans[i]);
+          }
+      }
+      else{
+          while(!q.empty()&&levelnodes>0){
+              Node *temp=q.front();
+              q.pop();
+              res.push_back(temp->data);
+              if(temp->left!=NULL)q.push(temp->left);
+              if(temp->right!=NULL)q.push(temp->right);
+              levelnodes--;
+          }
+      }
+      flag=(flag==0)?1:0;
+  }
+  return res;    
+}
+
+//10.Maximum Width of Tree
+// public:
+    // Function to get the maximum width of a binary tree.
+    int getMaxWidth(Node* node) {
+        // Your code here
+      if(node==NULL)return 0;
+      queue<Node*> q;
+      q.push(node);
+      int levelnodes,res=INT_MIN;
+      while(!q.empty()){
+          levelnodes=q.size();//means this time it has to process this much(q.size()) number of items which are in this level.valid for every next level elements 
+          res=max(res,levelnodes);
+          while(!q.empty()&&levelnodes>0){
+              Node *temp=q.front();
+              q.pop();
+              if(temp->left!=NULL)q.push(temp->left);
+              if(temp->right!=NULL)q.push(temp->right);
+              levelnodes--;
+          }
+          
+      }
+      return res;
+    }
+//11.Check for Balanced Tree
+public:
+    //Function to check whether a binary tree is balanced or not.
+    int funIsBalanced(Node *root){
+        if(root==NULL)return 0;
+        int left=funIsBalanced(root->left);
+        if(left==-1)return -1;
+        int right=funIsBalanced(root->right);
+        if(right==-1)return -1;
+        if(abs(left-right)>1)return -1;
+        else return max(left,right)+1;//return height which is max for this subtree
+    }
+    bool isBalanced(Node *root)
+    {
+        //  Your Code here
+        return (funIsBalanced(root)==-1)?0:1;        
+    }
+//12.Left View of Binary Tree
+vector<int> leftView(Node *root)
+{
+   // Your code here
+  //doing just l.o.t
+   vector<int> ans;
+   if(root==NULL)return ans;
+   queue<Node*>q;
+   q.push(root);
+   int count,i;
+   while(q.empty()!=true){
+       count=q.size();
+       i=count;
+       while(!q.empty()&&count>0){
+           Node *temp=q.front();
+           if(count==i)ans.push_back(temp->data);
+           q.pop();
+           if(temp->left!=NULL)q.push(temp->left);
+           if(temp->right!=NULL)q.push(temp->right);
+           count--;
+       }
+   }
+   return ans;
+}
+//13.Right View of Binary Tree
+//Function to return list containing elements of right view of binary tree.
+    vector<int> rightView(Node *root)
+    {
+       // Your Code here
+       vector<int> t;
+       vector<int> ans;
+       if(root==NULL)return ans;
+       queue<Node*>q;
+       q.push(root);
+       int count,i;
+       while(q.empty()!=true){
+           count=q.size();
+           t.clear();
+           while(!q.empty()&&count>0){
+               Node *temp=q.front();
+               t.push_back(temp->data);
+               q.pop();
+               if(temp->left!=NULL)q.push(temp->left);
+               if(temp->right!=NULL)q.push(temp->right);
+               count--;
+           }
+           if(t.size()>0){
+               int n=t.size()-1;
+               ans.push_back(t[n]);
+           }
+       }
+       return ans;
+    }
+//14.Lowest Common Ancestor in a Binary Tree
+//Function to return the lowest common ancestor in a Binary Tree.
+    Node* lca(Node* root ,int n1 ,int n2 )
+    {
+       //Your code here 
+       if(root==NULL)return NULL;
+       if(root->data==n1||root->data==n2) return root;//if found return this node
+       Node* left=lca(root->left,n1,n2);
+       Node* right=lca(root->right,n1,n2);
+       //4 cases where n1 and n2 can be there
+       if(left!=NULL&&right!=NULL)return root; //both are in different halfs or subtrees :one in left and other in right
+       else if(left!=NULL)return left;//both in left subtree
+       else if(right!=NULL)return right;//both in right subtree
+       else return NULL;//both in none
+    }
+//15.Diameter of Binary Tree
+ // Function to return the diameter of a Binary Tree.
+    int res=INT_MIN;//will store diameter
+    int height(Node* root){//modify height fun
+        if(root==NULL)return 0;
+        int lh=height(root->left);
+        int rh=height(root->right);
+        res=max(res,lh+rh+1);//stores diameter(max no of nodes on this path) through this node root
+        return max(lh,rh)+1;
+    }
+    int diameter(Node* root) {
+        // Your code here
+        height(root);
+        return res;
+    }
+//16.Vertical Width of a Binary Tree
+//Function to find the vertical width of a Binary Tree.
+int verticalWidth(Node* root)
+{
+    // Code here
+    //doing just l.o.t by maintaining line number
+    if(root==NULL)return 0;
+    queue<pair<Node*,int>> q;
+    unordered_set<int> s;
+    q.push({root,0});
+    while(q.empty()!=true){
+        Node* temp=q.front().first;
+        int line=q.front().second;
+        q.pop();
+        s.insert(line);
+        if(temp->left!=NULL){q.push({temp->left,line-1});}
+        if(temp->right!=NULL){q.push({temp->right,line+1});}
+    }
+    return s.size();
+}
+//17.Mirror Tree
+ public:
+    // Function to convert a binary tree into its mirror tree.
+    void mirror(Node* node) {
+        // code here
+        if(node==NULL||node->left==NULL&&node->right==NULL)return;
+        mirror(node->left);
+        Node* left=node->left;
+        mirror(node->right);
+        Node* right=node->right;
+        node->left=right;
+        node->right=left;
+        return;
+    }
+//18.Check if subtree
+ //Function to check if S is a subtree of tree T.
+    bool compare(Node* a,Node* b){
+        if(a==NULL&&b==NULL)return true;
+        if(a==NULL&&b!=NULL||a!=NULL&&b==NULL)return false;
+        if(a->data!=b->data)return false;
+        return compare(a->left,b->left)&&compare(a->right,b->right);
+    }
+    bool isSubTree(Node* T, Node* S) 
+    {
+        // Your code here
+        if(T==NULL&&S==NULL)return true;
+        if(T==NULL&&S!=NULL||T!=NULL&&S==NULL)return false;
+        queue<Node*> q;
+        q.push(T);
+        Node *curr=NULL;
+        while(!q.empty()){
+           curr=q.front(); 
+           if(curr->data==S->data){bool flag=compare(curr,S);if(flag==true)return true;}
+           q.pop();
+           if(curr->left)q.push(curr->left);
+           if(curr->right)q.push(curr->right);
+        }
+        return false;
+    }
+//19.Make Binary Tree From Linked List
+//Function to make binary tree from linked list.
+void convert(Node *head, TreeNode *&root) {
+    // Your code here
+    if(head==NULL)return;
+    queue<TreeNode*>q;
+    root=new TreeNode(head->data);
+    q.push(root);
+    head=head->next;
+    while(!q.empty()&&head!=NULL){
+        TreeNode* parent=q.front();
+        q.pop();
+        if(head!=NULL){
+            TreeNode* leftchild=new TreeNode(head->data);
+            parent->left=leftchild;
+            q.push(leftchild);
+            head=head->next;
+        }        
+        if(head!=NULL){
+            TreeNode* rightchild=new TreeNode(head->data);
+            parent->right=rightchild;
+            q.push(rightchild);
+            head=head->next;
+        }        
+    }    
+    return;
+}
+//20.Binary Tree to DLL
+ public: 
+    //Function to convert binary tree to doubly linked list and return it.
+    Node *prev,*head;
+    void funbToDLL(Node* root){//just do inorder traversal and store prev
+      if(root==NULL){return;} 
+      funbToDLL(root->left);
+      if(prev){prev->right=root;root->left=prev;prev=root;}
+      else {head=root,prev=root;}
+      funbToDLL(root->right);
+      return;
+    }
+    Node * bToDLL(Node *root)
+    {
+        // your code here
+        if(root==NULL)return root;
+        prev=NULL;
+        funbToDLL(root);
+        prev=NULL;
+        return head;
+    }
+//21.Binary Tree to CDLL
+//Function to convert binary tree into circular doubly linked list.
+    Node *prev,*h,*tail;
+    void funbTreeToCList(Node *root){
+        if(root==NULL)return;
+        funbTreeToCList(root->left);
+        if(prev){
+            prev->right=root;root->left=prev;prev=root;tail=root;
+        }else{prev=root;tail=root;h=root;}
+        funbTreeToCList(root->right);
+        return;
+    }
+    Node *bTreeToCList(Node *root)
+    {
+    //add code here.
+    if(root==NULL)return root;
+    prev=NULL;h=tail=NULL;
+    funbTreeToCList(root);
+    if(h&&tail){h->left=tail;tail->right=h;}
+    return h;
+    }
+//22.Connect Nodes at Same Level
+//Function to connect nodes at same level.
+    void connect(Node *root)
+    {
+       // Your Code Here
+       if(root==NULL)return;
+       queue<Node*> q;
+       q.push(root);
+       while(!q.empty()){
+           int count=q.size();
+           while(count>0){
+           Node *curr=q.front();
+           q.pop();
+           if(count>1){curr->nextRight=q.front();}
+           else if(count==1){curr->nextRight=NULL;}
+           if(curr->left){q.push(curr->left);}
+           if(curr->right){q.push(curr->right);}
+           count--;
+           }
+       }
+       return;
+    }
+//23.Construct Binary Tree from Parent Array
+//Function to construct binary tree from parent array.
+    void createNode(Node *created[],int i,int parentarr[],Node** root){
+        if(created[i]!=NULL)return;
+        Node* n=new Node(i);
+        created[i]=n;
+        if(parentarr[i]==-1){*root=n;return;}
+        if(created[parentarr[i]]==NULL){
+            createNode(created,parentarr[i],parentarr,root);
+        }
+        Node* daddy=created[parentarr[i]];
+        if(daddy->left==NULL){daddy->left=n;}
+        else if(daddy->right==NULL){daddy->right=n;}
+        return;
+    }
+    Node *createTree(int parentarr[], int n)
+    {
+        // Your code here
+        Node *root=NULL;
+        Node *created[n];
+        for(int i=0;i<n;i++){
+            created[i]=NULL;
+        }
+        for(int i=0;i<n;i++){
+            createNode(created,i,parentarr,&root);
+        }
+        return root;
+    }
+//24.Tree from Postorder and Inorder
+/* Recursive function to construct binary of size n
+from Inorder traversal in[] and Postorder traversal
+post[]. Initial values of inStrt and inEnd should
+be 0 and n -1. The function doesn't do any error
+checking for cases where inorder and postorder
+do not form a tree */
+Node* buildUtil(int in[], int post[], int inStrt,
+	int inEnd, int* pIndex, unordered_map<int, int>& mp)
+{
+	// Base case
+	if (inStrt > inEnd)
+		return NULL;
+
+	/* Pick current node from Postorder traversal
+	using postIndex and decrement postIndex */
+	int curr = post[*pIndex];
+	Node* node = newNode(curr);
+	(*pIndex)--;
+
+	/* If this node has no children then return */
+	if (inStrt == inEnd)
+		return node;
+
+	/* Else find the index of this node in Inorder
+	traversal */
+	int iIndex = mp[curr];
+
+	/* Using index in Inorder traversal, construct
+	left and right subtress */
+        //we call right first since we are building right subtree since postindex is decrementing and going from right to left
+	node->right = buildUtil(in, post, iIndex + 1,
+							inEnd, pIndex, mp);
+	node->left = buildUtil(in, post, inStrt,
+						iIndex - 1, pIndex, mp);
+
+	return node;
+}
+
+// This function mainly creates an unordered_map, then
+// calls buildTreeUtil()
+struct Node* buildTree(int in[], int post[], int len)
+{
+	// Store indexes of all items so that we
+	// we can quickly find later
+	unordered_map<int, int> mp;
+	for (int i = 0; i < len; i++)
+		mp[in[i]] = i;
+
+	int index = len - 1; // Index in postorder
+	return buildUtil(in, post, 0, len - 1,
+					&index, mp);
+}
+
+//25.Foldable Binary Tree
+//here we just change right subtree of root to its mirror image and compare left and right subtree.if same structrue then foldable else not.
+//Function to check whether a binary tree is foldable or not.
+void mirror(Node* root){ 
+    if(root==NULL)return;
+    if(root->left==NULL&&root->right==NULL)return;
+    mirror(root->left);
+    mirror(root->right);
+    Node* left=root->left;
+    Node* right=root->right;
+    root->left=right;
+    root->right=left;
+    return;
+}
+bool isStructureSame(Node* a,Node* b){
+    if(a==NULL&&b==NULL)return true;
+    if(a==NULL&&b!=NULL||a!=NULL&&b==NULL)return false;
+    return isStructureSame(a->left,b->left)&&isStructureSame(a->right,b->right);
+}
+bool IsFoldable(Node* root)
+{
+    // Your code goes here
+    if(root==NULL)return true;
+    mirror(root->right);
+    bool res=isStructureSame(root->left,root->right);
+    return res;
+}
+//26.Maximum path sum from any node
+/*For each node there can be four ways that the max path goes through the node: 
+1. Node only 
+2. Max path through Left Child + Node 
+3. Max path through Right Child + Node 
+4. Max path through Left Child + Node + Max path through Right Child
+The idea is to keep trace of four paths and pick up the max one in the end. An important thing to note is, root of every subtree need to return maximum path sum such that at most one child of root is involved. This is needed for parent function call. In below code, this sum is stored in ‘max_single’ and returned by the recursive function
+*/
+// This function returns overall maximum path sum in 'res'
+// And returns max path sum going through root.
+int findMaxUtil(Node* root, int &res)
+{
+	//Base Case
+	if (root == NULL)
+		return 0;
+
+	// l and r store maximum path sum going through left and
+	// right child of root respectively
+	int l = findMaxUtil(root->left,res);
+	int r = findMaxUtil(root->right,res);
+
+	// Max path for parent call of root. This path must
+	// include at-most one child of root
+	int max_single = max(max(l, r) + root->data, root->data);//max of 1 2 3 cases
+
+	// Max Top represents the sum when the Node under
+	// consideration is the root of the maxsum path and no
+	// ancestors of root are there in max sum path
+	int max_top = max(max_single, l + r + root->data);//max of 1 2 3 and 4
+
+	res = max(res, max_top); // Store the Maximum Result.
+
+	return max_single;//max of 1 2 3 since we need to return to the called node : the path to be followed in this subtree.(either node or node-anychild)
+}
+
+// Returns maximum path sum in tree with given root
+int findMaxSum(Node *root)
+{
+	// Initialize result
+	int res = INT_MIN;
+
+	// Compute and return result
+	findMaxUtil(root, res);
+	return res;
+}
+//27.Maximum difference between node and its ancestor
+Node* funmaxDiff(Node* root,int* res){
+    if(root==NULL)return NULL;
+    if(root->left==NULL&&root->right==NULL)return root;
+    Node* left=funmaxDiff(root->left,res);
+    Node* right=funmaxDiff(root->right,res);
+    if(left==NULL){
+        int currmaxDiff=(root->data)-(right->data);
+        Node* returnvalue=((root->data)<(right->data))?root:right;
+        *res=max(*res,currmaxDiff);
+        return returnvalue;
+    }
+    if(right==NULL){
+        int currmaxDiff=(root->data)-(left->data);
+        Node* returnvalue=((root->data)<(left->data))?root:left;
+        *res=max(*res,currmaxDiff);
+        return returnvalue;
+    }
+    int currmaxDiff=max((root->data)-(left->data),(root->data)-(right->data));
+    Node* mini=((left->data)<(right->data))?left:right;
+    Node* returnvalue=((root->data)<(mini->data))?root:mini;
+    *res=max(*res,currmaxDiff);
+    return returnvalue;
+}
+
+int maxDiff(Node* root)
+{
+    // Your code here
+    if(root==NULL)return 0;
+    int res=INT_MIN;
+    funmaxDiff(root,&res);
+    return res;
+}
+//28.Count Number of SubTrees having given Sum
+//Function to count number of subtrees having sum equal to given sum.
+int funcountSubtreesWithSumX(Node* root,int* count,int x){
+    if(root==NULL)return 0;
+    if(root->left==NULL&&root->right==NULL){if(root->data==x) (*count)++;return root->data;}
+    int left=funcountSubtreesWithSumX(root->left,count,x);
+    int right=funcountSubtreesWithSumX(root->right,count,x);
+    int sum=0;
+    if(root->data==x&&root->left==NULL&&root->right==NULL) (*count)++;
+    sum=sum+(root->data)+left+right;
+    if(sum==x)(*count)++;
+    return sum;
+}
+int countSubtreesWithSumX(Node* root, int X)
+{
+	// Code here
+	if(root==NULL)return 0;
+	int count=0;
+	funcountSubtreesWithSumX(root,&count,X);
+	return count;
+}
+//29.Serialize and Deserialize a Binary Tree
+public:
+    //Function to serialize a tree and return a list containing nodes of tree.
+    vector<int> serialize(Node *root) 
+    {
+        //Your code here
+        vector<int> ans;
+        if(root==NULL)return ans;
+        queue<Node*> q;
+        q.push(root);
+        ans.push_back(root->data);
+        while(!q.empty()){
+           int count=q.size();
+           while(count>0){
+               Node* curr=q.front();
+               q.pop();
+               if(curr->left){ ans.push_back(curr->left->data);q.push(curr->left);}
+               else ans.push_back(-100);
+               if(curr->right){ ans.push_back(curr->right->data);q.push(curr->right);}
+               else ans.push_back(-100);
+               count--;
+           }
+        }
+        return ans;
+    }
+    
+    //Function to deserialize a list and construct the tree.
+    Node * deSerialize(vector<int> &A)
+    {
+       //Your code here
+       if(A.size()==0)return NULL;
+       int i=0;
+       Node* root=new Node(A[i]);
+       queue<Node*>q;
+       q.push(root);
+       i++;
+       while(!q.empty()){
+           int count=q.size();
+           while(count>0){
+               Node* curr=q.front();
+               q.pop();
+               if(A[i]!=-100){Node* n=new Node(A[i]);curr->left=n;q.push(n);}
+               //else curr->left=NULL;
+               i++;
+               if(A[i]!=-100){curr->right=new Node(A[i]);q.push(curr->right);}
+               //else curr->right=NULL;
+               i++;
+               count--;
+           }
+       }
+       return root;
+    }
+//30.Node at distance
+void getKDistance(Node* root,int k,int level,map<int,pair<Node*,bool>> &mp,int &count){
+    if(root == NULL){
+        return;
+    }
+    
+    mp[level].first = root;
+    mp[level].second = false;
+    
+    if(root->left == NULL && root->right == NULL){
+        if(level-k >= 0 && mp[level-k].second != true){
+            mp[level-k].second = true;
+            count++;
+        }
+    }
+    
+    getKDistance(root->left,k,level+1,mp,count);
+    getKDistance(root->right,k,level+1,mp,count);
+}
+
+//Function to return count of nodes at a given distance from leaf nodes.
+int printKDistantfromLeaf(Node* root, int k)
+{
+    int count = 0;
+    map<int,pair<Node*,bool>> mp;//map[pathlen,{node(for value),visited(yes or no)}]
+    getKDistance(root,k,0,mp,count);
+    return count;
+}
+//31.ZigZag Tree Traversal
+ //Function to store the zig zag order traversal of tree in a list.
+    vector <int> zigZagTraversal(Node* node)
+    {
+    	// Code here
+    	 vector<int> ans;
+   vector<int> res;
+  if(node==NULL)return ans;
+  queue<Node*> q;
+  q.push(node);
+  int levelnodes;
+  int flag=0;//1 means tedha  0 means sidha
+  while(!q.empty()){
+      levelnodes=q.size();//means this time it has to process this much(q.size()) number of items which are in this level.valid for every next level elements 
+      if(flag==1){
+          ans.erase(ans.begin(),ans.end());
+          while(!q.empty()&&levelnodes>0){
+              Node *temp=q.front();
+              q.pop();
+              ans.push_back(temp->data);
+              if(temp->left!=NULL)q.push(temp->left);
+              if(temp->right!=NULL)q.push(temp->right);
+              levelnodes--;
+          }
+          for(int i=ans.size()-1;i>=0;i--){
+              res.push_back(ans[i]);
+          }
+      }
+      else{
+          while(!q.empty()&&levelnodes>0){
+              Node *temp=q.front();
+              q.pop();
+              res.push_back(temp->data);
+              if(temp->left!=NULL)q.push(temp->left);
+              if(temp->right!=NULL)q.push(temp->right);
+              levelnodes--;
+          }
+      }
+      flag=(flag==0)?1:0;
+  }
+  return res;  
+    }
+//32.Maximum sum of Non-adjacent nodes
+/*
+For every node, we find the following:
+
+1.Maximum sum of non-adjacent nodes including the node.
+2.Maximum sum of non-adjacent nodes excluding the node.
+Now, we return both the values in the recursive call. The parent node of the previously calculated node gets the maximum sum (including & excluding) the child node. Accordingly, the parent now calculates the maximum sum(including & excluding) and returns. This process continues till root node. Finally, we return the max(sum including root, sum excluding root).
+*/
+pair<int, int> max_sum(Node* root)
+{
+
+    if (!root)
+
+        return { 0, 0 };
+ 
+
+    auto left = max_sum(root->left);
+
+    auto right = max_sum(root->right);
+ 
+
+    int no_root_l = left.first, root_l = left.second;
+ 
+
+    int no_root_r = right.first, root_r = right.second;
+ 
+
+    int root_sum_max
+
+        = max(max(root->data, root->data + no_root_l),
+
+              max(root->data + no_root_r,
+
+                  root->data + no_root_r + no_root_l));
+
+    int no_root_sum_max = max(
+
+        max(root_l, root_r),
+
+        max(max(root_l + root_r, no_root_l + no_root_r),
+
+            max(root_l + no_root_r, root_r + no_root_l)));
+ 
+
+    return { no_root_sum_max, root_sum_max };
+}
+ 
+
+int getMaxSum(Node* root)
+{
+
+    pair<int, int> ans = max_sum(root);
+
+    return max(ans.first, ans.second);
+}
