@@ -5552,7 +5552,102 @@ void lot(Node *root,auto & h){
         }
         return ans;
     }
-//
+//15.Top View of Binary Tree
+public:
+    void lot(Node *root,auto & h){ //same like vertical traversal just store top node value(which will be first node seen for that index position from top) instead of list of values.
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        h[0]=root->data;
+        while(q.empty()!=true){
+            int size=q.size();
+            while(size>0){
+                pair<Node*,int> front=q.front();
+                q.pop();
+                if(front.first->left){
+                    q.push({front.first->left,front.second-1});
+                    if(h.find(front.second-1)==h.end()){
+                       h[front.second-1]=front.first->left->data;
+                    }
+                }
+                if(front.first->right){
+                    q.push({front.first->right,front.second+1});
+                    if(h.find(front.second+1)==h.end()){
+                       h[front.second+1]=front.first->right->data;
+                    }
+                }
+                size--;
+            }
+        }
+    }
+   
+    //Function to return a list of nodes visible from the top view 
+    //from left to right in Binary Tree.
+    vector<int> topView(Node *root)
+    {
+        //Your code here
+        if(root==NULL)return {-1};
+        vector<int> ans;
+        map<int,int> h;
+        lot(root,h);
+        for(auto i:h){
+            ans.push_back(i.second);
+        }
+        return ans;
+    }
+//16.Bottom View of Binary Tree
+void lot(Node *root,auto & h){ //same like vertical traversal just store latest or bottom most node value(which will be bottom most node seen for that index position from bottom) instead of list of values.
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        h[0]=root->data;
+        while(q.empty()!=true){
+            int size=q.size();
+            while(size>0){
+                pair<Node*,int> front=q.front();
+                q.pop();
+                if(front.first->left){
+                    q.push({front.first->left,front.second-1});
+                    h[front.second-1]=front.first->left->data;
+                }
+                if(front.first->right){
+                    q.push({front.first->right,front.second+1});
+                    h[front.second+1]=front.first->right->data;
+                }
+                size--;
+            }
+        }
+    }
+    vector <int> bottomView(Node *root) {
+         //Your code here
+        if(root==NULL)return {-1};
+        vector<int> ans;
+        map<int,int> h;
+        lot(root,h);
+        for(auto i:h){
+            ans.push_back(i.second);
+        }
+        return ans;
+    }
+//17.Check for BST
+//Function to check whether a Binary Tree is BST or not.
+    bool checkSorted(vector<int> &ans){
+        for(int i=1;i<ans.size();i++){
+            if((ans[i]-ans[i-1])<0) return false;
+        }
+        return true;
+    }
+    void inorder(Node *root,vector<int> &ans){
+        if(root==NULL) return;
+        inorder(root->left,ans);
+        ans.push_back(root->data);
+        inorder(root->right,ans);
+    }
+    bool isBST(Node* root) 
+    {
+        // Your code here
+        vector<int> ans;
+        inorder(root,ans);
+        return checkSorted(ans);
+    }
 //18.Find the Closest Element in BST
 void helper(Node *root,int k,int &ans){
         if(root==NULL){
@@ -5581,4 +5676,98 @@ void helper(Node *root,int k,int &ans){
         int ans=INT_MAX;
         helper(root,K,ans);
         return ans;
+    }
+//19.Convert Level Order Traversal to BST
+//User function Template for C++
+struct NodeDetails{
+    Node * ptr;
+    int min;
+    int max;
+    NodeDetails(Node* p){
+        this->ptr=p;
+        min=INT_MIN;
+        max=INT_MAX;
+    }
+};
+
+//Function to construct the BST from its given level order traversal.
+Node* constructBst(int arr[], int n)
+{
+    // Code here
+    if(n==0) return NULL;
+    int i=0;
+    Node *root=new Node(arr[i]);
+    i++;
+    NodeDetails *rt=new NodeDetails(root);
+    queue<NodeDetails*> q;
+    q.push(rt);
+    while(i<n){
+        NodeDetails *front=q.front();
+        q.pop();
+        if(i<n&&((arr[i]<front->ptr->data)&&(arr[i]>front->min))){
+            Node *left=new Node(arr[i]);
+            i++;
+            NodeDetails *l=new NodeDetails(left);
+            l->min=front->min;
+            l->max=front->ptr->data;
+            q.push(l);
+            front->ptr->left=left;
+        }
+        if(i<n&&((arr[i]>front->ptr->data)&&(arr[i]<front->max))){
+            Node *right=new Node(arr[i]);
+            i++;
+            NodeDetails *r=new NodeDetails(right);
+            r->max=front->max;
+            r->min=front->ptr->data;
+            q.push(r);
+            front->ptr->right=right;
+        }
+    }
+    return root;
+}
+//20.Count BST nodes that lie in a given range
+void helper(Node *root,int &l,int &h,int &ans){
+        if(root==NULL)return;
+        if(root->data>=l&&root->data<=h){
+            ans++;
+            helper(root->left,l,h,ans);
+            //v
+            helper(root->right,l,h,ans);
+        }else if(root->data<l){
+            helper(root->right,l,h,ans);
+        }else if(root->data>h){
+            helper(root->left,l,h,ans);
+        }
+    }
+    int getCount(Node *root, int l, int h)
+    {
+      // your code goes here  
+      if(root==NULL)return -1;
+      int ans=0;
+      helper(root,l,h,ans);
+      return ans;
+    }
+//21.Preorder to Postorder
+public:
+    int preIndex=0;
+    Node* helper(int in[],int pre[],int is,int ie){
+        if(is>ie)return NULL;
+        int inIndex;
+        Node *root=new Node(pre[preIndex]);
+        preIndex++;
+        for(int i=is;i<=ie;i++){
+            if(in[i]==root->data){
+                inIndex=i;
+                break;
+            }
+        }
+        root->left=helper(in,pre,is,inIndex-1);
+        root->right=helper(in,pre,inIndex+1,ie);
+        return root;
+    }
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        // Code here
+       
+       return helper(in,pre,0,n-1);
     }
