@@ -5280,3 +5280,305 @@ int getMaxSum(Node* root)
 
     return max(ans.first, ans.second);
 }
+
+BINARY SEARCH TREE:
+//03.Insert a node in a BST
+// Function to insert a node in a BST.
+Node* fun(Node* root,int &key){
+    if(root==NULL){return NULL;}
+    if(root->data==key){return root;}
+    if(root->data>key){
+        Node* left=fun(root->left,key);
+        if(left==NULL){root->left=new Node(key);}
+        return root;
+    }
+    else{
+        Node* right=fun(root->right,key);
+        if(right==NULL){root->right=new Node(key);}
+        return root;
+    }
+}
+Node* insert(Node* root, int key) {
+    // Your code here
+    if(root==NULL){Node *n=new Node(key);
+        root=n;
+        return root;
+    }
+    fun(root,key);
+    return root;
+}
+//04.Search a node in BST
+// Function to search a node in BST.
+bool search(Node* root, int x) {
+    // Your code here
+    if(root==NULL)return false;
+    if(root->data==x)return true;
+    if(root->data<x){return search(root->right,x);}
+    else return search(root->left,x);
+}
+//05.Minimum element in BST
+// Function to find the minimum element in the given BST.
+void fun(Node* root,int &mini){
+    if(root==NULL)return;
+    mini=root->data;
+    fun(root->left,mini);
+    return;
+}
+int minValue(Node* root) {
+    // Code 
+    if(root==NULL)return -1;
+    int mini;
+    fun(root,mini);
+    return mini;
+}
+//06.Find Common Nodes in two BSTs
+ //Function to find the nodes that are common in both BST.
+    void inorder(Node *root,auto &h){
+      if(root==NULL)return;
+      inorder(root->left,h);
+      h.insert(root->data);
+      inorder(root->right,h);
+    }
+    void fun(Node* root,auto &h,auto &ans){
+        if(root==NULL)return;
+        fun(root->left,h,ans);
+        if(h.find(root->data)!=h.end()) ans.push_back(root->data);
+        fun(root->right,h,ans);
+    }
+    vector <int> findCommon(Node *root1, Node *root2)
+    {
+     //Your code here
+     vector<int> ans;
+     if(root1==NULL&&root2==NULL)return ans;
+     unordered_set<int> h;
+     inorder(root1,h);
+     fun(root2,h,ans);
+     return ans;
+    }
+//07.Delete a node from BST
+// Function to delete a node from BST.
+Node *deleteNode(Node *root, int x) {
+    // your code goes here
+    if(root==NULL)return root;
+    //reach to reqd node using binary search feature.
+    if(root->data>x){
+        root->left=deleteNode(root->left,x);
+        return root;
+    }
+    else if(root->data<x){
+        root->right=deleteNode(root->right,x);
+        return root;
+    }
+    //reqd node reached
+    if(root->left==NULL){
+        Node* temp=root->right;
+        delete root;
+        return temp;
+    }
+    else if(root->right==NULL){
+        Node* temp=root->left;
+        delete root;
+        return temp;
+    }
+    else{
+        //both childs are there
+        //plan is to delete succ node ,so reach to it and copy its data to root and delete succ. 
+        Node *succparent=root;
+        Node *succ=root->right;
+        while(succ->left!=NULL){
+            succparent=succ;
+            succ=succ->left;
+        }
+        if(succparent==root){
+            succparent->right=succ->right;
+        }
+        else{
+            succparent->left=succ->right;
+        }
+        root->data=succ->data;
+        delete succ;
+        return root;
+    }
+}
+//08.Lowest Common Ancestor in a BST
+//Function to find the lowest common ancestor in a BST. 
+Node* LCA(Node *root, int n1, int n2)
+{
+   //Your code here
+   if(root==NULL)return NULL;
+   if(root->data==n1||root->data==n2){
+       return root;
+   }
+   Node *left=LCA(root->left,n1,n2);
+   Node *right=LCA(root->right,n1,n2);
+   if(left!=NULL&&right!=NULL){
+       return root;
+   }
+   else if(left!=NULL){
+       return left;
+   }
+   else if(right!=NULL){
+       return right;
+   }
+}
+//09.Print BST elements in given range
+public:
+  void helper(Node *root,int low,int high,vector<int>& ans){
+      if(root==NULL)return;
+      if(root->data>=low&&root->data<=high){
+          ans.push_back(root->data);
+          helper(root->left,low,high,ans);
+          helper(root->right,low,high,ans);
+      }
+      else if(root->data>high){
+          helper(root->left,low,high,ans);
+      }
+      else if(root->data<low){
+          helper(root->right,low,high,ans);
+      }
+      
+  }
+    vector<int> printNearNodes(Node *root, int low, int high) {
+        //code here   
+        vector<int> ans;
+        helper(root,low,high,ans);
+        sort(ans.begin(),ans.end());
+        return ans;
+        
+    }
+//10.Pair Sum in BST
+void inorder(Node *root,vector<int> & ans){
+        if(root==NULL)return;
+        inorder(root->left,ans);
+        ans.push_back(root->data);
+        inorder(root->right,ans);
+    }
+    // root : the root Node of the given BST
+    // target : the target sum
+    int isPairPresent(struct Node *root, int target)
+    {
+    //add code here.
+        if(root==NULL) return 0;
+        vector<int> ans;
+        inorder(root,ans);
+        unordered_set<int> h;
+        for(auto i: ans){
+            if(h.find(target-i)!=h.end()){return 1;}
+            h.insert(i);
+        }
+        return 0;
+    }
+//11.Smaller on Right
+later
+//12.Floor in BST
+int floor(Node* root, int key)
+{
+    if (!root)
+        return INT_MAX;
+ 
+    /* If root->data is equal to key */
+    if (root->data == key)
+        return root->data;
+ 
+    /* If root->data is greater than the key */
+    if (root->data > key)
+        return floor(root->left, key);
+ 
+    /* Else, the floor may lie in right subtree
+      or may be equal to the root*/
+    int floorValue = floor(root->right, key);
+    return (floorValue <= key) ? floorValue : root->data;
+}
+//13.Ceil in BST
+// User function Template for C++
+int helper(Node *root,int &key,int& ans){
+    if(root==NULL)return -1;
+    if(root->data==key){
+        ans=key;
+        return key;
+    }
+    else if(root->data>key){
+        int l=helper(root->left,key,ans);
+        ans=(key<=l)?l:root->data;
+        return ans;
+    }
+    else if(root->data<key){
+        return helper(root->right,key,ans);
+    }
+}
+// Function to return the ceil of given number in BST.
+int findCeil(Node* root, int input) {
+    if (root == NULL) return -1;
+
+    // Your code here
+    int ans=INT_MIN;
+    ans=helper(root,input,ans);
+    if(ans==-1)return -1;
+    return ans;
+}
+//14.Vertical Traversal of Binary Tree
+void lot(Node *root,auto & h){
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        h[0].push_back(root->data);
+        while(q.empty()!=true){
+            int size=q.size();
+            while(size>0){
+                pair<Node*,int> front=q.front();
+                q.pop();
+                if(front.first->left){
+                    q.push({front.first->left,front.second-1});
+                    h[front.second-1].push_back(front.first->left->data);
+                }
+                if(front.first->right){
+                    q.push({front.first->right,front.second+1});
+                    h[front.second+1].push_back(front.first->right->data);
+                }
+                size--;
+            }
+        }
+    }
+    //Function to find the vertical order traversal of Binary Tree.
+    vector<int> verticalOrder(Node *root)
+    {
+        //Your code here
+        if(root==NULL)return {-1};
+        map<int,list<int>> h;
+        lot(root,h);
+        vector<int> ans;
+        for(auto i:h){
+            for(auto j:i.second)
+              ans.push_back(j);
+        }
+        return ans;
+    }
+//
+//18.Find the Closest Element in BST
+void helper(Node *root,int k,int &ans){
+        if(root==NULL){
+            return;
+        }
+        if(root->data>k){
+            int diff=abs(root->data-k);
+            ans=min(ans,diff);
+            helper(root->left,k,ans);
+        }
+        else if(root->data<k){
+            int diff=abs(root->data-k);
+            ans=min(ans,diff);
+            helper(root->right,k,ans);
+        }
+        else if(root->data==k){
+            ans=min(ans,0);
+        }
+    }
+    //Function to find the least absolute difference between any node
+	//value of the BST and the given integer.
+    int minDiff(Node *root, int K)
+    {
+        //Your code here
+        if(root==NULL)return 0;
+        int ans=INT_MAX;
+        helper(root,K,ans);
+        return ans;
+    }

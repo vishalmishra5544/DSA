@@ -1,0 +1,35 @@
+JAVA:
+1)PRIMITIVES are stored in stack memory,different memory copies created.Accessing without initializing gives compiler error.
+2)Non-Primitives are stored in heap memory,same memory copies created as references are used (eg:A a=new A();A b=a;//this 'b' point to same memory location as 'a' unlike in primitives).Default values is used(integer: 0,boolean:false,float,double:0) for members of non-primitives.
+3)Auto boxing: Wrapper class = primitive variable eg:int y;Integer x=y; & Auto Unboxing: primitive varible= Wrapper class variable eg: Integer x;int y=x;
+4)float x=Math.PI;System.out.format() or System.out.printf("x=%05.2f",x); o/p: x=03.14//means:total width=5,after decimal=2,extra characters fill with 0 (in left)
+5)Methods:psvm(){Point p=new Point();fun(p);} fun(Point p){} //here p is passed by reference as it is non primitive,so both p of main & fun point to same memory.we can change p of fun to point to new memory by creating a new memory for object space of type point.
+ AND In primitive : psvm(){int x=10;fun(x);}fun(int x){} here x is a different variable stores copy of x from main.
+6)Array: they are objects.Default values are assigned during declaration by default.Adv:Random access,Cache friendly.Diadv:Fixed size,shifting during delete operations.Point [] p={new Point(2),new Point(3)}; it is like array of references where each slot points to random memory of that object from heap.so it is not continuous for non-primitives.But for primitives array it is stored in stack and is continuous.
+->unlike c++ here multidimensional arrays are like array of refernces where each slot points to a variable size array(it is like array of pointers with each pointer pointing to variable size array).Thus multidimensional array are non-continuous.
+-> int arr[][]=new int[m][n]; or int arr[][]={{1,2,3},{1}};//this is valid as each slot points to variable size array.
+-> a 2-d array is called  jagged array if each slot points to different size array. int arr[][]=new int[m][];for(int i=0;i<arr.length;i++){arr[i]=new int[n];for(int j=0;j<arr[i].length;j++){}}//here as it is jagged array column size not needed to specify but row size is needed.
+7)String: ways to create==>char [] arr;String;StringBuffer,StringBuilder.
+->String : immutable;StringBuffer: mutable (thread safe),StringBuilder : mutable (non-thread safe).
+->String methods: 
+   -s.charAt(i);//only way to access ith character in string.we can't use s[i] in java.
+   -s.substring(start); s.substring(start,end);//end is not included.
+   -s.contains(s2);//check if s2 is present in s and return true or false.
+   -s.indexOf(s1);//if s1 is present in s then returns first index else returns negative value.; s.indexOf(s1,t);//t is index from where to start looking for s1.
+   -String s1="abc";String s2="abc";//when contents are same in literals then both point to same location. if(s1==s2){}//checks addresses of s1 and s2 and here returns true. String s3=new String("abc");//this is new object created. so (s1==s3) return false;
+   -String s1="ab";String s2=s1;//till now both s1,s2 points to same memory. s1=s1+"bc";//or s1=s1.concat("bc");//now s1 after concatenating points to new object with concatenated value. whereas s2 remains unchanged i.e "ab".
+   -s.equals(s1);//check contents and returns true or false.
+   -s.compareTo(s1);//checks lexicographically and returns Positive,negative or zero.
+   -s.equalsIgnoreCase(s1);//checks content without considering cases.
+   -s.toUpperCase();s.toLowerCase();
+   -s.capitalize();//"ab"->"Ab"
+->StringBuilder or StringBuffer: StringBuilder s=new StringBuilder("ab");StringBuilder s1=s;s1=s1.append("cd");//now since here string is mutable thus both s1,s points to same memory before and after appending. thus: (s==s1) is true.
+8)final keyword: final int x;x=100;//This is blend or local final variable and is allowed in java,that too only once initialization but not in c++ using const.
+->final StringBuffer s=new StringBuffer("ab");s.append("d");//This is a constant reference declaration.here s points to object containing "ab" and can't be changed to point some other object.But value of this object can change (only if stringbuilder or stringbuffer is used).
+9)static keyword: static methods do not have access to 'this' reference. 
+10)BigInteger: 
+-BigInteger a=new BigInteger("103");//creation(pass string in constructor.)
+-int a=1234;BigInteger b=BigInteger.valueOf(a);//creation of biginteger from int by getting numerical value.
+-BigInteger c=a.add(b);//operations : a.add(b),a.subtract(b),a.multiply(b),a.remainder(b),a.divide(b),a.compareTo(b) (returns -1,0,1 based on comparison).
+-BigInteger to primitive:int x=a.intValue();long y=a.longValue();String z=a.toString();
+
