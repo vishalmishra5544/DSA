@@ -5771,3 +5771,88 @@ public:
        
        return helper(in,pre,0,n-1);
     }
+//22.Merge two BST 's
+void inorder(Node* root,vector<int>& ans){
+        if(root==NULL)return;
+        inorder(root->left,ans);
+        ans.push_back(root->data);
+        inorder(root->right,ans);
+    }
+    void mergefun(vector<int>& a,vector<int>& b,vector<int> &ans){
+        int i=0,j=0,k=0,s1=a.size(),s2=b.size();
+        while(i<s1&&j<s2){
+            if(a[i]<b[j]){ans.push_back(a[i]);i++;}
+            else if(a[i]>b[j]){ans.push_back(b[j]);j++;}
+            else if(a[i]=b[j]){ans.push_back(a[i]);ans.push_back(b[j]);i++;j++;}
+        }
+        while(i<s1){
+            ans.push_back(a[i]);i++;
+        }
+        while(j<s2){
+            ans.push_back(b[j]);j++;
+        }
+    }
+    //Function to return a list of integers denoting the node 
+    //values of both the BST in a sorted order.
+    vector<int> merge(Node *root1, Node *root2)
+    {
+       //Your code here
+       vector<int> a,b,ans;
+       inorder(root1,a);
+       inorder(root2,b);
+       mergefun(a,b,ans);
+       return ans;
+    }
+//23.Fixing Two nodes of a BST
+ public:
+   /*first store inorder and then two cases:
+   1. The swapped nodes are not adjacent in the in-order traversal of the BST.
+     For example, Nodes 5 and 25 are swapped in {3 5 7 8 10 15 20 25}. 
+     The inorder traversal of the given tree is 3 25 7 8 10 15 20 5
+    Observe carefully, during inorder traversal, 
+    find node 7 is smaller than the previously visited node 25.
+    Here save the context of node 25 (previous node).
+    Again, find that node 5 is smaller than the previous node 20.
+    This time, save the context of node 5 (the current node ).
+    Finally, swap the two node’s values.
+    2. The swapped nodes are adjacent in the inorder traversal of BST.
+      For example, Nodes 7 and 8 are swapped in {3 5 7 8 10 15 20 25}. 
+      The inorder traversal of the given tree is 3 5 8 7 10 15 20 25 
+      Here only one point exists where a node value is smaller than the previous node value.
+      e.g. node 7 is smaller than node 8. 
+    */
+
+    void inorder(Node* root,vector<Node*>& ans){
+        if(root==NULL)return;
+        inorder(root->left,ans);
+        ans.push_back(root);
+        inorder(root->right,ans);
+    }
+    void correctBST( struct Node* root )
+    {
+        // add code here.
+        vector<Node*> ans;
+        inorder(root,ans);
+        int count=0;
+        Node *temp1,*temp2,*prev,*last;
+        for(auto i=ans.begin()+1;i!=ans.end();i++){
+            if(((*i)->data)<((*(i-1))->data)){
+                if(count==0){prev=(*(i-1));temp1=(*i);count++;}
+                else if(count==1){temp2=(*i);count++;}
+            }
+        }
+        if(count==1){
+            prev->data=prev->data+temp1->data;
+            temp1->data=prev->data-temp1->data;
+            prev->data=prev->data-temp1->data;
+        }
+        else if(count==2){
+            prev->data=prev->data+temp2->data;
+            temp2->data=prev->data-temp2->data;
+            prev->data=prev->data-temp2->data;
+        }
+        
+    }
+
+HEAP:
+//01.Binary Heap Operations
