@@ -5991,4 +5991,68 @@ public:
         }
         return ans;
     }
-//04.
+
+//05.Kth smallest element
+ public:
+    // arr : given array
+    // l : starting index of the array i.e 0
+    // r : ending index of the array i.e size-1
+    // k : find kth smallest element and return using this function
+    int kthSmallest(int arr[], int l, int r, int k) {
+        //code here
+        priority_queue<int> pq(arr,arr+r+1);
+        int reqd=(r+1)-k+1;
+        while(reqd>1){
+            pq.pop();
+            reqd--;
+        }
+        return pq.top();
+    }
+//06. Kth largest element in a stream
+vector<int> kthLargest(int k, int arr[], int n) {
+        // code here
+        priority_queue<int,vector<int>,greater<int>> pq;
+        vector<int> ans;
+        for(int i=0; i<n; i++)
+        {
+            pq.push(arr[i]);
+            if(pq.size() < k)
+            ans.push_back(-1);
+            else if(pq.size() == k)
+            ans.push_back(pq.top());
+            else
+            {
+                pq.pop();
+                ans.push_back(pq.top());
+            }
+        }
+        return ans;
+    }
+//07.K Most occurring elements
+ static bool comp(pair<int,int> a,pair<int,int> b){
+        if(a.second>b.second){
+            return true;
+        }else if(a.second==b.second){
+            return a.first>b.first;
+        }else return false;
+    }
+    vector<int> topK(vector<int>& nums, int k) {
+        // Code here
+        unordered_map<int,int> h;
+        vector<pair<int,int>> v;
+        vector<int> ans;
+        for(auto i: nums){
+            h[i]++;
+        }
+        for(auto i:h){
+            v.push_back({i.first,i.second});
+        }
+        sort(v.begin(),v.end(),comp);
+        for(auto i:v){
+            if(k>0){
+            ans.push_back(i.first);
+            k--;
+            }else break;
+        }
+        return ans;
+    }
