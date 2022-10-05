@@ -6056,3 +6056,234 @@ vector<int> kthLargest(int k, int arr[], int n) {
         }
         return ans;
     }
+//08.Minimum Cost of ropes
+//Function to return the minimum cost of connecting the ropes.
+    long long minCost(long long arr[], long long n) {
+        // Your code here
+        priority_queue<long long int,vector<long long int>,greater<long long int>> pq(arr,arr+n);
+        long long cost=0,currcost=0;
+        if(pq.size()<=1) return 0;
+        while(pq.size()>1){
+            currcost=0;
+            currcost+=pq.top();
+            pq.pop();
+            currcost+=pq.top();
+            pq.pop();
+            cost+=currcost;
+            pq.push(currcost);
+        }
+        return cost;
+    }
+//09.Nearly sorted
+ //Function to return the sorted array.
+    vector <int> nearlySorted(int arr[], int num, int K){
+        // Your code here
+        priority_queue<int,vector<int>,greater<int>> pq;
+        vector<int> ans;
+        for(int i=0;i<num;i++){
+            pq.push(arr[i]);
+            if(pq.size()>K){
+                ans.push_back(pq.top());
+                pq.pop();
+            }
+        }
+        while(pq.empty()!=true){
+            ans.push_back(pq.top());
+            pq.pop();
+        }
+        return ans;
+    }
+//10.Merge k Sorted Arrays
+struct Triplet{
+    int val;
+    int arraypos;
+    int valuepos;
+    Triplet(int v,int ap,int vp){
+        this->val=v;
+        this->arraypos=ap;
+        this->valuepos=vp;
+    }
+};
+struct mycomp{
+    bool operator()(Triplet &a,Triplet &b){
+        return a.val>b.val;
+    }
+};
+class Solution
+{
+    public:
+    //Function to merge k sorted arrays.
+   /*
+   //m-1 -o(nlogn)  time-0.4 sec
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
+    {
+        //code here
+        vector<int> ans;
+        priority_queue<int,vector<int>,greater<int>> pq;
+        for(int i=0;i<arr.size();i++){
+            for(int j=0;j<arr[i].size();j++){
+                pq.push(arr[i][j]);
+            }
+        }
+        while(pq.empty()!=true){
+            ans.push_back(pq.top());
+            pq.pop();
+        }
+        return ans;
+        
+    }
+    */
+    // m-2 -o(nklogk)  time-0.33 sec
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K){
+        priority_queue<Triplet,vector<Triplet>,mycomp> pq;
+        vector<int> ans;
+        int row=arr.size();
+        for(int i=0;i<row;i++){
+            Triplet t(arr[i][0],i,0);
+            pq.push(t);
+        }
+        while(pq.empty()!=true){
+            Triplet mini=pq.top();
+            pq.pop();
+            int val=mini.val;
+            ans.push_back(val);
+            int ap=mini.arraypos;
+            int vp=mini.valuepos;
+            if((vp+1)<arr[ap].size()){
+                Triplet next(arr[ap][vp+1],ap,(vp+1));
+                pq.push(next);
+            }
+        }
+        return ans;
+    }
+    
+};
+//11.Rearrange characters
+string rearrangeString(string str)
+    {
+        //code here
+        int n=str.length();
+        if(n==0)return "-1";
+        int chars[26]={0};
+        char maxchar;
+        int maxcount=0;
+        for(auto i:str){
+            chars[i-'a']+=1;
+            if(chars[i-'a']>((n+1)/2)) return "-1";
+            if(chars[i-'a']>maxcount){maxcount=chars[i-'a'];maxchar=i;}
+        }
+        int ind=0;
+        string res(n,' ');
+        while(maxcount>0){
+            res[ind]=maxchar;
+            ind+=2;
+            maxcount--;
+            chars[maxchar-'a']--;
+        }
+        for(int i=0;i<26;i++){
+                while(chars[i]>0){
+                    ind=(ind>=n)?1:ind;
+                    res[ind]=i+'a';
+                    ind+=2;
+                    chars[i]--;
+                }
+        }
+        return res;
+    }
+//12.Find median in a stream
+public:
+    //time:o(nlogn) space :o(n)
+    priority_queue<int> maxheap;//for left  to store all elements=<expected median)
+    priority_queue<int,vector<int>,greater<int>> minheap;//for right to store all elements>expected median
+    //Function to insert heap.
+    void insertHeap(int &x)
+    {
+     if(maxheap.size()==0||maxheap.top()>x){
+         maxheap.push(x);
+     }else minheap.push(x);
+     balanceHeaps();
+    }
+    
+    //Function to balance heaps.
+    void balanceHeaps()
+    {
+        if(maxheap.size()>minheap.size()+1){
+            int temp=maxheap.top();
+            maxheap.pop();
+            minheap.push(temp);
+        }else if(minheap.size()>maxheap.size()){
+            int temp=minheap.top();
+            minheap.pop();
+            maxheap.push(temp);
+        }
+    }
+    
+    //Function to return Median.
+    double getMedian()
+    {
+        if(maxheap.size()==minheap.size()){
+            return double(maxheap.top()+minheap.top())/2;
+        }else return maxheap.top();
+    }
+
+GRAPH:
+//01.Print adjacency list
+   // Function to return the adjacency list for each vertex.
+    vector<vector<int>> printGraph(int V, vector<int> adj[]) {
+        // Code here
+        vector<vector<int>> adjlist(V,{0});
+        for(int i=0;i<V;i++){
+            adjlist[i][0]=i;
+            for(auto j:adj[i]){
+                adjlist[i].push_back(j);
+            }
+        }
+        return adjlist;
+    }
+//02.BFS of graph
+ // Function to return Breadth First Traversal of given graph.
+    vector<int> bfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        unordered_map<int,int> h;
+        vector<int> ans;
+        queue<int> q;
+        q.push(0);
+        h[0]++;
+        ans.push_back(0);
+        while(q.empty()!=true){
+            int front=q.front();
+            q.pop();
+            for(auto it:adj[front]){
+                if(h[it]<=0){
+                    h[it]++;
+                    ans.push_back(it);
+                    q.push(it);
+                }
+            }
+        }
+        return ans;
+    }
+//03.DFS of Graph
+ // Function to return a list containing the DFS traversal of the graph.
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        stack<int> st;
+        vector<int> ans;
+        st.push(0);
+        unordered_map<int,int> h;//visited array
+        while(st.empty()!=true){
+            int t=st.top();
+            st.pop();
+            if(h[t]<=0){
+                h[t]=1;
+                ans.push_back(t);
+                for(int it=adj[t].size()-1;it>=0;it--){//we add connected elements in reverse order
+                    if(h[adj[t][it]]<=0){
+                        st.push(adj[t][it]);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+//
