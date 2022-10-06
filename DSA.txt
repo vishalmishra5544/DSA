@@ -6286,4 +6286,141 @@ GRAPH:
         }
         return ans;
     }
-//
+//04.Find the number of islands
+void checkneighbours(vector<vector<char>> &grid,int &m,int &n,int i,int j){
+       if(i>=m||i<0||j>=n||j<0) return;
+       if(grid[i][j]=='0') return;//if we are using visted array then ,also check if visited[i][j]==true
+       grid[i][j]='0';//alternative of visited array is to mark it '0' which will mean it will be caught in base condn and will be treated as visited.
+       checkneighbours(grid,m,n,i-1,j-1);
+       checkneighbours(grid,m,n,i-1,j);
+       checkneighbours(grid,m,n,i-1,j+1);
+       checkneighbours(grid,m,n,i,j-1);
+       checkneighbours(grid,m,n,i,j+1);
+       checkneighbours(grid,m,n,i+1,j-1);
+       checkneighbours(grid,m,n,i+1,j);
+       checkneighbours(grid,m,n,i+1,j+1);
+   }
+    // Function to find the number of islands.
+    int numIslands(vector<vector<char>>& grid) {
+        // Code here
+        int m=grid.size(),n=grid[0].size(),count=0;
+        //vector<vector<bool>> visited(m,{false});
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j]=='1'){// if we are using visted array then ,also check &&visited[i][j]==false
+                    count++;
+                    checkneighbours(grid,m,n,i,j);
+                }
+            }
+        }
+        return count;
+    }
+//05.Detect cycle in an undirected graph
+//mark curr node visited and for each of its child check if they are visited but their parent is not curr node. for such case it means there is an cycle in graph.if it was parent node then means the edge is normal undirected edge which leads 2 calls i.e form child to parent and parent to child thus doesn't means a cycle.
+void dfs(int curr,int parent,vector<int> adj[],vector<bool> &visited,int &flag){
+       visited[curr]=true;
+       for(auto i:adj[curr]){
+           if(visited[i]==false){
+               dfs(i,curr,adj,visited,flag);
+           }else if(visited[i]==true&&i!=parent){
+               flag=1;
+               return;
+           }
+       }
+   }
+    // Function to detect cycle in an undirected graph.
+    bool isCycle(int V, vector<int> adj[]) {
+        // Code here
+        int flag=0;
+        vector<bool> visited(V,false);
+        for(int i=0;i<V;i++){
+            if(visited[i]==false){
+                dfs(i,-1,adj,visited,flag);
+            }
+        }
+        return bool(flag);
+    }
+//06.Detect cycle in a directed graph
+ //Kahn's algo like topological sort we do extraction & if extraction not possible means dependency and thus means cycle. 
+    // Function to detect cycle in a directed graph.
+    bool isCyclic(int V, vector<int> adj[]) {
+        // code here
+        vector<int> indegree(V,0);
+        queue<int> q;
+        int count=0;
+        for(int i=0;i<V;i++){
+            for(auto j:adj[i]){
+                indegree[j]+=1;
+            }
+        }
+        for(int i=0;i<V;i++){
+            if(indegree[i]==0){
+                q.push(i);
+            }
+        }
+        while(q.empty()!=true){
+            int front=q.front();
+            q.pop();
+            count++;
+            for(auto child:adj[front]){
+                indegree[child]--;
+                if(indegree[child]==0){
+                    q.push(child);
+                }
+            }
+        }
+        if(count==V) return false;
+        else return true;
+    }
+//07.Find whether path exist
+ bool dfs(vector<vector<int>>& grid,int i,int j){
+        if(i<0||i>=grid.size()||j<0||j>=grid[0].size())return false;
+        if(grid[i][j]==0) return false;
+        if(grid[i][j]==2) return true;
+        grid[i][j]=0;//to mark curr box as  visited hence next time it will be trapped in base case and won't apply dfs on it.
+        return dfs(grid,i-1,j)||dfs(grid,i,j-1)||dfs(grid,i,j+1)||dfs(grid,i+1,j);
+    }
+    //Function to find whether a path exists from the source to destination.
+    bool is_Possible(vector<vector<int>>& grid) 
+    {
+        //code here
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[i].size();j++){
+                if(grid[i][j]==1){
+                   return dfs(grid,i,j);
+                }
+            }
+        }
+        
+    }
+//08.Topological sort
+//Function to return list containing vertices in Topological order. 
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    // code here
+	    vector<int> indegree(V,0),ans;
+	    queue<int> q;
+	    for(int i=0;i<V;i++){
+	        for(auto j:adj[i]){
+	            indegree[j]++;
+	        }
+	    }
+	    for(int i=0;i<V;i++){
+	        if(indegree[i]==0){
+	            q.push(i);
+	            ans.push_back(i);
+	        }
+	    }
+	    while(q.empty()!=true){
+	        int front=q.front();
+	        q.pop();
+	        for(auto child:adj[front]){
+	            indegree[child]--;
+	            if(indegree[child]==0){
+	                q.push(child);
+	                ans.push_back(child);
+	            }
+	        }
+	    }
+	    return ans;
+	}
