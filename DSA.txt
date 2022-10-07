@@ -6424,3 +6424,108 @@ void dfs(int curr,int parent,vector<int> adj[],vector<bool> &visited,int &flag){
 	    }
 	    return ans;
 	}
+//09.Level of Nodes
+/* //level of nodes in a binary tree
+int lot(Node *root,int &target){
+        if(root->data==target)return 1;
+        queue<Node*> q;
+        q.push(root);
+        int level=1;
+        while(q.empty()!=true){
+            int size=q.size();
+            level++;
+            while(size>0){
+                Node* front=q.front();
+                q.pop();
+                if(front->left){if(front->left->data==target)return level; q.push(front->left);}
+                if(front->right){if(front->right->data==target)return level; q.push(front->right);}
+                size--;
+            }
+        }
+        return 0;
+    }
+    // function should return level of the target node
+    int getLevel(struct Node *node, int target)
+    {
+    	//code here
+    	if(node==NULL)return -1;
+    	return lot(node,target);
+    }
+*/
+//level of node in graph
+int lot(int v,vector<int> adj[],int target){
+	    if(target==0) return 0;
+        queue<int> q;
+        q.push(0);
+        unordered_map<int,bool> visited;
+        int level=0;
+        while(q.empty()!=true){
+            int size=q.size();
+            level++;
+            while(size>0){
+                int front=q.front();
+                q.pop();
+                for(auto child:adj[front]){
+                if(visited[child]==false){if(child==target)return level; q.push(child); visited[child]=true;}
+                if(visited[child]==false){if(child==target)return level; q.push(child);visited[child]=true;}
+                }
+                size--;
+            }
+        }
+        return -1;
+    }
+	//Function to find the level of node X.
+	int nodeLevel(int V, vector<int> adj[], int X) 
+	{
+	    // code here
+	    if(V==0) return -1;
+	    return lot(V,adj,X);
+	}
+//10.Possible paths between 2 vertices
+void dfs(int v,vector<int> adj[],int currentsource,int &destination,int & ans){
+        if(currentsource==destination){
+            ans++;
+            return;
+        }
+        for(auto child:adj[currentsource]){
+            dfs(v,adj,child,destination,ans);
+        }
+    }
+    // Function to count paths between two vertices in a directed graph.
+    int countPaths(int V, vector<int> adj[], int source, int destination) {
+        // Code here
+        int ans=0;
+        dfs(V,adj,source,destination,ans);
+        return ans;
+    }
+//11.X Total Shapes
+void dfs(vector<vector<char>>& grid,int row,int col){
+        if(row<0||row>=grid.size()||col<0||col>=grid[0].size()){
+            return;
+        }
+        if(grid[row][col]!='X'){
+            return;
+        }
+        grid[row][col]='Y';
+        dfs(grid,row-1,col);
+        dfs(grid,row,col-1);
+        dfs(grid,row,col+1);
+        dfs(grid,row+1,col);
+
+    }
+    //Function to find the number of 'X' total shapes.
+    int xShape(vector<vector<char>>& grid) 
+    {
+        // Code here
+        int ans=0;
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[0].size();j++){
+                if(grid[i][j]=='X'){
+                  dfs(grid,i,j);
+                  ans++;
+                }
+            }
+        }
+        return ans;
+    }
+//
