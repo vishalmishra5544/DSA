@@ -6777,3 +6777,113 @@ int orangesRotting(vector<vector<int>>& grid) {
 	    }
 	    return -1;
 	}
+//18.Implementing Dijkstra Algorithm
+	//Function to find the shortest distance of all the vertices
+    //from the source vertex S.
+    vector <int> dijkstra(int V, vector<vector<int>> adj[], int S)
+    {
+        // Code here
+        vector<int> dis(V,INT_MAX);
+        dis[S]=0;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        pq.push({S,0});
+        while(pq.empty()!=true){
+            pair<int,int> top=pq.top();
+            pq.pop();
+            int currnode=top.first;
+            int distancetillnow=top.second;
+            for(auto child:adj[currnode]){
+                int adjnode=child[0];
+                int adjdis=child[1];
+                if(distancetillnow+adjdis<dis[adjnode]){
+                    dis[adjnode]=distancetillnow+adjdis;
+                    pq.push({adjnode,dis[adjnode]});
+                }
+            }
+        }
+        return dis;
+    }
+//19.Minimum Spanning Tree
+//Function to find sum of weights of edges of the Minimum Spanning Tree.
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        // code here
+        //prim's algo:
+        vector<bool> visited(V,false);
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        pq.push({0,0});//{wt,src} here pq is giving priority based on wt.
+        int res=0;
+        while(pq.empty()!=true){
+            pair<int,int> top=pq.top();
+            pq.pop();
+            int currnode=top.second;
+            int distance=top.first;
+            if(visited[currnode]==false){
+                res+=distance;
+                visited[currnode]=true;
+                for(auto child:adj[currnode]){
+                    if(visited[child[0]]==false){
+                        pq.push({child[1],child[0]});
+                    }
+                }
+            }
+        }
+        return res;
+    }
+//20.Strongly Connected Components (Kosaraju's Algo)
+ public: 
+//Kosaraju Algo:
+//  1.  do dfs on the graph and store nodes end time wise in the stack.
+
+//  2.  reverseEdges the given graph(transpose)
+
+//  3.   do the dfs(accordig to the top element of the stack you got from step 1) and count everytime you run the dfs  
+
+//dfs the graph:  
+ void dfsSort(int src, vector<int>&vist, vector<int>adj[], stack<int>&st){
+       vist[src]=1;
+       for(auto x:adj[src]){
+           if(!vist[x]){
+               dfsSort(x,vist,adj,st);
+           }
+       }
+       st.push(src);
+   }
+//revdfs the graph
+ void revDfs(int node, vector<int>&vist, vector<int>transpose[]){
+       vist[node]=1;
+       for(auto it:transpose[node]){
+           if(!vist[it]){
+               revDfs(it,vist,transpose);
+           }
+       }
+ }
+ int kosaraju(int V, vector<int> adj[]){
+       vector<int>vist(V,0);
+       stack<int>st;        
+       // fist point is done means all element push in the stack 
+       for(int i=0; i<V; i++){
+           if(!vist[i]){
+              dfsSort(i,vist,adj,st);
+           }
+       }    
+      // second point is done means transpose of the graph
+      vector<int> transpose[V];
+       for(int i=0; i<V; i++){
+           vist[i]=0;
+           for(auto it:adj[i]){
+               transpose[it].push_back(i);
+           }
+       }
+      // 3rd point is done 
+       int  components=0;
+      while(!st.empty()){
+        int node = st.top();
+        st.pop(); 
+        if(!vist[node]){
+           components++;
+           revDfs(node, vist, transpose); 
+        } 
+       }
+    return  components;
+    }
