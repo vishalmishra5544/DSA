@@ -7213,3 +7213,174 @@ void aphelper(int currnode,int v,vector<int> adj[],vector<bool> &visited,vector<
         }
         return res;
     }
+
+GREEDY:
+//01.Activity Selection
+ public:
+    static bool mycomp(pair<int,int> a,pair<int,int> b){
+        if(a.second<b.second) return true;
+        else if(a.second==b.second) return a.first<b.first;
+        else return false;
+        
+    }
+    //Function to find the maximum number of activities that can
+    //be performed by a single person.
+    int activitySelection(vector<int> start, vector<int> end, int n)
+    {
+        // Your code here
+        if(n<=0) return 0;
+        vector<pair<int,int>> v;
+        for(int i=0;i<start.size();i++){
+            v.push_back({start[i],end[i]});
+        }
+        sort(v.begin(),v.end(),mycomp);
+        int time=0,res=1,i=1;
+        while(i<n){
+            if(v[time].second<v[i].first){
+                res++;
+                time=i;
+            }
+            i++;
+        }
+        return res;
+    }
+//02. Huffman Decoding
+void preorder(MinHeapNode *root,string &binaryString,unordered_map<string,char> &h,string temp){
+    if(root==NULL) return;
+    if(root->data!='$'){
+        h[temp]=root->data;
+    }
+    preorder(root->left,binaryString,h,temp+"0");
+    preorder(root->right,binaryString,h,temp+"1");
+}
+//Function to return the decoded string.
+string decodeHuffmanData(struct MinHeapNode* root, string binaryString)
+{
+    // Code here
+    string ans="",temp="";
+    unordered_map<string,char> h;
+    preorder(root,binaryString,h,temp);
+    temp="";
+    for(int i=0;i<binaryString.length();i++){
+        temp.push_back(binaryString[i]);
+        if(h.find(temp)!=h.end()){
+            ans.push_back(h[temp]);
+            temp="";
+        }
+    }
+    return ans;
+}
+//03.N meetings in one room
+public:
+    static bool mycomp(pair<int,int> a,pair<int,int> b){
+        if(a.second<b.second) return true;
+        else if(a.second==b.second){
+            if(abs(a.second-a.first)<abs(b.second-b.first)) return true;
+            else return false;
+        }else return false;
+    }
+    //Function to find the maximum number of meetings that can
+    //be performed in a meeting room.
+    int maxMeetings(int start[], int end[], int n)
+    {
+        // Your code here
+        if(n<=0) return 0;
+        vector<pair<int,int>> v;
+        for(int i=0;i<n;i++){
+            v.push_back({start[i],end[i]});
+        }
+        sort(v.begin(),v.end(),mycomp);
+        int time=0,i=1,res=1;
+        while(i<n){
+            if(v[time].second<v[i].first){
+                res++;
+                time=i;
+            }
+            i++;
+        }
+        return res;
+    }
+//04.Fractional Knapsack
+bool static mycomp(Item a,Item b){
+        return ((a.value*1.0)/a.weight)>((b.value*1.0)/b.weight) ;
+    }
+    //Function to get the maximum total value in the knapsack.
+    double fractionalKnapsack(int W, Item arr[], int n)
+    {
+        // Your code here
+        if(n<=0) return 0.0;
+        sort(arr,arr+n,mycomp);
+        double res=0;
+        int a=0;
+        while(W>0&&a<n){
+            if(arr[a].weight<W){
+                res+=(arr[a].value);
+                W-=(arr[a].weight);
+                a++;
+            }else {
+                res+=(W*((arr[a].value*1.0)/arr[a].weight));
+                W=0;//w=w-w;
+                a++;
+            }
+        }
+        return res;
+    }
+//05.Largest number with given sum
+ public:
+    //Function to return the largest possible number of n digits
+    //with sum equal to given sum.
+    //each digit can be used only once.
+    string largestNumber(int n, int sum)
+    {
+        // Your code here
+        vector<int> v={9,8,7,6,5,4,3,2,1,0};
+        string res="";
+        int i=0;
+        while(sum>0&&n>0&&i<10){
+            if(sum>=v[i]){
+                res+=to_string(v[i]);
+                sum-=v[i];
+                n--;
+            }else i++;
+            
+        }
+        if(sum>0) return "-1";
+        while(n>0&&sum<=0){
+            res+='0';
+            n--;
+        }
+        return res;
+    }
+//06.Job Sequencing Problem
+public:
+    bool static mycomp(Job a,Job b){
+        if(a.profit>b.profit) return true;
+        else return false;
+    }
+    //Function to find the maximum profit and the number of jobs done.
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        // your code here
+        int maxitime=INT_MIN;
+        for(int i=0;i<n;i++){
+            if(maxitime<arr[i].dead){
+                maxitime=arr[i].dead;
+            }
+        }
+        sort(arr,arr+n,mycomp);
+        vector<int> v(maxitime+1,0);
+        int profit=0,count=0,i=0,t=0;
+        while(i<n){
+                t=arr[i].dead;
+                while(v[t]!=0&&t>=1){
+                    t--;
+                }
+                if(t!=0){
+                    v[t]=arr[i].id;
+                    profit+=arr[i].profit;
+                    count++;
+                }
+                i++;
+        }
+        return {count,profit};
+    } 
