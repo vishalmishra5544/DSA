@@ -7384,3 +7384,69 @@ public:
         }
         return {count,profit};
     } 
+
+BACKTRACKING:
+//01.Largest number in K swaps
+void solve(string str,int k,string &ans,int index,int n){
+        if(k==0)return;
+        char mx=str[index];
+        for(int i=index+1;i<n;i++){
+            mx=max(mx,str[i]);
+        }
+        if(mx!=str[index]) k--;
+        for(int i=n-1;i>=index;i--){
+            if(str[i]==mx){
+                swap(str[index],str[i]);
+                if(ans<str) ans=str;
+                solve(str,k,ans,index+1,n);
+                swap(str[index],str[i]);
+            }
+        }
+    }
+    //Function to find the largest number after k swaps.
+    string findMaximumNum(string str, int k)
+    {
+       // code here.
+       string ans="";
+       solve(str,k,ans,0,str.length());
+       return ans;
+    }
+//02.Rat Maze With Multiple Jumps
+bool isSafe(int i, int j, int n, vector<vector<int>> &matrix) {
+        return (i < n && j < n && matrix[i][j] != 0);
+    }
+
+    bool distanceRec(vector<vector<int>> &matrix, int n, int i, int j) {
+        
+        if (i == n - 1 && j == n - 1) {
+            matrix[i][j] = -1;
+            return true;
+        }
+        if(isSafe(i, j, n, matrix)) {
+            int x = matrix[i][j];
+            matrix[i][j] = -1;
+            for (int a = 1; a <= x; a++) {
+                if (distanceRec(matrix, n, i, j + a) == true) return true;
+                if (distanceRec(matrix, n, i + a, j) == true) return true;
+            }
+            matrix[i][j] = 0;
+        }
+        return false;
+    }
+    
+	vector<vector<int>> ShortestDistance(vector<vector<int>>&matrix){
+	   // Code here
+	   int n = matrix.size();
+	   bool flag = distanceRec(matrix, n, 0, 0);
+	   if (flag) {
+	       for (int i = 0; i < n; i++) {
+	           for (int j = 0; j < n; j++) {
+	               if(matrix[i][j] == -1) matrix[i][j] = 1;
+	               else matrix[i][j] = 0;
+	           }
+	       }
+	       return matrix;
+	   }
+	   else return {{-1}};
+	   
+	}
