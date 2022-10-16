@@ -7482,3 +7482,43 @@ long long numOfWays(int n, int m)
     }
     return count;
 }
+//04.Combination Sum
+//This is subset sum problem with some slight
+// variation.....first we must remove the 
+//duplicates from the arr and then sort in 
+//increasing order as it is been asked in 
+//the question to give output in increasing 
+//order
+void solve(vector<int> &arr, int index, int n, int sum, vector<vector<int>> &ans, vector<int> temp){
+        if(sum == 0){
+            ans.push_back(temp);
+            return;
+        }
+        if(index >= n || sum < 0){
+            return;
+        }
+        if(arr[index] <= sum){
+            temp.push_back(arr[index]);
+            solve(arr,index,n,sum-arr[index],ans,temp);
+            temp.pop_back();
+            solve(arr,index+1,n,sum,ans,temp);
+        }
+        else{
+            solve(arr,index+1,n,sum,ans,temp);
+        }
+    }
+    vector<vector<int> > combinationSum(vector<int> &A, int B) {
+        set<int> s;
+        for(auto x:A){
+            s.insert(x);
+        }
+        vector<int> arr;
+        for(auto x:s){
+            arr.push_back(x);
+        }
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> ans;
+        vector<int> temp;
+        solve(arr, 0, arr.size() , B, ans, temp);
+        return ans;
+    }
