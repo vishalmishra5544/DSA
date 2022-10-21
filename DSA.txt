@@ -544,6 +544,20 @@ void reverse(vector<long long>& arr, int n,int i,int k){
         reverseArr(arr,n,0,n-1);
         
     }
+//Rotate bits
+/*Rotate left and right by d digits
+Given an integer N and an integer D, rotate the binary representation of the integer N by D digits to the left as well as right and print the results in decimal values after each of the rotation.
+Note: Integer N is stored using 16 bits. i.e. 12 will be stored as 0000.....001100.
+*/
+vector <int> rotate (int n, int d)
+        {
+            //code here.
+            int l,r;
+            d=d%16;
+            l=((n<<d)|(n>>(16-d)))&0xFFFF;
+            r=((n>>d)|(n<<(16-d)))&0xFFFF;
+            return {l,r};
+        }
 //Maximum occurred integer-(given n ranges find max appearing element in the ranges given)
  public:
     // L and R are input array
@@ -7522,3 +7536,30 @@ void solve(vector<int> &arr, int index, int n, int sum, vector<vector<int>> &ans
         solve(arr, 0, arr.size() , B, ans, temp);
         return ans;
     }
+//05.Unique Subsets
+    set<vector<int>> m;
+    void solve(vector<int> &v,int n,vector<vector<int>> &ans,int index,vector<int> &s){
+        if(index==n){
+           m.insert(s);
+           return;
+        }
+        if(index>n) return;
+        s.push_back(v[index]);
+        solve(v,n,ans,index+1,s);
+        s.pop_back();
+        solve(v,n,ans,index+1,s);
+    }
+    //Function to find all possible unique subsets.
+    vector<vector<int> > AllSubsets(vector<int> arr, int n)
+    {
+        // code here 
+        sort(arr.begin(),arr.end());
+        vector<vector<int>> ans;
+        vector<int> temp;
+        solve(arr,n,ans,0,temp);
+        for(auto v:m){
+            ans.emplace_back(v);
+        }
+        return ans;
+    }
+//
