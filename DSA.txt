@@ -108,7 +108,25 @@ for(int i=2;i<=n;i++){
 }
 }
 
-
+STRING:
+//Longest Common Prefix in an Array of string
+string longestCommonPrefix (string arr[], int N)
+    {
+        // your code here
+       string prefix=arr[0];
+       for(int i=1;i<N;i++){
+           string ans="";
+           string curr=arr[i];
+           int l=min(prefix.length(),curr.length());
+           for(int j=0;j<l;j++){
+               if(prefix[j]!=curr[j]) break;
+               ans+=curr[j];
+           }
+           if(ans=="") return "-1";
+           else prefix=ans;
+       }
+       return prefix;
+    }
 BIT MANIPULATION:
  // Function to check if given number n is a power of two.
     bool isPowerofTwo(long long n){
@@ -7562,4 +7580,109 @@ void solve(vector<int> &arr, int index, int n, int sum, vector<vector<int>> &ans
         }
         return ans;
     }
-//
+//06. M-Coloring Problem
+ bool isPossible(bool graph[101][101],int m,int n,vector<int> &color,int currnode,int currcolor){
+        for(int child=0;child<n;child++){
+            if(graph[currnode][child]==1){
+                if(color[child]==currcolor) return false;
+            }
+        }
+        return true;
+    }
+    bool rec(bool graph[101][101],int m,int n,vector<int>&color, int currnode){
+        if(currnode>=n) return true;
+        for(int clr=1;clr<=m;clr++){//for each node total m colors to pick and check: thus clr=1 to m
+            if(isPossible(graph,m,n,color,currnode,clr)==true){
+               color[currnode]=clr;
+               if(rec(graph,m,n,color,currnode+1)==true) return true; 
+               else color[currnode]=0;//backtracking
+            }
+        }
+        return false;
+    }
+    // Function to determine if graph can be coloured with at most M colours such
+    // that no two adjacent vertices of graph are coloured with same colour.
+    bool graphColoring(bool graph[101][101], int m, int n) {
+        // your code here
+      vector<int> color(n,0);
+      return rec(graph,m,n,color,0);
+    }
+//07.Solve the Sudoku
+ public:
+    bool isPossible(int grid[N][N],int currval,int r,int c){
+        int blkrow=(r/3)*3,blkcol=(c/3)*3;
+        for(int i=0;i<N;i++){
+            if(i!=c&&grid[r][i]==currval) return false;
+            if(i!=r&&grid[i][c]==currval) return false;
+            if(grid[blkrow+i/3][blkcol+i%3]==currval) return false;
+        }
+      
+        return true;
+    }
+    bool rec(int grid[N][N]){
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                if(grid[i][j]==0){
+                    for(int currval=1;currval<=9;currval++){
+                        if(isPossible(grid,currval,i,j)){
+                            grid[i][j]=currval;
+                            if(rec(grid)==true) return true;
+                            else grid[i][j]=0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    //Function to find a solved Sudoku. 
+    bool SolveSudoku(int grid[N][N])  
+    { 
+        // Your code here
+        
+       return rec(grid);
+    }
+    
+    //Function to print grids of the Sudoku.
+    void printGrid (int grid[N][N]) 
+    {
+        // Your code here 
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                cout<<grid[i][j]<<" ";
+            }
+        }
+    }
+
+
+DYNAMIC PROGRAMMING:
+//03.Print first n Fibonacci Numbers
+long long int nthFibonacci(long long int n){
+        // code here
+        if(n==1||n==2) return 1;
+        if(n<=0) return 0;
+        long long int first=1,second=1,curr=0;
+        for(long long int i=3;i<=n;i++){
+            curr=(second+first)%1000000007;
+            first=second%1000000007;
+            second=curr%1000000007;
+        }
+        return curr;
+    }
+//04. Nth catalan number
+public:
+    //Function to find the nth catalan number.
+    cpp_int findCatalan(int n) 
+    {
+        //code here
+        //use recurrence: cn=((4n-2)/(n+1))*cn-1
+        cpp_int cat=1;
+        if(n==0) return cat;
+        for(cpp_int i=1;i<=n;i++){
+        cat*=(4*i-2);
+        cat/=(i+1);
+        }
+        return cat;
+    }
+
