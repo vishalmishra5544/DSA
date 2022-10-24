@@ -7686,3 +7686,97 @@ public:
         return cat;
     }
 
+//05,06:coins problems:
+ /*recursion:
+   //here qn is to find min no of conins
+    static bool comp(int a,int b){
+        return a>b;
+    }
+    map<int,vector<int>> h;
+    void rec(vector<int> &coins,vector<int> ans,int target,int ind){
+        if(target==0){
+            int s=ans.size();
+            h[s]=ans;
+        }
+        if(ind>=coins.size()||target<0){return;}
+        if(coins[ind]<=target){
+            ans.push_back(coins[ind]);
+            rec(coins,ans,target-coins[ind],ind);
+            ans.pop_back();
+            rec(coins,ans,target,ind+1);
+        }else {
+            rec(coins,ans,target,ind+1);
+        }
+    }
+    vector<int> minPartition(int N)
+    {
+        // code here
+        vector<int> ans;
+        vector<int> coins({1,2,5,10,20,50,100,200,500,2000});
+        rec(coins,ans,N,0);
+        if(h.size()==0) return {};
+        auto it=h.begin();
+        ans=(*it).second;
+        sort(ans.begin(),ans.end(),comp);
+        return ans;
+    }
+    */
+    //greedy:
+    vector<int> minPartition(int N)
+    {
+        // code here
+        vector<int> ans;
+        vector<int> coins({2000,500,200,100,50,20,10,5,2,1});
+        int ind=0;
+        while(N>0&&ind<10){
+            while(N>=coins[ind]){
+                N-=coins[ind];
+                ans.push_back(coins[ind]);
+            }
+            ind++;
+        }
+        return ans;
+    }
+  //dp:
+  //coin change :Here qn is:no of ways to make sum is to find .
+ long long int rec(int coins[], int n, int i, int sum){
+        
+        if(sum==0)
+        return 1;
+        
+        if(i==n || sum<0)
+        return 0;
+        
+        return rec(coins, n, i, sum-coins[i])+rec(coins, n, i+1, sum);
+    }
+    long long int recMemo(int coins[],int n,int sum,int ind,vector<vector<long long int>> &dp){
+        if(sum<0||ind>=n) return 0;
+        if(sum==0) return 1;
+        if(dp[sum][ind]==-1){
+             long long int inc=recMemo(coins,n,sum-coins[ind],ind,dp);
+             long long int exc=recMemo(coins,n,sum,ind+1,dp);
+             dp[sum][ind]=inc+exc;
+             return dp[sum][ind];
+        }
+        else return dp[sum][ind];
+    }
+    long long int Tab(int coins[],int n,vector<vector<long long int>> &dp,int target){
+        for(int j=0;j<=n;j++) dp[0][j]=1;
+        for(int i=0;i<=target;i++){
+            for(int j=n-1;j>=0;j--){
+                long long int inc=0;
+                if((i-coins[j])>=0){
+                    inc=dp[i-coins[j]][j];
+                }
+                long long int exc=dp[i][j+1];
+                dp[i][j]=inc+exc;
+            }
+        }
+        return dp[target][0];
+    }
+    long long int count(int coins[], int N, int sum) {
+
+        // code here.
+        vector<vector<long long int>> dp(sum+1,vector<long long int> (N+1,0));
+        return Tab(coins,N,dp,sum);
+    }
