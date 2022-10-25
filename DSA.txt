@@ -7685,10 +7685,73 @@ public:
         }
         return cat;
     }
+//05.Coin Change - Minimum number of coins
 
-//05,06:coins problems:
+	public:
+	/* //inc exc way of recursion
+    long long int rec(int coins[],int n,int target,int index,long long int &res){
+        if(target<0||index>=n)return INT_MAX;
+        if(target==0) return 0;
+        long long int inc=1+rec(coins,n,target-coins[index],index,res);
+        long long int exc=rec(coins,n,target,index+1,res);
+        return min(inc,exc);
+    }
+    */
+    // chose one by one from all way of recursion
+    long long int rec(int coins[],int n,int target){
+        if(target<0) return INT_MAX;
+        if(target==0) return 0;
+        long long int res=INT_MAX;
+        for(int i=0;i<n;i++){
+            if(coins[i]<=target){
+                res=min(res,(1+rec(coins,n,target-coins[i])));
+            }
+        }
+        return res;
+    }
+    long long int recMemo(int coins[],int n,long long int target,vector<long long int> &dp){
+        if(target<0) return INT_MAX;
+        if(target==0) return 0;
+        if(dp[target]!=-1) return dp[target];
+        long long int res=INT_MAX;
+        for(int i=0;i<n;i++){
+            if(coins[i]<=target){
+                res=min(res,(1+recMemo(coins,n,target-coins[i],dp)));
+            }
+        }
+        dp[target]=res;
+        return dp[target];
+    }
+    int Tab(int coins[],int n,int target,vector<int> &dp){
+        for(int sum=1;sum<=target;sum++){
+            for(int coin=0;coin<n;coin++){
+                if(((sum-coins[coin])>=0)&&(dp[sum-coins[coin]]!=INT_MAX)){
+                  dp[sum]=min(dp[sum],1+dp[sum-coins[coin]]);
+                }
+            }
+        }
+    }
+    
+    int minCoins(int coins[], int M, int V) 
+	{ 
+	    // Your code goes here
+	    /*
+	    long long int res,target=V;
+	    vector<long long int> dp(V+1,-1);
+	    res=recMemo(coins,M,target,dp);
+	    */
+	    int res;
+	    vector<int> dp(V+1,INT_MAX);
+	    dp[0]=0;
+	    Tab(coins,M,V,dp);
+	    res=dp[V];
+	    if(res==INT_MAX) return -1;
+	    else return res;
+	} 
+
+//06.Coin Change - Number of ways
  /*recursion:
-   //here qn is to find min no of conins
+   //here qn is to find min no of coins
     static bool comp(int a,int b){
         return a>b;
     }
