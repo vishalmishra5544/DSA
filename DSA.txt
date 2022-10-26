@@ -7843,3 +7843,132 @@ public:
         vector<vector<long long int>> dp(sum+1,vector<long long int> (N+1,0));
         return Tab(coins,N,dp,sum);
     }
+//07. Ways to write n as sum
+ int rec(int arr[],int n,int target){
+        if(target<0) return 0;
+        if(target==0){
+            return 1;
+        }
+        int res=0;
+        for(int i=0;i<n;i++){
+            if(arr[i]<=target){
+             res+=rec(arr,n,target-arr[i]);
+            }
+        }
+        return res;
+    }
+    int recMemo(int arr[],int n,long long int target,vector<long long int> &dp){
+        if(target<0) return 0;
+        if(target==0){
+            return 1;
+        }
+        if(dp[target]!=-1) return dp[target];
+        long long int res=0;
+        for(int i=0;i<n;i++){
+            if(arr[i]<=target){
+             res=(res+(recMemo(arr,n,target-arr[i],dp)%1000000007))%1000000007;
+            }
+        }
+        dp[target]=res;
+        return dp[target];
+    }
+    
+    int tab(int arr[],int n,long long int target,vector<long long int> &dp){
+        dp[0]=1;
+        for(long long int sum=1;sum<=target;sum++){
+            for(long long int val=0;val<n;val++){
+                if(((sum-arr[val])>=0)&&(dp[sum-arr[val]]!=0)&&(arr[val]<=sum)){
+                  dp[sum]=(dp[sum]+(dp[sum-arr[val]]%1000000007))%1000000007;
+                }
+            }
+        }
+        return dp[target];
+    }
+    // function to count the total  
+    // number of ways to sum up to 'N' 
+    int countWays(int arr[], int m, int N) 
+    { 
+      //code here.
+      vector<long long int> dp(N+1,0);
+      int res=tab(arr,m,(long long int)N,dp);
+      return res;
+    } 
+//08. Count ways to reach the n'th stair
+public:
+    const long long int mod=1e9+7;
+    int rec(int n){
+        if(n<0) return 0;
+        if(n==0) return 1;
+        long long int res=0;
+        res=(res+rec(n-1))%mod;
+        res=(res+rec(n-2))%mod;
+        return res;
+    }
+    int recMemo(int n,vector<long long int> &dp){
+        if(n<0) return 0;
+        if(n==0) return 1;
+        if(dp[n]!=-1) return dp[n];
+        long long int res=0;
+        res=(res+recMemo(n-1,dp))%mod;
+        res=(res+recMemo(n-2,dp))%mod;
+        dp[n]=res;
+        return dp[n];
+    }
+    int tab(int n,vector<long long int> &dp){
+        dp[0]=1;
+        for(long long int i=1;i<=n;i++){//i:noofstair
+            for(long long int j=1;j<=2;j++){//j:noofsteps
+                if(((i-j)>=0)&&(dp[i-j]!=0)){
+                   dp[i]=(dp[i]+dp[i-j])%mod;
+                }
+            }
+        }
+        return dp[n];
+    }
+    //Function to count number of ways to reach the nth stair.
+    int countWays(int n)
+    {
+        // your code here
+        vector<long long int> dp(n+1,0);
+        int res;
+        res=tab(n,dp);
+        return res;
+    }
+//09.Count ways to N'th Stair(Order does not matter)
+     int nthStair(int n){
+        //  Code here
+	return (n/2)+1;
+     }
+	public:
+	//order does not matter means: {1,2,1},{1,1,2},{2,1,1} all are same.
+	int nthStair(int n){
+	    //  Code here
+	    /*m1:return (n/2)+1;
+	    Consider that you have N stairs. First of all you have to understand if N is odd or even.
+            If is even than it will be a multiple of 2: N = 2*S, where S is the number of pair of stairs.
+            Suppose N = 6 and S = 3. Your first solution is {2,2,2}. than you can change the first 2 stairs with 1 + 1 stairs and you have your second solution {1, 1, 2 ,2}. 
+            Since order doesn't matter let's proceed with the next pair and we have our third solution {1, 1, 1, 1, 2} and then the fourth {1, 1, 1, 1, 1, 1}
+            Given N = 2*S the number of possible solutions are S + 1.
+            Now suppose N is odd and N = 2S + 1. Let N = 7 and S = 3. Our solutions are {2,2,2,1}, {1,1,2,2,1}, {1,1,1,1,2,1} and {1,1,1,1,1,1,1}. Again, the number of solutions is given by S+1
+            Now your algorithm is pretty simple:
+            return N/2 + 1
+		    */
+	    /*m2:
+	    example:
+            jumps =[1,2]
+            Lets say that jump =1, so for any stair, the number of ways will always be equal to 1.
+            Now for jump=2, say for stair 8: no of ways will be (no of ways to reach 8 using 1 only)+(no of ways to reach 6 using both 1 and 2 because you can reach to 8 from 6 by just a jump of 2).
+            So the code will looks like:
+             for(int i=1; i<=n;i++)
+                 dp[i]=1;
+            for(int i=2;i<=n;i++)
+                dp[i]=dp[i]+dp[i-2];
+            return dp[n];
+            */
+	     vector<int> dp(n+1,1);
+             dp[0]=1;
+	     for(int i=2;i<=n;i++){
+		dp[i]=dp[i]+dp[i-2];
+	     }
+       	    return dp[n];
+	}
