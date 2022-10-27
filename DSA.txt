@@ -7972,3 +7972,97 @@ public:
 	     }
        	    return dp[n];
 	}
+//10. Count number of hops
+ public:
+    const long long int mod=1e9+7;
+    long long int rec(int n){
+        if(n<0) return 0;
+        if(n==0) return 1;
+        long long int res=0;
+        res=(res+rec(n-1))%mod;
+        res=(res+rec(n-2))%mod;
+        res=(res+rec(n-3))%mod;
+        return res;
+    }
+    long long int recMemo(int n,vector<long long int> &dp){
+        if(n<0) return 0;
+        if(n==0) return 1;
+        if(dp[n]!=-1) return dp[n];
+        long long int res=0;
+        res=(res+recMemo(n-1,dp))%mod;
+        res=(res+recMemo(n-2,dp))%mod;
+        res=(res+recMemo(n-3,dp))%mod;
+        dp[n]=res;
+        return dp[n];
+    }
+    long long int tab(int n,vector<long long int> &dp){
+        dp[0]=1;
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=3;j++){
+                if((i-j)>=0&&dp[i-j]!=0)
+                  dp[i]=(dp[i]+dp[i-j])%mod;
+            }
+        }
+        return dp[n];
+    }
+    //Function to count the number of ways in which frog can reach the top.
+    long long countWays(int n)
+    {
+        // your code here
+        vector<long long int> dp(n+1,0);
+        long long int res;
+        res=tab(n,dp);
+        return res;
+    }
+//11. Reach a given score
+const long long int mod=1e9+7;
+long long int rec(vector<long long int> &arr,long long int n,long long int index){
+    if(n<0||index>=arr.size()) return 0;
+    if(n==0) return 1;
+    long long int inc=rec(arr,n-arr[index],index)%mod;
+    long long int exc=rec(arr,n,index+1)%mod;
+    return (inc+exc)%mod;
+}
+long long int recMemo(vector<long long int> &arr,long long int n,long long int index,vector<vector<long long int>> &dp){
+    if(n<0||index>=arr.size()) return 0;
+    if(n==0) return 1;
+    if(dp[n][index]!=-1) return dp[n][index];
+    long long int inc=recMemo(arr,n-arr[index],index,dp)%mod;
+    long long int exc=recMemo(arr,n,index+1,dp)%mod;
+    dp[n][index]=(inc+exc)%mod;
+    return dp[n][index];
+}
+long long int tab1(vector<long long int> &arr,long long int n,long long int index,vector<vector<long long int>> &dp){
+     for(int i = 0;i<=3;i++){
+           dp[0][i] = 1;
+       }
+       for(int i = 1;i<=n;i++){
+           for(int j = 1;j<4;j++){
+               if(i>=arr[j-1]){
+                   dp[i][j] =(dp[i][j-1]+dp[i-arr[j-1]][j])%mod;
+               }else{
+                   dp[i][j] =(dp[i][j-1])%mod;
+               }
+           }
+       }
+       return dp[n][3];
+}
+long long int tab2(vector<long long int> &arr,long long int n,long long int index,vector<long long int> &dp){
+    dp[0]=1;
+    for(int i=0;i<arr.size();i++){
+     for(int j=arr[i];j<n+1;j++){
+         dp[j]+=dp[j-arr[i]];
+     }
+ }
+    return dp[n];
+}
+
+long long int count(long long int n)
+{  
+	long long int res;
+	vector<long long int> arr({3,5,10});
+	vector<vector<long long int>> dp1(n+1,vector<long long int> ((arr.size()+1),0));
+	vector<long long int> dp2(n+1,0);
+	res=tab2(arr,n,0,dp2);
+	return res;
+}
