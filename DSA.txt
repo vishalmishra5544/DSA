@@ -957,7 +957,53 @@ int main()
         return max(circular_sum,normal_sum);//max of( wrap up sum,non-wrap up sum or std sum)
     }
 
-
+//Smallest subarray with sum greater than x
+int smallestSubWithSum(int arr[], int n, int x)
+    {
+        // Your code goes here
+        long long int prefix=0,start=0,ans=INT_MAX,end=0;
+        if(n==1){
+            if(x<arr[0]) return 1;
+            else return 0;
+        }
+        while(end<n){//sliding window
+            prefix+=arr[end];
+            while(prefix>x&&start<=end){//window shrink
+                ans=min(ans,end-start+1);
+                prefix-=arr[start];
+                start++;
+            }
+            end++;
+        }
+        return ans;
+    }
+//First negative integer in every window of size k
+vector<long long> printFirstNegativeInteger(long long int arr[],long long int n, long long int k) {
+        map<int,int> h;
+        long long int i=0,start=0,res=0;
+        vector<long long int> ans;
+        for(i=0;i<k;i++){
+            if(arr[i]<0) h[i]=arr[i];
+        }
+        auto it=h.begin();
+        if(h.size()>0)it=h.begin();
+        else it=h.end();
+        if(it!=h.end()&&(*it).second<0) res=(*it).second;
+        else res=0;
+        ans.push_back(res);
+        while(i<(n)){
+            if(arr[i]<0) h[i]=arr[i];
+            if(arr[start]<0) {h.erase(start);}
+            i++;
+            start++;
+            if(h.size()>0)it=h.begin();
+            else it=h.end();
+            if(it!=h.end()&&((*it).second<0)) res=(*it).second;
+            else res=0;
+            ans.push_back(res);
+        }
+        return ans;
+ }
 SEARCHING:
 //search an element in an array  - linear search
   public:
