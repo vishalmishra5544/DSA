@@ -1024,6 +1024,29 @@ public:
         if(k%2==0) return res;
         else return res-=2*mini;
     }
+//Max sum path in two arrays
+ int max_path_sum(int A[], int B[], int m, int n)
+    {
+        //Your code here
+       int i=0,j=0,s1=0,s2=0,res=0;
+       while(i<m&&j<n){
+           if(A[i]<B[j]){
+               s1+=A[i];
+               i++;
+           }else if(A[i]>B[j]){
+               s2+=B[j];
+               j++;
+           }else{
+               res+=max(s1,s2)+A[i];
+               s1=0;s2=0;
+               i++;j++;
+           }
+       }
+       while(i<m) s1+=A[i++];
+       while(j<n) s2+=B[j++];
+       res+=max(s1,s2);
+       return res;
+    }
 SEARCHING:
 //search an element in an array  - linear search
   public:
