@@ -3458,6 +3458,22 @@ public:
         head=curr;
         return head;
     }
+//12.1 Reverse a Linked List in groups of given size.
+public:
+    struct node *reverse (struct node *head, int k)
+    { 
+        if(head==NULL||head->next==NULL) return head;
+        int c=k;
+        node *curr=head,*prev=NULL,*next=NULL;
+        while(k--&&curr!=NULL){
+            next=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+        }
+        head->next=reverse(curr,c);
+        return prev;
+    }
 //13.Detect Loop in linked list
 public:
     //Function to check if the linked list has a loop.
@@ -8217,3 +8233,135 @@ long long int count(long long int n)
 	res=tab2(arr,n,0,dp2);
 	return res;
 }
+//12.Minimum number of jumps
+//refer gfg
+int minJumps(int arr[], int n){
+      if(n==1) return 0;
+      if(arr[0]==0) return -1;
+      int rng=arr[0];
+      int steps=arr[0];
+      int jump=1;
+      for(int i=1;i<n;i++){
+          if(i==n-1) return jump;
+          rng=max(rng,i+arr[i]);
+          steps--;
+          if(steps==0){
+              jump++;
+              if(rng<=i) return -1;
+              steps=rng-i;
+          }
+      }
+    return -1;
+    }
+//13.nCr
+const long long int mod=1e9+7;
+    long long int rec(int n,int r){//USE NCR+NC(R-1) = (N+1)CR
+        if(n<r||n<0||r<0) return 0;
+        else if((n==r)||(n>r&&r==0)) return 1;
+        else if((n>r&&r==1)||(n>r&&((n-r)==1))) return n;
+        return (rec(n-1,r-1)%mod+rec(n-1,r)%mod)%mod;
+    }
+     long long int recMemo(long long int n,long long int r,vector<vector<long long int>> &dp){
+        if(n<r||n<0||r<0) return 0;
+        else if((n==r)||(n>r&&r==0)) return 1;
+        else if((n>r&&r==1)||(n>r&&((n-r)==1))) return n;
+        long long int first=-1,second=-1;
+        if(dp[n-1][r-1]!=-1) first=dp[n-1][r-1];
+        else if(first==-1) first=recMemo(n-1,r-1,dp)%mod;
+        if(dp[n-1][r]!=-1)  second=dp[n-1][r];
+        else if(second==-1) second=recMemo(n-1,r,dp)%mod;
+        return (first+second)%mod;
+    }
+    int nCr(int n, int r){
+        // code here
+       /* 
+        vector<vector<long long int>> dp(n+1,vector<long long int> (r+1,-1));
+        for(long long int i=0;i<=r;i++){
+            dp[0][i]=0;
+        }
+        for(long long int i=0;i<=n;i++){
+            dp[i][0]=1;
+        }
+        for(long long int i=1;i<=n;i++){
+            dp[i][1]=i;
+        }
+        return recMemo((long long int)n,(long long int)r,dp);
+        */ 
+        //TABULATION
+        vector<vector<long long int>> dp(n+1,vector<long long int> (r+1,0));
+        for(long long int i=0;i<=r;i++){
+            dp[0][i]=0;
+        }
+         for(long long int i=0;i<=n;i++){
+            dp[i][0]=1;
+        }
+        for(long long int i=1;i<=n;i++){
+            dp[i][1]=i;
+        }
+        for(long long int i=1;i<=n;i++){
+            for(long long int j=1;j<=r;j++){
+                dp[i][j]=(dp[i-1][j]%mod+dp[i-1][j-1]%mod)%mod;
+            }
+        }
+        return dp[n][r];
+    }
+//14. Kadane's Algorithm
+long long maxSubarraySum(int arr[], int n){
+        
+        // Your code here
+        long long int sum=0,res=INT_MIN;
+        for(int i=0;i<n;i++){
+            sum+=arr[i];
+            res=max(res,sum);
+            if(sum<0) sum=0;
+        }
+        return res;
+        
+    }
+//16. Unique BST's
+const long long int mod=1e9+7;
+    /* use catalan recurrence
+    long long int rec(int n){
+        if(n<=0) return 1;
+        if(n==1) return 1;
+        return (((rec(n-1)%mod)*(4*n-2))%mod/(n+1))%mod;
+    }
+    */
+    long long int rec(int n){
+        if(n<=0) return 1;
+        if(n==1) return 1;
+        long long int res=0;
+        for(int i=0;i<n;i++){// in a bst  for n nodes no of unique structures: i nodes in left * n-i-1 nodes in right; eg for i=0-> rootnode=1,left=0 nodes,right=2 to n nodes;
+            res=(res+((rec(i)%mod)*(rec(n-i-1)%mod))%mod)%mod;
+        }
+        return res;
+    }
+    long long int recMemo(int n,vector<long long int> &dp){
+        if(n<=0) return 1;
+        if(n==1) return 1;
+        if(dp[n]!=-1) return dp[n];
+        long long int res=0;
+        for(int i=0;i<n;i++){
+            res=(res+((recMemo(i,dp)%mod)*(recMemo(n-i-1,dp)%mod))%mod)%mod;
+        }
+        dp[n]=res;
+        return dp[n];
+    }
+    long long int tab(int n,vector<long long int> &dp){
+        dp[0]=1;
+        dp[1]=1;
+        for(int i=2;i<=n;i++){ //i is no of nodes and in left there are j nodes and in right n-j-1
+            for(int j=0;j<i;j++){
+                dp[i]=(dp[i]+((dp[j]%mod)*(dp[i-j-1]%mod)))%mod;
+            }
+        }
+        return dp[n];
+    }
+    //Function to return the total number of possible unique BST. 
+    int numTrees(int N) 
+    {
+        // Your code here
+       // vector<long long int> dp(N+1,-1); //for memo
+       vector<long long int> dp(N+1,0);
+       return tab(N,dp);
+    }
