@@ -1,3 +1,4 @@
+K-th element of two sorted Arrays
 MATHEMATICS AND BASICS:
 //finding number of digits in a number
 int numOfDigits(int n){
@@ -1110,6 +1111,20 @@ SEARCHING:
        return (binary_search(arr,arr+N,K)==1)?1:-1;
        
     }
+//Search in a Rotated Array
+int search(int A[], int l, int h, int key){
+        // l: The starting index
+        // h: The ending index, you have to search the key in this range
+        
+        //complete the function here
+        while(l<h){
+            if(A[l]==key) return l;
+            else l++;
+            if(A[h]==key) return h;
+            else h--;
+        }
+        return -1;
+    }
 //Count the zeroes
 int countZeroes(int arr[], int n) {
         // code here
@@ -1193,6 +1208,22 @@ public:
         }
         
         
+    }
+//K-th element of two sorted Arrays
+int kthElement(int arr1[], int arr2[], int n, int m, int k)
+    {
+        int i=0,j=0,res;
+        while(i<n&&j<m&&k>0){
+            if(arr1[i]<=arr2[j]) k--,res=arr1[i],i++;
+            else if(arr1[i]>arr2[j]) k--,res=arr2[j],j++;
+        }
+        if(i<n&&k>0){
+            res=arr1[i+k-1];
+        }
+        if(j<m&&k>0){
+            res=arr2[j+k-1];
+        }
+        return res;
     }
 // with duplicates
 // Function to find minimum element
