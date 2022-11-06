@@ -1111,6 +1111,28 @@ SEARCHING:
        return (binary_search(arr,arr+N,K)==1)?1:-1;
        
     }
+//Find the element that appears once in sorted array
+int findOnce(int arr[], int n)
+    {
+        //code here.
+        if(n==1) return arr[0];
+        if(n>1&&arr[0]!=arr[1]) return arr[0];
+        if(n>1&&arr[n-2]!=arr[n-1]) return arr[n-1];
+        int l=0,h=n-1,mid;
+        while(l<=h){
+            mid=l+((h-l)/2);
+            if(((arr[mid]!=arr[mid-1])&&(arr[mid]!=arr[mid+1]))) return arr[mid];
+            else if(arr[mid]==arr[mid+1]){
+                if(mid%2!=0){//odd no of elements in right half
+                    h=mid-1;
+                }else l=mid+1; //even
+            }else if(arr[mid]==arr[mid-1]){
+                 if(mid%2==0){//even no of elements in left
+                    h=mid-1;
+                }else l=mid+1; //odd
+            }
+        }
+    }
 //Search in a Rotated Array
 int search(int A[], int l, int h, int key){
         // l: The starting index
@@ -2514,6 +2536,41 @@ public:
       }
       if(maxi==INT_MIN) return 1;
       return maxi;
+    }
+//Triplet Sum in Array
+ bool find3Numbers(int arr[], int n, int X)
+    {  
+        /*m-1:o(n^2)
+        unordered_map<int,int> h;
+        for(int i=0;i<n;i++) h[arr[i]]++;
+        for(int i=0;i<=(n-3);i++){
+            for(int j=i+1;j<n;j++){
+                int y=(arr[i]+arr[j]);
+                if(y<X){
+                    int t=X-y;
+                    h[arr[i]]--;
+                    h[arr[j]]--;
+                    if(h[t]>0) return true;
+                    h[arr[i]]++;
+                    h[arr[j]]++;
+                }
+            }
+        }
+        return false;
+        */
+        //m-2:o(n^2)
+        int l,h;
+        sort(arr,arr+n);//o(nlogn)
+        for(int i=0;i<n-2;i++){//o(n^2)
+            l=i+1;
+            h=n-1;
+            while(l<h){
+              if(arr[i]+arr[l]+arr[h]==X) return true;
+              else if(arr[i]+arr[l]+arr[h]<X) l++;
+              else h--;
+            }
+        }
+        return false;
     }
 
 STRINGS:
