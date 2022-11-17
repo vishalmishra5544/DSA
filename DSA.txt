@@ -8522,3 +8522,77 @@ const long long int mod=1e9+7;
        vector<long long int> dp(N+1,0);
        return tab(N,dp);
     }
+//17.Sum of all substrings of a number
+//Function to find sum of all possible substrings of the given string.
+    /*
+    We can solve this problem by using dynamic programming. We can write a summation of all substrings on basis of the digit at which they are ending in that case, 
+Sum of all substrings = sumofdigit[0] + sumofdigit[1] + sumofdigit[2] … + sumofdigit[n-1] where n is length of string.
+Where sumofdigit[i] stores the sum of all substring ending at ith index digit, in the above example, 
+
+Example: num = “1234”
+
+sumofdigit[0] = 1 = 1
+sumofdigit[1] = 2 + 12  = 14
+sumofdigit[2] = 3 + 23  + 123 = 149
+sumofdigit[3] = 4 + 34  + 234 + 1234  = 1506
+Result = 1670
+
+Now we can get the relation between sumofdigit values and can solve the question iteratively. Each sumofdigit can be represented in terms of previous value as shown below, For above example,
+
+sumofdigit[3] = 4 + 34 + 234 + 1234
+                     = 4 + 30 + 4 + 230 + 4 + 1230 + 4
+                     = 4*4 + 10*(3 + 23 +123)
+                     = 4*4 + 10*(sumofdigit[2])
+
+In general, sumofdigit[i]  =  (i+1)*num[i] + 10*sumofdigit[i-1]
+    */
+    long long sumSubstrings(string s){
+        const long long int mod=1e9+7;
+        vector<long long int> sum(s.length(),0);
+        sum[0]=s[0]-'0';
+        long long int res=sum[0];
+        for(int i=1;i<s.length();i++){
+           sum[i]=((i+1)*(s[i]-'0')+10*(sum[i-1]))%mod;
+           res=(res+sum[i])%mod;
+        }
+        return res%mod;
+    }
+//18.Max sum subarray by removing at most one element
+public:
+    //Function to return maximum sum subarray by removing at most one element.
+    /*
+    Follow the below steps to Implement the idea:
+
+Initialize two arrays, one for prefix max sum fw[] and another for suffix max sum bw[].
+Run two for loops 
+First one to store the maximum current sum from prefix in fw[] and 
+The other loop stores the same for suffix in bw[]. 
+Getting the current maximum and updating it is the same as Kadane’s algorithm. 
+Now for one element removal iterate over each index i, calculate the maximum subarray sum after ignoring ith element i.e. fw[i-1] + bw[i+1] 
+So loop for all possible index i and choose the maximum among them
+    */
+    int maxSumSubarray(int arr[], int n)
+    {
+       int lef[n];//forward kadane
+       int ri[n];//backward kadane
+        
+        lef[0] = arr[0];
+        ri[n-1] = arr[n-1];
+        int ans = max(lef[0], ri[n-1]);
+        for(int i=1; i<n; i++)
+        {
+            lef[i] = max(arr[i], arr[i]+lef[i-1]);
+            ans = max(ans, lef[i]);
+        }
+        for(int i=n-2; i>=0; i--)
+        {
+            ri[i] = max(arr[i], arr[i]+ri[i+1]);
+            ans = max(ans, ri[i]);
+        }
+        
+        for(int i=1; i<n-1; i++)
+        {
+            ans = max(ans, lef[i-1]+ri[i+1]);//remove ith element
+        }
+        return ans;
+    }
