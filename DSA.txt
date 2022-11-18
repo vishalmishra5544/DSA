@@ -8596,3 +8596,230 @@ So loop for all possible index i and choose the maximum among them
         }
         return ans;
     }
+//19. Longest Increasing Subsequence
+int rec(int arr[],int n,int curr,int prev){
+        if(curr>=n) return 0;
+        //include
+        int take=0;
+        if(prev==-1||arr[curr]>arr[prev]){
+            take=1+rec(arr,n,curr+1,curr);
+        }
+        //exclude
+        int notTake=0+rec(arr,n,curr+1,prev);
+        return max(take,notTake);
+    }
+    int recMemo(int arr[],int n,int curr,int prev,vector<vector<int>> &dp){//curr:0 to n-1,prev:-1 to n-1
+        if(curr>=n) return 0;
+        if(dp[curr][prev+1]!=-1) return dp[curr][prev+1];
+        //include
+        int take=0;
+        if(prev==-1||arr[curr]>arr[prev]){
+            take=1+recMemo(arr,n,curr+1,curr,dp);
+        }
+        //exclude
+        int notTake=0+recMemo(arr,n,curr+1,prev,dp);
+        dp[curr][prev+1]=max(take,notTake);
+        return dp[curr][prev+1];
+    }
+    int tab(int arr[],int n,vector<vector<int>> &dp){//curr:0 to n-1,prev:-1 to n-1
+        for(int curr=n-1;curr>=0;curr--){//start from rev dir for bottom-up soln or tab --> curr:n-1 to 0
+            for(int prev=curr-1;prev>=-1;prev--){//-->prev:n-1 to -1 but prev by definition means curr-1 or just one early to curr so prev:curr-1 to -1
+                  //include
+                    int take=0;
+                    if(prev==-1||arr[curr]>arr[prev]){
+                        take=1+dp[curr+1][curr+1];// here also prev coordinate is changed so do curr+1 for columns index, in rec,recmemo there was no need to do this as we had seperate prev variable and only dp needed to be mapped for changed coordinates
+                    }
+                    //exclude
+                    int notTake=0+dp[curr+1][prev+1];//doint prev+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+                    dp[curr][prev+1]=max(take,notTake);//doint prev+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+            }
+        }
+        return dp[0][-1+1];// here return (0,-1) so doint -1+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+      
+    }
+    int tabSpaceOptimized(int arr[],int n){//for space optimization we see that dp[curr][prev+1] depends on dp[curr+1][curr+1] and dp[curr+1][prev+1]; means row is common i.e (curr+1) i.e nextRow so store two rows only currRow for processing and nextRow. Also after every iteration currRow moves up and nextrow moves up to currRow. //curr:0 to n-1,prev:-1 to n-1
+       vector<int> currRow(n+1,0);
+       vector<int> nextRow(n+1,0);
+        for(int curr=n-1;curr>=0;curr--){//start from rev dir for bottom-up soln or tab --> curr:n-1 to 0
+            for(int prev=curr-1;prev>=-1;prev--){//-->prev:n-1 to -1 but prev by definition means curr-1 or just one early to curr so prev:curr-1 to -1
+                  //include
+                    int take=0;
+                    if(prev==-1||arr[curr]>arr[prev]){
+                        take=1+nextRow[curr+1];// here also prev coordinate is changed so do curr+1 for columns index, in rec,recmemo there was no need to do this as we had seperate prev variable and only dp needed to be mapped for changed coordinates
+                    }
+                    //exclude
+                    int notTake=0+nextRow[prev+1];//doint prev+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+                    currRow[prev+1]=max(take,notTake);//doint prev+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+            }
+            nextRow=currRow;
+        }
+        return nextRow[-1+1];// here return (0,-1) so doint -1+1 to change coordinate of index from 0 to n for prev ,as -1 is not valid index
+      
+    }
+    int optimized(int arr[],int n){//dp+binary search:o(nlogn)
+        if(n==0) return 0;
+        vector<int> ans;
+        ans.push_back(arr[0]);
+        for(int i=1;i<n;i++){
+            if(arr[i]>ans.back()){
+                ans.push_back(arr[i]);
+            }else {
+                //index of just bada element in vector 
+                int index=lower_bound(ans.begin(),ans.end(),arr[i])-ans.begin();//o(logn)
+                ans[index]=arr[i];
+            }
+        }
+        return ans.size();
+    }
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+      // return rec(a,n,0,-1);
+      /*vector<vector<int>> dp(n,vector<int> (n+1,-1));
+      return recMemo(a,n,0,-1,dp);
+      */
+      /*vector<vector<int>> dp(n+1,vector<int> (n+1,0));
+      return tab(a,n,dp);
+      */
+      //return tabSpaceOptimized(a,n);
+      return optimized(a,n);
+    }
+//20.Longest Common Subsequence
+public:
+    int rec(string s1,int i,string s2,int j){
+        if(i>=s1.length()||j>=s2.length()) return 0;
+        //match
+        if(s1[i]==s2[j]){
+            return 1+rec(s1,i+1,s2,j+1);
+        }else{//not a match
+            return max(rec(s1,i,s2,j+1),rec(s1,i+1,s2,j));
+        }
+    }
+    int recMemo(string s1,int i,string s2,int j,vector<vector<int>> &dp){
+        if(i>=s1.length()||j>=s2.length()) return 0;
+        if(dp[i][j]!=-1) return dp[i][j];
+        //match
+        if(s1[i]==s2[j]){
+            return dp[i][j]= 1+recMemo(s1,i+1,s2,j+1,dp);
+        }else{//not a match
+            return dp[i][j]=max(recMemo(s1,i,s2,j+1,dp),recMemo(s1,i+1,s2,j,dp));
+        }
+    }
+    int tab(string s1,string s2,vector<vector<int>> &dp){
+        dp[s1.length()][s2.length()]=0;
+        for(int i=s1.length()-1;i>=0;i--){
+            for(int j=s2.length()-1;j>=0;j--){
+                //match
+                if(s1[i]==s2[j]){
+                    dp[i][j]= 1+dp[i+1][j+1];
+                }else{//not a match
+                    dp[i][j]=max(dp[i][j+1],dp[i+1][j]);
+                }
+            }
+        }
+        return dp[0][0];
+    }
+    int tabSpaceOptimized(string s1,string s2){
+        vector<int> currRow(s2.length()+1,0),nextRow(s2.length()+1,0);
+        for(int i=s1.length()-1;i>=0;i--){
+            for(int j=s2.length()-1;j>=0;j--){
+                //match
+                if(s1[i]==s2[j]){
+                    currRow[j]= 1+nextRow[j+1];
+                }else{//not a match
+                    currRow[j]=max(currRow[j+1],nextRow[j]);
+                }
+            }
+            nextRow=currRow;
+        }
+        return nextRow[0];
+    }
+    //Function to find the length of longest common subsequence in two strings.
+    int lcs(int x, int y, string s1, string s2)
+    {
+        // your code here
+        //return rec(s1,0,s2,0);
+        /*vector<vector<int>> dp(x,vector<int> (y,-1));
+        return recMemo(s1,0,s2,0,dp);
+        */
+        /*vector<vector<int>> dp(x+1,vector<int> (y+1,0));
+         return tab(s1,s2,dp);
+         */
+         return tabSpaceOptimized(s1,s2);
+    }
+//21. Shortest Common Supersequence
+ int tabSpaceOptimized(string s1,string s2){
+        vector<int> currRow(s2.length()+1,0),nextRow(s2.length()+1,0);
+        for(int i=s1.length()-1;i>=0;i--){
+            for(int j=s2.length()-1;j>=0;j--){
+                //match
+                if(s1[i]==s2[j]){
+                    currRow[j]= 1+nextRow[j+1];
+                }else{//not a match
+                    currRow[j]=max(currRow[j+1],nextRow[j]);
+                }
+            }
+            nextRow=currRow;
+        }
+        return nextRow[0];
+    }
+    //Function to find the length of longest common subsequence in two strings.
+    int lcs(int x, int y, string s1, string s2)
+    {
+         return tabSpaceOptimized(s1,s2);
+    }
+    //Function to find length of shortest common supersequence of two strings.
+    int shortestCommonSupersequence(string X, string Y, int m, int n)
+    {
+        //code here
+        return m+n-lcs(m,n,X,Y);
+    }
+//22.Number of Unique Paths
+public:
+    int rec(int a,int b,int i,int j){
+        if(i>=a||j>=b) return 0;
+        if(i==(a-1)&&j==(b-1)) return 1;
+        return rec(a,b,i,j+1)+rec(a,b,i+1,j);
+    }
+    int recMemo(int a,int b,int i,int j,vector<vector<int>> &dp){
+        if(i>=a||j>=b) return 0;
+        if(i==(a-1)&&j==(b-1)) return 1;
+        if(dp[i][j]!=-1) return dp[i][j];
+        return dp[i][j]=(recMemo(a,b,i,j+1,dp)+recMemo(a,b,i+1,j,dp));
+    }
+    int tab(int a,int b,vector<vector<int>> &dp){
+        dp[a-1][b-1]=1;
+        for(int i=a-1;i>=0;i--){
+            for(int j=b-1;j>=0;j--){
+                if(i==a-1&&j==b-1) continue;
+                dp[i][j]=(dp[i][j+1]+dp[i+1][j]);
+            }
+        }
+        return dp[0][0];
+    }
+    int tabSpaceOptimized(int a,int b){
+        vector<int> currRow(b+1,0),nextRow(b+1,0);
+        currRow[b-1]=1;
+        nextRow[b-1]=1;
+        for(int i=a-1;i>=0;i--){
+            for(int j=b-1;j>=0;j--){
+                if(i==a-1&&j==b-1) continue;
+                currRow[j]=(currRow[j+1]+nextRow[j]);
+            }
+            nextRow=currRow;
+        }
+        return nextRow[0];
+    }
+    //Function to find total number of unique paths.
+    int NumberOfPath(int a, int b)
+    {
+        //code here
+        //return rec(a,b,0,0);
+        /*vector<vector<int>> dp(a,vector<int> (b,-1));
+        return recMemo(a,b,0,0,dp);
+        */
+        /*vector<vector<int>> dp(a+1,vector<int> (b+1,0));
+        return tab(a,b,dp);
+        */
+        return tabSpaceOptimized(a,b);
+    }
