@@ -8823,3 +8823,110 @@ public:
         */
         return tabSpaceOptimized(a,b);
     }
+//23. Maximize The Cut Segments
+ public:
+    int rec(int n,int x,int y,int z){
+        if(n<0) return INT_MIN;
+        if(n==0) return 0;
+        int res=INT_MIN;
+        int a=rec(n-x,x,y,z);
+        if(a!=INT_MIN) res=max(res,a+1);
+        int b=rec(n-y,x,y,z);
+        if(b!=INT_MIN) res=max(res,b+1);
+        int c=rec(n-z,x,y,z);
+        if(c!=INT_MIN) res=max(res,c+1);
+        return res;
+    }
+    int recMemo(int n,int x,int y,int z,vector<int> &dp){
+        if(n<0) return INT_MIN;
+        if(n==0) return 0;
+        if(dp[n]!=-1) return dp[n];
+        int res=INT_MIN;
+        int a=recMemo(n-x,x,y,z,dp);
+        if(a!=INT_MIN) res=max(res,a+1);
+        int b=recMemo(n-y,x,y,z,dp);
+        if(b!=INT_MIN) res=max(res,b+1);
+        int c=recMemo(n-z,x,y,z,dp);
+        if(c!=INT_MIN) res=max(res,c+1);
+        return dp[n]=res;
+    }
+    int tab(int n,int x,int y,int z,vector<int> &dp){
+        int arr[3]={x,y,z};
+        for(int i=1;i<=n;i++){
+            int res=0;
+            for(int j=0;j<3;j++){
+                if(arr[j]-i==0){
+                    int ans=1;
+                    res=max(res,ans);
+                }else if(i-arr[j]<0){
+                    int ans=0;
+                    res=max(res,ans);
+                }
+                else if(arr[j]<i&&dp[i-arr[j]]>0){
+                    int ans=1+dp[i-arr[j]];
+                    res=max(res,ans);
+                }
+            }
+            dp[i]=res;
+        }
+        return dp[n];
+    }
+    //Function to find the maximum number of cuts.
+    int maximizeTheCuts(int n, int x, int y, int z)
+    {
+        //Your code here
+        //return rec(n,x,y,z);
+        /*vector<int> dp(n+1,-1);
+        int ans=recMemo(n,x,y,z,dp);
+        */
+        vector<int> dp(n+1,0);
+        int ans=tab(n,x,y,z,dp);
+        if(ans==INT_MIN) return 0;
+        else return ans;
+    }
+//24. Subset Sum Problems
+public:
+    int rec(vector<int> &arr,int target,int ind){
+        if(ind>=arr.size()||target<0) return 0;
+        if(target==0) return 1;
+        int include=rec(arr,target-arr[ind],ind+1);
+        int exclude=rec(arr,target,ind+1);
+        return max(include,exclude);
+    }
+    int recMemo(vector<int> &arr,int target,int ind,vector<vector<int>> &dp){
+        if(ind>=arr.size()||target<0) return dp[ind+1][target+1]=0;
+        if(target==0) return dp[ind+1][target+1]=1;
+        if(dp[ind+1][target+1]!=-1) return dp[ind+1][target+1];
+        int include=0;
+        if(target>=arr[ind]){
+          include=recMemo(arr,target-arr[ind],ind+1,dp);
+        }
+        int exclude=recMemo(arr,target,ind+1,dp);
+        return dp[ind+1][target+1]=max(include,exclude);
+    }
+    int tab(vector<int> &arr,int target,vector<vector<int>> &dp){
+       for(int i=0;i<arr.size();i++) dp[i][0]=1;
+       for(int i=0;i<arr.size();i++){
+           for(int j=1;j<=target;j++){
+              if(i==0&&arr[i]==j) dp[i][j]=1;
+              if(i-1>=0){
+                  int include=0;
+                  if(j-arr[i]>=0){
+                      include=dp[i-1][j-arr[i]];
+                  }
+                  int exclude=dp[i-1][j];
+                  dp[i][j]=max(include,exclude);
+              }
+           }
+       }
+       return dp[arr.size()-1][target];
+   }
+    bool isSubsetSum(vector<int>arr, int sum){
+        // code here 
+        //return rec(arr,sum,0);
+        /*vector<vector<int>> dp(arr.size()+1,vector<int> (sum+1,-1));
+        return (bool)recMemo(arr,sum,0,dp);
+        */
+        vector<vector<int>> dp(arr.size(),vector<int> (sum+1,0));
+        return tab(arr,sum,dp);
+    }
