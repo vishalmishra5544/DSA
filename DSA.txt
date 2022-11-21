@@ -8987,4 +8987,205 @@ public:
       vector<vector<int>> dp(n+1,vector<int> (W+1,0));
       return tab(W,wt,val,n,dp);
     }
-//
+//26. Optimal Strategy For A Game
+public:
+/*
+Approach: As both the players are equally strong, both will try to reduce the possibility of winning of each other. Now let’s see how the opponent can achieve this.
+There are two choices:
+1-The user chooses the ‘ith’ coin with value ‘Vi’: The opponent either chooses (i+1)th coin or jth coin. The opponent intends to choose the coin which leaves the user with minimum value. 
+  i.e. The user can collect the value Vi + min(F(i+2, j), F(i+1, j-1) ) where [i+2,j] is the range of array indices available to the user if the opponent chooses Vi+1 and [i+1,j-1] is the range of array indexes available if opponent chooses the jth coin. 
+2-The user chooses the ‘jth’ coin with value ‘Vj’: The opponent either chooses ‘ith’ coin or ‘(j-1)th’ coin. The opponent intends to choose the coin which leaves the user with minimum value, i.e. the user can collect the value Vj + min(F(i+1, j-1), F(i, j-2) ) where [i,j-2] is the range of array indices available for the user if the opponent picks jth coin and [i+1,j-1] is the range of indices available to the user if the opponent picks up the ith coin.
+*/
+    long long rec(int arr[],int n,int i,int j){
+        if(i==j) return arr[i];
+        if(i+1==j) return max(arr[i],arr[j]);
+        long long int choiceI=arr[i]+min(rec(arr,n,i+2,j),rec(arr,n,i+1,j-1));
+        long long int choiceJ=arr[j]+min(rec(arr,n,i+1,j-1),rec(arr,n,i,j-2));
+        return max(choiceI,choiceJ);
+    }
+    long long recMemo(int arr[],int n,int i,int j,vector<vector<int>> &dp){
+        if(i==j) return arr[i];
+        if(i+1==j) return max(arr[i],arr[j]);
+        if(dp[i][j]!=-1) return dp[i][j];
+        long long int choiceI=arr[i]+min(recMemo(arr,n,i+2,j,dp),recMemo(arr,n,i+1,j-1,dp));
+        long long int choiceJ=arr[j]+min(recMemo(arr,n,i+1,j-1,dp),recMemo(arr,n,i,j-2,dp));
+        return dp[i][j]=max(choiceI,choiceJ);
+    }
+    long long int tab(int arr[],int n,vector<vector<int>> &dp){
+        for(int i=n-1;i>=0;i--){
+            for(int j=0;j<=n-1;j++){
+                if(i==j) dp[i][j]=arr[i];
+                else if(i+1==j) dp[i][j]=max(arr[i],arr[j]);
+                else{
+                    long long int choiceI=0,a=0,b=0;
+                    if(i+2<=n&&j>=0) a=dp[i+2][j];
+                    if(i+1<=n&&j-1>=0) b=dp[i+1][j-1];
+                    choiceI=arr[i]+min(a,b);
+                    long long int choiceJ=0;
+                    if(i+1<=n&&j-1>=0) a=dp[i+1][j-1];
+                    if(i<=n&&j-2>=0) b=dp[i][j-2];
+                    choiceJ=arr[j]+min(a,b);
+                    dp[i][j]=max(choiceI,choiceJ);
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+    long long int tabSpaceOptimized(int arr[],int n){
+        vector<int> curr(n+1,0),next1(n+1,0),next2(n+1,0);
+        for(int i=n-1;i>=0;i--){
+            for(int j=0;j<=n-1;j++){
+                if(i==j) curr[j]=arr[i];
+                else if(i+1==j) curr[j]=max(arr[i],arr[j]);
+                else{
+                    long long int choiceI=0,a=0,b=0;
+                    if(i+2<=n&&j>=0) a=next2[j];
+                    if(i+1<=n&&j-1>=0) b=next1[j-1];
+                    choiceI=arr[i]+min(a,b);
+                    long long int choiceJ=0;
+                    if(i+1<=n&&j-1>=0) a=next1[j-1];
+                    if(i<=n&&j-2>=0) b=curr[j-2];
+                    choiceJ=arr[j]+min(a,b);
+                    curr[j]=max(choiceI,choiceJ);
+                }
+            }
+            next2=next1;
+            next1=curr;
+        }
+        return curr[n-1];
+    }
+    long long maximumAmount(int arr[], int n){
+        // Your code here
+       // return rec(arr,n,0,n-1);
+       /*vector<vector<int>> dp(n+1,vector<int> (n+1,-1));
+       return recMemo(arr,n,0,n-1,dp);
+       */
+       vector<vector<int>> dp(n+1,vector<int> (n+1,0));
+       return tabSpaceOptimized(arr,n);
+    }
+//27. Egg Dropping Puzzle
+int rec(int n,int k){
+        if(n==1) return k;
+        if(k==0||k==1) return k;
+        int res=INT_MAX;
+        for(int f=1;f<=k;f++){
+            int temp=1+max(rec(n-1,f-1),rec(n,k-f));
+            res=min(res,temp);
+        }
+        return res;
+    }
+    int recMemo(int n,int k,vector<vector<int>> &dp){
+        if(n==1) return k;
+        if(k==0||k==1) return k;
+        if(dp[n][k]!=-1) return dp[n][k];
+        int res=INT_MAX;
+        for(int f=1;f<=k;f++){
+            int temp=1+max(recMemo(n-1,f-1,dp),recMemo(n,k-f,dp));
+            res=min(res,temp);
+        }
+        return dp[n][k]=res;
+    }
+    int tab(int n,int k,vector<vector<int>> &dp){
+        for(int i=1;i<=n;i++){
+            for(int j=0;j<=k;j++){
+                if(i==1) dp[i][j]=j;
+                else if(j==0||j==1) dp[i][j]=j;
+                else{
+                    int res=INT_MAX;
+                    for(int f=1;f<=k;f++){
+                        int temp=0,a=0,b=0;
+                        if(i-1<=n&&j<=k) a=dp[i-1][f-1];
+                        if(i<=n&&j-f<=k) b=dp[i][j-f];
+                        temp=1+max(a,b);
+                        res=min(res,temp);
+                    }
+                    dp[i][j]=res;
+                }
+            }
+        }
+        return dp[n][k];
+    }
+    int tabSpaceOptimized(int n,int k){
+        vector<int> currRow(k+1,0),prevRow(k+1,0);
+        for(int i=1;i<=n;i++){
+            for(int j=0;j<=k;j++){
+                if(i==1) currRow[j]=j;
+                else if(j==0||j==1) currRow[j]=j;
+                else{
+                    int res=INT_MAX;
+                    for(int f=1;f<=k;f++){
+                        int temp=0,a=0,b=0;
+                        if(i-1<=n&&j<=k) a=prevRow[f-1];
+                        if(i<=n&&j-f<=k) b=currRow[j-f];
+                        temp=1+max(a,b);
+                        res=min(res,temp);
+                    }
+                    currRow[j]=res;
+                }
+            }
+            prevRow=currRow;
+        }
+        return prevRow[k];
+    }
+    //Function to find minimum number of attempts needed in 
+    //order to find the critical floor.
+    int eggDrop(int n, int k) 
+    {
+        // your code here
+        //return rec(n,k);
+        /*vector<vector<int>> dp(n+1,vector<int> (k+1,-1));
+        return recMemo(n,k,dp);
+        */
+        /*vector<vector<int>> dp(n+1,vector<int>(k+1,0));
+        return tab(n,k,dp);
+        */
+        return tabSpaceOptimized(n,k);
+    }
+//28. Stickler Thief
+public:
+    int rec(int arr[],int n,int ind){
+        if(ind>=n) return 0;
+        int inc=arr[ind]+rec(arr,n,ind+2);
+        int exc=rec(arr,n,ind+1);
+        return max(inc,exc);
+    }
+    int recMemo(int arr[],int n,int ind,vector<int> &dp){
+        if(ind>=n) return 0;
+        if(dp[ind]!=-1) return dp[ind];
+        int inc=arr[ind]+recMemo(arr,n,ind+2,dp);
+        int exc=recMemo(arr,n,ind+1,dp);
+        return dp[ind]=max(inc,exc);
+    }
+    int tab(int arr[],int n,vector<int> &dp){
+        dp[n+1]=0;
+        for(int i=n-1;i>=0;i--){
+            int inc=arr[i]+dp[i+2];
+            int exc=dp[i+1];
+            dp[i]=max(inc,exc);
+        }
+        return dp[0];
+    }
+    int tabSpaceOptimized(int arr[],int n){
+        int curr=0,next1=0,next2=0;
+        for(int i=n-1;i>=0;i--){
+            int inc=arr[i]+next2;
+            int exc=next1;
+            curr=max(inc,exc);
+            next2=next1;
+            next1=curr;
+        }
+        return curr;
+    }
+    //Function to find the maximum money the thief can get.
+    int FindMaxSum(int arr[], int n)
+    {
+        // Your code here
+        //return rec(arr,n,0);
+        /*vector<int> dp(n+1,-1);
+        return recMemo(arr,n,0,dp);
+        */
+        /*vector<int> dp(n+2,0);
+        return tab(arr,n,dp);
+        */
+        return tabSpaceOptimized(arr,n);        
+    }
