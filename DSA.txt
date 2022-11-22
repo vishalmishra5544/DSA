@@ -9189,3 +9189,73 @@ public:
         */
         return tabSpaceOptimized(arr,n);        
     }
+
+TRIE:
+//01. Trie _ (Insert and Search)
+// trie node
+/*
+struct TrieNode {
+    struct TrieNode *children[ALPHABET_SIZE];
+
+    // isLeaf is true if the node represents
+    // end of a word
+    bool isLeaf;
+};
+struct TrieNode *getNode(void){
+  struct TrieNode *pNode=NULL;
+  pNode=(struct TrieNode*) malloc(sizeof(struct TrieNode));
+  if(pNode){
+    int i;
+    pNode->isLeaf=false;
+    for(i=0;i<26;i++) pNode->children[i]=NULL;
+  }
+  return pNode;
+}
+*/
+
+//Function to insert string into TRIE.
+void insert(struct TrieNode *root, string key)
+{
+    // code here
+    if(key.length()==0){
+        root->isLeaf=true;
+        return;
+    }
+    TrieNode* child=NULL;
+    if(root->children[key[0]-'a']!=NULL) child=root->children[key[0]-'a'];
+    else{
+        child=getNode();
+        root->children[key[0]-'a']=child;
+    }
+    insert(child,key.substr(1));
+}
+
+//Function to use TRIE data structure and search the given string.
+bool search(struct TrieNode *root, string key) 
+{
+    // code here
+     if(key.length()==0){
+        return root->isLeaf;
+    }
+    TrieNode* child=NULL;
+    if(root->children[key[0]-'a']!=NULL) child=root->children[key[0]-'a'];
+    else{
+        return false;
+    }
+    return search(child,key.substr(1));
+}
+//02.Search Query for Strings
+	vector<int>SolveQueris(string str, vector<vector<int>>Query){
+	    // Code here
+	    vector<int> ans;
+	    for(auto q:Query){
+	        int l=q[0]-1,r=q[1]-1;
+	        string s=str.substr(l,r-l+1);
+	        unordered_map<int,int> h;
+	        for(auto i:s){
+	          h[i]++;   
+	        }
+	        ans.push_back(h.size());
+	    }
+	    return ans;
+	}
