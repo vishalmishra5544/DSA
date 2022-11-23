@@ -9259,3 +9259,74 @@ bool search(struct TrieNode *root, string key)
 	    }
 	    return ans;
 	}
+//03.Camel Case
+public:
+    /* typedef struct trieNode{
+        trieNode *children[26];
+        bool isLeaf;
+        trieNode(){
+            isLeaf=false;
+            for(int i=0;i<26;i++) children[i]=NULL;
+        }
+    }tN;
+    
+    void insertWord(string s,tN *root){
+        tN *curr=root;
+        for(int i=0;i<s.length();i++){
+            if(s[i]>='A'&&s[i]<='Z'){
+              if(curr->children[s[i]-'A']!=NULL){
+                  curr=curr->children[s[i]-'A'];
+              }
+              else{
+                  tN *t=new tN();
+                  curr->children[s[i]-'A']=t;
+                  curr=t;
+              }
+                
+            }
+            if(i==s.length()-1) curr->isLeaf=true;
+        }
+    }
+    bool searchWord(string s,tN *root,string pattern){
+        tN *curr=root;
+        int patInd=0;
+        for(int i=0;i<s.length();i++){
+            if(s[i]>='A'&&s[i]<='Z'&&patInd<pattern.size()){
+              if(pattern[patInd++]!=s[i]){
+                  return false;
+              }
+              else if(curr->children[s[i]-'A']==NULL){return false;}
+              else{
+                  curr=curr->children[s[i]-'A'];
+              }
+            }
+        }
+        if(curr!=NULL&&patInd==pattern.length()) return true;
+        else return false;
+    }
+    */
+    vector<string> CamelCase(int N, vector<string> Dictionary, string Pattern) {
+        // code here
+      /* tN *root=new tN();
+       for(auto i:Dictionary){
+         insertWord(i,root);
+       }
+       vector<string> ans;
+        for(auto i:Dictionary){
+         if(searchWord(i,root,Pattern)) ans.push_back(i);
+       }
+       return ans;
+       */
+       vector<string> ans;
+       for(auto w:Dictionary){
+           int patInd=0,i=0;
+           for(i=0;i<w.length();i++){
+               if(w[i]>='A'&&w[i]<='Z'&&patInd<Pattern.length()){
+                   if(w[i]!=Pattern[patInd++]) break;
+               }
+           }
+           if(patInd==Pattern.length()&&i==w.length()) ans.push_back(w);
+       }
+       return ans;
+    }
+};
