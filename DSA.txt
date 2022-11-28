@@ -3344,7 +3344,31 @@ string multiplyStrings(string s1, string s2) {
            return "-"+ans;
        }else return ans;
     }
+//Roman Number to Integer
+int romanToDecimal(string &str) {
+        // code here
+        unordered_map<char,int> h;
+        h['I']=1;
+        h['V']=5;        
+        h['X']=10;
+        h['L']=50;
+        h['C']=100;
+        h['D']=500;
+        h['M']=1000;
+        int prev=0,ans=0;
+        for(auto s:str){
+            if(prev>0&&prev<h[s]){//for cases like num:iv
+                ans-=prev;
+                ans=ans+h[s]-prev;
+                prev=0;
+            }else{
+                ans+=h[s];
+                prev=h[s];
+            }
+        }
+        return ans;
 
+    }
 LINKEDLISTS:
 //01.Count nodes of linked list
 //public:
