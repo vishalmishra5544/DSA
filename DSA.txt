@@ -329,7 +329,22 @@ int toggleBits(int N , int L , int R) {
         }
         return N;
     }
-
+//Largest Number formed from an Array
+ static bool comp(string a,string b){
+        return a+b>b+a;
+    }
+	// The main function that returns the arrangement with the largest value as
+	// string.
+	// The function accepts a vector of strings
+	string printLargest(vector<string> &arr) {
+	    // code here
+	    sort(arr.begin(),arr.end(),comp);
+	    string res="";
+	    for(auto &i:arr){
+	        res+=i;
+	    }
+	    return res;
+	}
 RECURSION:
 //Print 1 to n without using loops
     void printTillN(int N)
@@ -1116,6 +1131,7 @@ int getMinDiff(int arr[], int n, int k)
     }
     return ans;
 }
+
 SEARCHING:
 //search an element in an array  - linear search
   public:
@@ -2608,7 +2624,39 @@ public:
         }
         return false;
     }
-
+//Swapping pairs make sum equal:
+	int findSwapValues(int A[], int n, int B[], int m)
+	{
+        // Your code goes here
+      /* //m-1: o(nlogn+mlogn)
+      sort(A,A+n);
+       sort(B,B+m);
+       long long int sumA=0,sumB=0;
+       for(int i=0;i<n;i++) sumA+=A[i];
+       for(int i=0;i<m;i++) sumB+=B[i];
+       if((sumA-sumB)%2!=0) return -1;// because that the target must be an integer as a-b will always be integer.
+       long long int target=(sumA-sumB)/2;// Finds value of  a - b = (sumA - sumB) / 2
+       int i=0,j=0,diff=0;
+       while(i<n&&j<m){
+           diff=A[i]-B[j];
+           if(diff==target) return 1; // Look for a greater value in A[]
+           else if(diff<target) i++; // Look for a greater value in B[]
+           else j++;
+       }
+       return -1;
+       */
+       //m-2:o(m+n)
+       unordered_set<int> h;
+       long long int sumA=0,sumB=0;
+       for(int i=0;i<n;i++) sumA+=A[i];
+       for(int i=0;i<m;i++) sumB+=B[i],h.insert(B[i]);
+       if((sumA-sumB)%2!=0) return -1;// because that the target must be an integer as a-b will always be integer.
+       long long int target=(sumA-sumB)/2;// Finds value of  a - b = (sumA - sumB) / 2
+       for(int i=0;i<n;i++){
+           if(h.find(A[i]-target)!=h.end()) return 1;
+       }
+       return -1;
+	}
 STRINGS:
 //Naive Pattern searching
 bool searchPattern(string str, string pat)
