@@ -1948,6 +1948,32 @@ public:
     	}
     	return res;
     }
+//Overlapping Intervals
+static bool comp(vector<int> a,vector<int> b){
+        if(a[0]==b[0]){return a[1]<b[1];}
+        else if(a[0]>b[0]) return false;
+        else if(a[0]<b[0]) return true;
+    }
+    vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
+         // Code here
+         vector<vector<int>> ans;
+         sort(intervals.begin(),intervals.end());
+         int currStart=intervals[0][0],currEnd=intervals[0][1];
+         int newStart,newEnd;
+         for(int i=1;i<intervals.size();i++){
+             newStart=intervals[i][0];
+             newEnd=intervals[i][1];
+             if(newStart<=currEnd){//overlapped
+                 currEnd=max(currEnd,newEnd);
+             }else{
+                 ans.push_back({currStart,currEnd});
+                 currStart=newStart;
+                 currEnd=newEnd;
+             }
+         }
+         ans.push_back({currStart,currEnd});
+         return ans;
+    }
 
 MATRIX:
 //Addition of two square matrices
