@@ -1869,6 +1869,48 @@ public:
       }
       return ans;
     }
+//Merge Sort
+ void swap(int arr[],int i,int j){
+        int t=*(arr+i);
+        *(arr+i)=*(arr+j);
+        *(arr+j)=t;
+    }
+    void merge(int arr[], int l, int m, int r)
+    {
+         // Your code here
+         int n1=m-l+1,n2=r-m;
+         int a[n1+n2],i=l,j=m+1,k=0;
+         while(i<=m&&j<=r&&k<(n1+n2)){
+             if(arr[i]<=arr[j]) a[k]=arr[i],i++;
+             else a[k]=arr[j],j++;
+             k++;
+         }
+         while(i<=m){
+             a[k]=arr[i];
+             i++;
+             k++;
+         }
+         while(j<=r){
+             a[k]=arr[j];
+             j++;
+             k++;
+         }
+         k=0;
+         for(int x=l;x<=r;x++){
+             arr[x]=a[k++];
+         }
+    }
+    public:
+    void mergeSort(int arr[], int l, int r)
+    {
+        //code here
+        if(l<r){
+            int mid=l+(r-l)/2;
+            mergeSort(arr,l,mid);
+            mergeSort(arr,mid+1,r);
+            merge(arr,l,mid,r);
+        }
+    }
 //Merge without extra space  -gap method.
  //Function to merge the arrays.
         void merge(long long arr1[], long long arr2[], int n, int m) 
@@ -2683,6 +2725,39 @@ public:
        }
        return -1;
 	}
+//Find All Four Sum Numbers
+ public:
+    // arr[] : int input array of integers
+    // k : the quadruple sum required
+    vector<vector<int> > fourSum(vector<int> &arr, int k) {
+        // Your code goes here
+        int n=arr.size();
+        vector<vector<int>> ans;
+        sort(arr.begin(),arr.end());
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                int a=arr[i],b=arr[j];
+                int sum=k-a-b;
+                int s=j+1;
+                int e=n-1;
+                while(s<e){
+                    int c=arr[s],d=arr[e];
+                    int twoSum=c+d;
+                    if(twoSum<sum) s++;
+                    else if(twoSum>sum) e--;
+                    else{
+                        vector<int> v={a,b,c,d};
+                        ans.push_back(v);
+                        while(s<e&&arr[s]==c) s++;
+                        while(s<e&&arr[e]==d) e--;
+                    }
+                    while(j+1<n&&arr[j]==arr[j+1]) j++;
+                }
+                while(i+1<n&&arr[i]==arr[i+1]) i++;
+            }
+        }
+        return ans;
+    }
 STRINGS:
 //Naive Pattern searching
 bool searchPattern(string str, string pat)
