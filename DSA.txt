@@ -2209,6 +2209,47 @@ public:
         }
       return v;  
     }
+//Rotate matrix elements clockwise
+ vector<vector<int>> rotateMatrix(int M, int N, vector<vector<int>> mat) {
+        // code here
+        int r=0,c=0,maxRow=M-1,maxCol=N-1,prev=0,curr=0;
+        while(r<maxRow&&c<maxCol){
+            //top row
+            prev=mat[r+1][c];
+            for(int j=c;j<=maxCol;j++){
+                curr=mat[r][j];
+                mat[r][j]=prev;
+                prev=curr;
+            }
+            r++;
+            //right col
+            for(int i=r;i<=maxRow;i++){
+                curr=mat[i][maxCol];
+                mat[i][maxCol]=prev;
+                prev=curr;
+            }
+            maxCol--;
+            //bottom row
+            if(r<=maxRow){
+                for(int j=maxCol;j>=c;j--){
+                    curr=mat[maxRow][j];
+                    mat[maxRow][j]=prev;
+                    prev=curr;
+                }
+                maxRow--;
+            }
+            //left col
+            if(c<=maxCol){
+                for(int i=maxRow;i>=r;i--){
+                    curr=mat[i][c];
+                    mat[i][c]=prev;
+                    prev=curr;
+                }
+                c++;
+            }
+        }
+        return mat;
+    }
 //Search in a row-column sorted matrix
  public:
     //Function to search a given number in row-column sorted matrix.
@@ -9394,7 +9435,94 @@ public:
         */
         return tabSpaceOptimized(arr,n);        
     }
-
+//Maximum path sum in matrix
+public:
+    long long int rec(int n,vector<vector<int>> &matrix,int r,int c,long long int sum){
+        if(r<0||r>=n||c<0||c>=n) return 0;
+        long long int a=0,b=0,d=0,res=0;
+        a=rec(n,matrix,r+1,c,sum);
+        b=rec(n,matrix,r+1,c-1,sum);
+        d=rec(n,matrix,r+1,c+1,sum);
+        res=max(a,max(b,d));
+        return matrix[r][c]+res;
+    }
+    long long int recMemo(int n,vector<vector<int>> &matrix,int r,int c,long long int sum,vector<vector<int>> &dp){
+        if(r<0||r>=n||c<0||c>=n) return 0;
+        if(dp[r][c]!=-1) return dp[r][c];
+        long long int a=0,b=0,d=0,res=0;
+        a=recMemo(n,matrix,r+1,c,sum,dp);
+        b=recMemo(n,matrix,r+1,c-1,sum,dp);
+        d=recMemo(n,matrix,r+1,c+1,sum,dp);
+        res=max(a,max(b,d));
+        return dp[r][c]=matrix[r][c]+res;
+    }
+    long long int tab(int n,vector<vector<int>> &matrix,vector<vector<int>> &dp){
+        for(int j=0;j<n;j++){//last row will remain same
+            dp[n-1][j]=matrix[n-1][j];
+        }
+        for(int i=n-2;i>=0;i--){
+            for(int j=n-1;j>=0;j--){
+                long long int a=0,b=0,d=0,res=0;
+                if(i+1<n){a=dp[i+1][j];}
+                if(i+1<n&&j-1>=0){b=dp[i+1][j-1];}
+                if(i+1<n&&j+1<n){d=dp[i+1][j+1];}
+                res=max(a,max(b,d));
+                dp[i][j]=matrix[i][j]+res;
+            }
+        }
+        long long int res=0,ans=0;
+        for(int j=0;j<n;j++){
+            res=dp[0][j];
+            ans=max(ans,res);
+        }
+        return ans;
+    }
+    long long int tabSpaceOptimized(int n,vector<vector<int>> &matrix){
+        vector<int> currRow(n,0),nextRow(n,0);
+        for(int j=0;j<n;j++){//last row will remain same
+            nextRow[j]=matrix[n-1][j];
+        }
+        for(int i=n-2;i>=0;i--){
+            for(int j=n-1;j>=0;j--){
+                long long int a=0,b=0,d=0,res=0;
+                if(i+1<n){a=nextRow[j];}
+                if(i+1<n&&j-1>=0){b=nextRow[j-1];}
+                if(i+1<n&&j+1<n){d=nextRow[j+1];}
+                res=max(a,max(b,d));
+                currRow[j]=matrix[i][j]+res;
+            }
+            nextRow=currRow;
+        }
+        long long int res=0,ans=0;
+        for(int j=0;j<n;j++){
+            res=nextRow[j];
+            ans=max(ans,res);
+        }
+        return ans;
+    }
+    int maximumPath(int N, vector<vector<int>> Matrix)
+    {
+        // code here
+        /*long long int res=0,ans=0;
+        for(int j=0;j<N;j++){
+         res=rec(N,Matrix,0,j,0);
+         ans=max(ans,res);
+        }
+        return ans;
+        */
+       /* vector<vector<int>> dp(N+1,vector<int> (N+1,-1));
+        long long int res=0,ans=0;
+        for(int j=0;j<N;j++){
+         res=recMemo(N,Matrix,0,j,0,dp);
+         ans=max(ans,res);
+        }
+        return ans;
+        */
+        /*vector<vector<int>> dp(N,vector<int> (N,0));
+        return tab(N,Matrix,dp);
+        */
+        return tabSpaceOptimized(N,Matrix);
+    }
 TRIE:
 //01. Trie _ (Insert and Search)
 // trie node
