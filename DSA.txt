@@ -5924,7 +5924,30 @@ public:
 	    if(root==NULL) return true;
 	    return inOrder(root->left,root->right);
     }
-
+//Print all nodes that don't have sibling
+vector<int> noSibling(Node* node)
+{
+    // code here
+    if(node==NULL) return {};
+    vector<int> ans;
+    queue<Node*> q;
+    q.push(node);
+    while(!q.empty()){
+        int n=q.size();
+        while(n>0){
+            Node *f=q.front();
+            q.pop();
+            if(f->left) q.push(f->left);
+            if(f->right) q.push(f->right);
+            if(f->left&&!f->right){ans.push_back(f->left->data);}
+            else if(!f->left&&f->right){ans.push_back(f->right->data);}
+            n--;
+        }
+    }
+    if(ans.size()==0) return {-1};
+    sort(ans.begin(),ans.end());
+    return ans;
+}
 BINARY SEARCH TREE:
 //03.Insert a node in a BST
 // Function to insert a node in a BST.
@@ -6496,6 +6519,25 @@ void inorder(Node* root,vector<int>& ans){
             prev->data=prev->data-temp2->data;
         }
         
+    }
+//EXTRA:
+//Kth largest element in BST
+public:
+    int ans=0;
+    void postOrder(Node *root,int k,int &curr){
+        if(root==NULL)return;
+        postOrder(root->right,k,curr);
+        curr++;
+        if(curr==k){ans=root->data;return;}
+        postOrder(root->left,k,curr);
+    }
+    int kthLargest(Node *root, int K)
+    {
+        //Your code here
+        if(root==NULL) return -1;
+        int curr=0;
+        postOrder(root,K,curr);
+        return ans;
     }
 
 HEAP:
