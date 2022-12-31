@@ -5948,6 +5948,27 @@ vector<int> noSibling(Node* node)
     sort(ans.begin(),ans.end());
     return ans;
 }
+//Leaf at same level
+bool check(Node *root)
+    {  
+        if(!root) return true;
+        queue<Node*> q;
+        q.push(root);
+        int isLeaf=false;
+        while(!q.empty()){
+            int size=q.size();
+            for(int i=1;i<=size;i++){
+                Node* front=q.front();
+                q.pop();
+                if(!front->left&&!front->right) isLeaf=true;
+                if(front->left) q.push(front->left);
+                if(front->right) q.push(front->right);
+            }
+            // check if there exist any further levels.
+            if(isLeaf&&!q.empty()) return false;
+        }
+        return true;
+    }
 BINARY SEARCH TREE:
 //03.Insert a node in a BST
 // Function to insert a node in a BST.
