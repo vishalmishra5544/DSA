@@ -5969,6 +5969,20 @@ bool check(Node *root)
         }
         return true;
     }
+//Check if Tree is Isomorphic
+// Return True if the given trees are isomotphic. Else return False.
+    bool preOrder(Node *root1,Node *root2){
+        if(root1==NULL&&root2==NULL) return true;
+        if((root1&&!root2)||(!root1&&root2)) return false;
+        if(root1->data!=root2->data) return false;
+        return (preOrder(root1->left,root2->left)&&preOrder(root1->right,root2->right))||(preOrder(root1->left,root2->right)&&preOrder(root1->right,root2->left));
+    }
+    bool isIsomorphic(Node *root1,Node *root2)
+    {
+    //add code here.
+      if(root1==NULL&&root2==NULL) return true;
+      return preOrder(root1,root2);
+    }
 BINARY SEARCH TREE:
 //03.Insert a node in a BST
 // Function to insert a node in a BST.
