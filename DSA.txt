@@ -373,6 +373,18 @@ int toggleBits(int N , int L , int R) {
         if(ans.empty()){ans.push_back("-1");}
         return ans;
     }
+//Reverse Bits
+ long long reversedBits(long long x) {
+        // code here
+        int pow=31; //31 because at pos 1st a value is already there so need to go 31 more to left;
+        long result=0;
+        while(x!=0){
+            result+=((x&1)<<pow);
+            pow--;
+            x=x>>1;
+        }
+        return result;
+    }
 RECURSION:
 //Print 1 to n without using loops
     void printTillN(int N)
