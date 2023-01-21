@@ -385,6 +385,44 @@ int toggleBits(int N , int L , int R) {
         }
         return result;
     }
+//Minimum X (xor) A:
+ public:
+    int minVal(int a, int b)
+    {
+        // code here
+        int aSetBits=__builtin_popcount(a);
+        int bSetBits=__builtin_popcount(b);
+        if(aSetBits==bSetBits)
+        { //a^a=0,same noofsetbits and min xor.
+            return a;
+        }else if(aSetBits>bSetBits)
+        { //remove leftmost bits of a until noofsetbits are same;
+            int ans=0;
+            int temp=bSetBits;
+            for(int i=31;i>=0;i--)
+            {
+                if((a&(1<<i)))
+                {
+                    ans|=(1<<i);
+                    temp--;
+                }
+                if(temp==0) return ans;
+            }
+        }else if(aSetBits<bSetBits)
+        {// add this much 1 to rightmost bits
+            int reqdBits=bSetBits-aSetBits;
+            int ans=a;
+            for(int i=0;i<=31;i++)
+            {
+                if((a&(1<<i))==0)
+                {
+                    ans|=(1<<i);
+                    reqdBits--;
+                }
+                if(reqdBits==0) return ans;
+            }
+        }
+    }
 RECURSION:
 //Print 1 to n without using loops
     void printTillN(int N)
