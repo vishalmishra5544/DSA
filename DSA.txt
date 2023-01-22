@@ -129,7 +129,75 @@ for(int i=2;i<=n;i++){
  if(sieve[i]==true) cout<<i<<endl;
 }
 }
+//Trailing zeroes in factorial:
+//Number of trailing zeroes in n! = Number of times n! is divisible by 10
+    //= Highest power of 10 which divides n! = Highest power of 5 in n!
+    int trailingZeroes(int N)
+    {
+        // Write Your Code here
+        int res=0;
+        while(N>0){
+            res+=(N/5);
+            N=N/5;
+        }
+        return res;
+    }
+//GCD Array:
+/*
+Question Breakdown : We want to find highest possible GCD by splitting subarrays into k parts.
 
+What is GCD ? GCD is just finding the highest common factor.
+
+So, Let's find highest common factor.
+
+Intution -  Let's say I have splitted the array into 3 parts and calculated their sum.
+
+----x--- | ------y----- | ----z-----
+
+Now , Lets say the highest common factor for all of them is m.
+
+So, I know that x%m=0 and y%m=0 and z%m=0
+
+So, I can also say (x+y)%m=0 and (x+y+z)%m=0
+
+That means , if I take prefixsum and take a
+ factor and iterate over that prefixsum . 
+So, whenever, presum[i]%m==0 -> That means , 
+splitting at i is possible.
+
+So, if there are more than or equal to k splittings -> I got
+ my answer 🙂.
+
+NOTE -> We want to split the whole array into subarrays. We don't want to leave any element. So, that means sum%m=0. For this to be possible, we have to use all the factors of sum. Since any of them can be the probable answer.
+*/
+ int solve(int N, int k, vector<int> &arr) {
+        // code here
+        vector<int> factors;
+        for(int i=1;i<N;i++){
+            arr[i]+=arr[i-1];
+        }
+        int G=arr[N-1];
+        for(int i=1;i*i<=G;i++){
+            if(G%i==0){
+                factors.push_back(i);
+                if(i!=G/i) factors.push_back(G/i);
+            }
+        }
+        sort(factors.begin(),factors.end(),greater<int>());
+        int count=0,ans=1;
+        for(auto it:factors){
+            count=0;
+            for(int i=0;i<N;i++){
+                if(arr[i]%it==0) count++;
+            }
+            if(count>=k){
+                ans=it;
+                break;
+            }
+        }
+        return ans;
+       
+    }
 STRING:
 //Longest Common Prefix in an Array of string
 string longestCommonPrefix (string arr[], int N)
