@@ -79,3 +79,264 @@ int findPosition(int N) {
         if(N<=0||noofsetbits>1||noofsetbits==0) return -1;
         else return floor(log2(rightmost)+1);
     }
+
+
+
+BIT MANIPULATION:
+ // Function to check if given number n is a power of two.
+    bool isPowerofTwo(long long n){
+        
+        // Your code here    
+        return (n>0)&&((n&(n-1))==0);
+        
+    }
+// getting first set bit
+unsigned int getFirstSetBit(int n)
+    {
+       return log2(n^(n&(n-1)))+1;
+    }
+//Function to find the first position with different bits.
+    int posOfRightMostDiffBit(int m, int n)
+    {
+        // Your code here
+        int i=m^n,res=-1;
+        res=(log2(i^(i&(i-1)))+1);
+        if(res>-1) return res;
+        else return -1;
+    }
+// Function to check if Kth bit is set or not.
+    bool checkKthBit(int n, int k)
+    {
+        // Your code here
+        // It can be a one liner logic!! Think of it!!
+        return n&(1<<k);
+    }
+//count set bit in an integer
+ int setBits(int N) {
+        // Write Your Code here
+        int lookup[256]={0};
+        for(int i=1;i<256;i++)
+            lookup[i]=(i&1)+lookup[i/2];
+        int res=0;
+        while(N>0){
+            res=res+lookup[N&0xff];
+            N=N>>8;
+        }
+       return res;
+    }
+//count set bit from 1 to n
+//method-1-DP LOOKUP
+int lookup[n+1]={0};
+for(int i=1;i<n;i++)
+    lookup[i]=(i&1)+lookup[i/2];
+int res=0;
+for(int i=n;i>=1;i--){
+    res=res+lookup[n&0xff];
+ }
+return res;
+//method-2-o(logn)
+ int countSetBits(int n){
+        n++;
+        int countsetbits=n/2,pairs=0,setbits=0,remainingsetbits=0;
+        int powerof2=2;
+        while(powerof2<=n){
+        pairs=n/powerof2;
+        setbits=(pairs/2)*powerof2;
+        remainingsetbits=(pairs&1)?n%powerof2:0;
+        countsetbits=countsetbits+setbits+remainingsetbits;
+        powerof2=powerof2<<1;
+        }
+    return countsetbits;
+    }
+ // Function to find number of bits needed to be flipped to convert A to B
+    int countBitsFlip(int a, int b){
+        
+        // Your logic her
+        int n=a^b;
+        return __builtin_popcount(n);
+        
+    }
+//Function to check if the number is sparse or not.
+    bool isSparse(int n)
+    {
+        // Your code
+        int flag=0;
+        while(n>0){ 
+            if(flag==2) return 0;
+            if(n&1==1) flag+=1;
+            else flag=0;  
+            n=n>>1;
+        }
+        if(flag==2) return 0;
+        return 1;
+    }
+//longest consecutive ones
+int maxConsecutiveOnes(int N)
+    {
+        // code here
+         int n=N,flag=0,maxlen=0;
+        while(n>0){ 
+            if(n&1==1){  flag+=1;maxlen=max(maxlen,flag);}
+            else flag=0;  
+            n=n>>1;
+        }
+      return maxlen;
+    }
+//binary to gray code
+ string binToGrey(string B) {
+        // code here
+        string g;
+        g.push_back(B[0]);
+        for(int i=1;i<B.length();i++){
+            char res=(B[i-1]==B[i])?'0':'1';
+            g.push_back(res);
+            }
+        return g;
+    }
+// gray code to binary    
+    string greyToBin(string G) {
+        // code here
+        string b="";
+        b.push_back(G[0]);
+        for(int i=1;i<G.length();i++){
+         char res=(b[i-1]==G[i])?'0':'1';
+          b.push_back(res);
+        }
+        return b;
+    }
+ //Function to swap odd and even bits.
+    unsigned int swapBits(unsigned int n)
+    {
+    	// Your code here
+    for(int i=0;i<32;i=i+2){//since int is 32 bit and check for i and i+1 th at a time
+    int ithbit=(n>>i)&1;//get ith bit
+    int iplus1thbit=(n>>(i+1))&1;//get i+1 th bit
+    n=n-(ithbit<<i)-(iplus1thbit<<(i+1))+(ithbit<<(i+1))+(iplus1thbit<<i);//remove ith bit and i+1 th bit and addnew swapped values of ith and i+1 th bit
+    }
+    return n;
+    }
+//Maximum AND value of any pair in an array.
+int checkBits(int * arr,int n,int pattern){
+        int count=0;
+        for(int i=0;i<n;i++){
+            if((arr[i]&pattern)==pattern)//if there is a num in arr which has his bit set then do count++
+                count++;// so if two or more such num present then this bit can be included in our pattern or final res.
+        }
+        return count;
+    }
+    // Function for finding maximum AND value.
+    int maxAND (int arr[], int N)
+    {
+        // Your code here
+        int res=0,setbit,count=0;
+        for(int i=31;i>=0;i--){
+            setbit=res|(1<<i); //set i th bit and add res or pattern(a number which will have set bits only when two such num in arr are present having this bit set) till now to check if this bit can be included or not
+            count=checkBits(arr,N,setbit);// check if this setbit can be included or not
+            if(count>=2)//means there are 2 numbers having this bit set thus on doing their AND this bit will be included else not
+                res=res|(1<<i);//include this setbit
+            
+        }
+        return res;
+    }
+//Toggle bits given range
+int toggleBits(int N , int L , int R) {
+        // code here
+        for(int i=L-1;i<=R-1;i++){
+            N=N^(1<<i);
+        }
+        return N;
+    }
+//Largest Number formed from an Array
+ static bool comp(string a,string b){
+        return a+b>b+a;
+    }
+	// The main function that returns the arrangement with the largest value as
+	// string.
+	// The function accepts a vector of strings
+	string printLargest(vector<string> &arr) {
+	    // code here
+	    sort(arr.begin(),arr.end(),comp);
+	    string res="";
+	    for(auto &i:arr){
+	        res+=i;
+	    }
+	    return res;
+	}
+//Generate IP Addresses
+ bool isValid(string x){
+        int n=x.size();
+        if(n==0||n>3||stoi(x)>255||((x[0]=='0')&&(n>1))) return false;
+        return true;
+    }
+    vector<string> genIp(string &s) {
+        // Your code here
+        int n=s.length();
+        string a="",b="",c="",d="";
+        vector<string> ans;
+        for(int i=0;i<n-3;i++){
+            for(int j=i+1;j<n-2;j++){
+                for(int k=j+1;k<n-1;k++){
+                        a=s.substr(0,i+1);
+                        b=s.substr(i+1,j-i);
+                        c=s.substr(j+1,k-j);
+                        d=s.substr(k+1,n-1-k);
+                        if(isValid(a)&&isValid(b)&&isValid(c)&&isValid(d)){
+                            string res=a+"."+b+"."+c+"."+d;
+                            ans.push_back(res);
+                        }
+                }
+            }
+        }
+        if(ans.empty()){ans.push_back("-1");}
+        return ans;
+    }
+//Reverse Bits
+ long long reversedBits(long long x) {
+        // code here
+        int pow=31; //31 because at pos 1st a value is already there so need to go 31 more to left;
+        long result=0;
+        while(x!=0){
+            result+=((x&1)<<pow);
+            pow--;
+            x=x>>1;
+        }
+        return result;
+    }
+//Minimum X (xor) A:
+ public:
+    int minVal(int a, int b)
+    {
+        // code here
+        int aSetBits=__builtin_popcount(a);
+        int bSetBits=__builtin_popcount(b);
+        if(aSetBits==bSetBits)
+        { //a^a=0,same noofsetbits and min xor.
+            return a;
+        }else if(aSetBits>bSetBits)
+        { //remove leftmost bits of a until noofsetbits are same;
+            int ans=0;
+            int temp=bSetBits;
+            for(int i=31;i>=0;i--)
+            {
+                if((a&(1<<i)))
+                {
+                    ans|=(1<<i);
+                    temp--;
+                }
+                if(temp==0) return ans;
+            }
+        }else if(aSetBits<bSetBits)
+        {// add this much 1 to rightmost bits
+            int reqdBits=bSetBits-aSetBits;
+            int ans=a;
+            for(int i=0;i<=31;i++)
+            {
+                if((a&(1<<i))==0)
+                {
+                    ans|=(1<<i);
+                    reqdBits--;
+                }
+                if(reqdBits==0) return ans;
+            }
+        }
+    }
