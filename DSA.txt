@@ -9841,6 +9841,58 @@ public:
         */
         return tabSpaceOptimized(N,Matrix);
     }
+//Friends Pairing Problem
+public:
+    const long long int mod=1e9+7;
+    long long int rec(int n)
+    {
+        if(n==0||n==1) return 1L;
+        long long int single=rec(n-1);//either single and recur for n-1 remaining
+        long long int paired=(n-1)*rec(n-2);//or pair with any of n-1 and recur for n-2 remaining
+        return (single%mod+paired%mod)%mod;
+    }
+    long long int recMemo(vector<long long int> &dp,int n)
+    {
+        if(n==0||n==1) return dp[n]=1L;
+        if(n<0) return 0L;
+        if(n==2) return dp[n]=2L;
+        if(dp[n]!=-1) return dp[n];
+        long long int single=recMemo(dp,n-1);
+        long long int paired=(n-1)*recMemo(dp,n-2);
+        return dp[n]=(single%mod+paired%mod)%mod;
+    }
+    long long int tab(vector<long long int>&dp,int n)
+    {
+        dp[0]=dp[1]=1;
+        long long int single=0,paired=0;
+        for(int i=2;i<=n;i++)
+        {
+            if((i-1)>=0)single=dp[i-1];
+            if((i-2)>=0)paired=(i-1)*dp[i-2];
+            dp[i]=(single%mod+paired%mod)%mod;
+        }
+        return dp[n];
+    }
+    long long int tabSpaceOptimized(int n)
+    {
+        long long int prev1=1,prev2=1,curr=0,single=0,paired=0;
+        for(int i=2;i<=n;i++)
+        {
+            single=prev1;
+            if((i-1)>=0)paired=(i-1)*prev2;
+            curr=(single%mod+paired%mod)%mod;
+        }
+        return curr;
+    }
+    int countFriendsPairings(int n) 
+    { 
+        // code here
+        //return rec(n);
+        // vector<long long int> dp(n+1,-1);
+        // return recMemo(dp,n);
+        vector<long long int> dp(n+1,0);
+        return tab(dp,n);
+    }
 TRIE:
 //01. Trie _ (Insert and Search)
 // trie node
