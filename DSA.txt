@@ -8119,7 +8119,60 @@ void aphelper(int currnode,int v,vector<int> adj[],vector<bool> &visited,vector<
         }
         return res;
     }
+//Select Nodes:
+The approach is a simple dfs travelsal while maintaining which bulb is light up and total number of bulbs lighted thus far:
 
+ 
+//https://practice.geeksforgeeks.org/problems/f7bfa137576243795abb0595962d61b632bbad21/1
+The code is as follows:
+
+class Solution{
+  public:
+  int count=0;
+  bool dfs(vector<int> adj[],vector<int> &visited,int node){
+      //mkae node visted
+      visited[node]=1;
+      bool select=false;
+      for(auto i:adj[node]){
+          if(visited[i]==0){
+              
+            //call the dfs for the child
+            bool isChildSelected=dfs(adj,visited,i);
+            
+            //means if child is not selected than select the parent
+            if(!isChildSelected){
+                select=true;
+            }
+          }
+          
+      }
+      
+      //increment the count if the current node is selected
+      if(select){
+          count++;
+      }
+      return select;
+      
+  }
+  
+    int countVertex(int N, vector<vector<int>>edges){
+        
+        //making adjacency matrix
+        vector<int> adj[N+1];
+        for(auto i:edges){
+            int v=i[0];
+            int u=i[1];
+            adj[v].push_back(u);
+            adj[u].push_back(v);
+        }
+        
+        //visted array
+        vector<int> visited(N+1,0);
+        dfs(adj,visited,1);
+        return count;
+        
+    }
+};
 GREEDY:
 //01.Activity Selection
  public:
