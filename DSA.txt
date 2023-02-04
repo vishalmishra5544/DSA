@@ -9946,6 +9946,65 @@ public:
         vector<long long int> dp(n+1,0);
         return tab(dp,n);
     }
+    
+ //problem:/*Given an array Arr of size N containing positive integers. Find the maximum sum of a subsequence such that no two numbers in the sequence should be adjacent in the array.*/:
+    // calculate the maximum sum with out adjacent
+	int rec(int *arr,int n,int curr)
+	{
+	    if(curr>=n) return 0;
+	    //take
+	    int t=arr[curr]+rec(arr,n,curr+2);
+	    //not take
+	    int nt=rec(arr,n,curr+1);
+	    return max(t,nt);
+	}
+	int recMemo(int *arr,int n,int curr,vector<int> &dp)
+	{
+	    if(curr>=n) return 0;
+	    if(dp[curr]!=-1) return dp[curr];
+	    //take
+	    int t=arr[curr]+recMemo(arr,n,curr+2,dp);
+	    //not take
+	    int nt=recMemo(arr,n,curr+1,dp);
+	    return dp[curr]=max(t,nt);
+	}
+	int tab(int *arr,int n)
+	{
+	    vector<int> dp(n+2,0);
+	    for(int i=n-1;i>=0;i--)//curr is i
+	    {
+    	     //take
+    	    int t=arr[i]+dp[i+2];
+    	    //not take
+    	    int nt=dp[i+1];
+    	     dp[i]=max(t,nt);   
+	    }
+	    return dp[0];
+	}
+    int tabSpaceOptimized(int *arr,int n)
+	{
+	    int curr=0,next1=0,next2=0;
+	    for(int i=n-1;i>=0;i--)//curr is i
+	    {
+    	     //take
+    	    int t=arr[i]+next2;
+    	    //not take
+    	    int nt=next1;
+    	    curr=max(t,nt); 
+    	    next2=next1;
+    	    next1=curr;
+	    }
+	    return curr;
+	}
+	int findMaxSum(int *arr, int n) {
+	    // code here
+	   //  int res=rec(arr,n,0);
+	   //  return res;
+	  /* vector<int> dp(n+1,-1);
+	   return recMemo(arr,n,0,dp); */
+	  // return tab(arr,n);
+	  return tabSpaceOptimized(arr,n);
+	}
 TRIE:
 //01. Trie _ (Insert and Search)
 // trie node
