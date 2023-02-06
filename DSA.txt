@@ -6805,7 +6805,34 @@ public:
         postOrder(root,K,curr);
         return ans;
     }
-
+//BST Downward Traversal:
+ long long int verticallyDownBST(Node *root,int target){
+        // Code here
+        queue<pair<Node*,pair<int,bool>>> q;
+        q.push({root,{0,false}});
+        bool found=false;
+        int reqdIndex=INT_MAX;
+        long long int sum=0;
+        while(!q.empty())
+        {
+            int size=q.size();
+            while(size--)
+            {
+                auto front=q.front();
+                q.pop();
+                Node *ele=front.first;
+                auto pos=front.second.first;
+                auto isDescendant=front.second.second;
+                if(found&&(pos==reqdIndex)&&isDescendant){ sum+=ele->data; }
+                if(ele->data==target){ reqdIndex=pos;isDescendant=true;}
+                if(ele->left) q.push({ele->left,{pos-1,isDescendant}});
+                if(ele->right) q.push({ele->right,{pos+1,isDescendant}});
+            }
+            if(reqdIndex!=INT_MAX) found=true;
+        }
+        if(found==false) return -1;
+        return sum;
+    }
 HEAP:
 //01.Binary Heap Operations
 /*The structure of the class is
