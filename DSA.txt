@@ -1610,6 +1610,58 @@ public:
     
     }
 
+
+//Length of the longest subarray with positive product:
+        // Function to return the length of the
+        //longest subarray with ppositive product
+        /*
+        TC : O(n) , SC : O(1)
+
+        Approach : 4 simple steps
+        
+        Common step :
+        
+        If negCount is even we include the whole subarray as explained earlier
+        
+        if negCount is odd we exclude the firstNeg value and count the length of subarray
+        
+        Step 1 : Initially start from index 0 , and keep track of negCount , prevZero
+        
+        Step 2 : If you see a negative value increase negCount and check if negCount is even or odd and do the common step explained above
+        
+        Step 3 : If you see zero start everything fresh and update prevZero to currentIndex
+        
+        Step 4 : If you see a positive value do the common step again
+        
+        Return maxLen at the end.
+        */
+        int maxLength(vector<int> &arr,int n){
+           int maxLen=0,prevZero=-1,firstNeg=-1,negCount=0;
+           for(int i=0;i<n;i++)
+           {
+               if(arr[i]<0)
+               {
+                   negCount++;
+                   if(firstNeg==-1)
+                   {
+                       firstNeg=i;
+                   }
+               }
+               if(arr[i]==0)
+               {
+                   prevZero=i;
+                   firstNeg=-1;
+                   negCount=0;
+               }else //do this for both pos and neg values
+               {
+                   if(negCount%2==0) maxLen=max(maxLen,i-prevZero);
+                   else  maxLen=max(maxLen,i-firstNeg);
+               }
+           }
+           return maxLen;
+         
+        }
+	
 SORTING:
 
 //Bubble sort
