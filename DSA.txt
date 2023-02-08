@@ -1278,6 +1278,55 @@ int getMinDiff(int arr[], int n, int k)
     return ans;
 }
 
+
+//Count number of free cell:
+/*
+  TC : O(k) , SC : O(n+n+k)
+link:https://discuss.geeksforgeeks.org/comment/680ee3619bf57456e949d838320db716
+Approach :
+
+At first total no of free cells will be (N*N)
+
+Step 1 : From the start keep track of the row index and col index filled till now and the count of rows and cols filled till now.
+
+Step 2 : For every k , check if the respective row / col is filled or not , if already filled don't do anything.
+
+Step 3 : If that's a new row or col then decrease the count of free cells using the formula explained above for both row and col differently
+
+Step 4 : Mark the respective row index / col index as filled and increase the count of rows / cols filled till now
+
+Step 5 : Return the ans array after the iteration is done.
+  */
+  vector<long long int> countZero(int n, int k, vector<vector<int>>& arr){
+    long long int freecells=n*n;
+    vector<bool> filledRows(n,false);
+    vector<bool> filledCols(n,false);
+    vector<long long int> ans(k,0);
+    int rowCount=0,colCount=0;
+    for(int i=0;i<k;i++)
+    {
+        int r=arr[i][0];
+        int c=arr[i][1];
+        
+        if(filledRows[r-1]==false)//i.e not filled
+        {
+            int cellsToFillNow=(n-colCount);
+            filledRows[r-1]=true;
+            freecells=freecells-cellsToFillNow;
+            rowCount++;
+        }
+        if(filledCols[c-1]==false)//i.e not filled
+        {
+            int cellsToFillNow=(n-rowCount);
+            filledCols[c-1]=true;
+            freecells=freecells-cellsToFillNow;
+            colCount++;
+        }
+        ans[i]=freecells;
+    }
+   return ans; 
+  }
+
 SEARCHING:
 //search an element in an array  - linear search
   public:
