@@ -6315,6 +6315,35 @@ bool check(Node *root)
       if(root1==NULL&&root2==NULL) return true;
       return preOrder(root1,root2);
     }
+//Sum of the Longest Bloodline of a Tree (Sum of nodes on the longest path from root to leaf node):
+void dfs(Node *root,int sum,int &maxSum,int len,int &maxLen)
+    {
+        if(root==NULL)
+        {
+            if(len>maxLen)
+            {
+                maxLen=len;
+                maxSum=sum;                
+            }
+            if(len==maxLen)
+            {
+                maxSum=max(maxSum,sum);
+            }
+            return;
+        }
+        sum=sum+root->data;
+        dfs(root->left,sum,maxSum,len+1,maxLen);
+        dfs(root->right,sum,maxSum,len+1,maxLen);
+    }
+    int sumOfLongRootToLeafPath(Node *root)
+    {
+        //code here
+        int sum=0,maxSum=INT_MIN;
+        int len=0,maxLen=0;
+        dfs(root,sum,maxSum,len,maxLen);
+        return maxSum;
+    }
+    
 BINARY SEARCH TREE:
 //03.Insert a node in a BST
 // Function to insert a node in a BST.
