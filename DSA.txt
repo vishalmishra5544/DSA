@@ -685,6 +685,47 @@ public:
         return ans;
     }
 
+//Good Stones:
+int recOptimized(int n,vector<int> &arr,int curr,vector<int> &isGood)
+    {
+        if(curr<=n-1&&curr>=0&&isGood[curr]==0) return 0;
+        if(curr>=n||curr<0) return 1; 
+        if(curr<=n-1&&curr>=0&&isGood[curr]==1) return 1;
+        isGood[curr]=0;
+        bool ans=recOptimized(n,arr,curr+arr[curr],isGood);
+        if(ans) isGood[curr]=1;
+        return ans;
+    }
+   
+    int rec(int n,vector<int> &arr,int curr,vector<bool> &visited,vector<int> &isGood)
+    {
+        if(curr<=n-1&&curr>=0&&visited[curr]==true) return 0;
+        if(curr>=n||curr<0) return 1; 
+        if(curr<=n-1&&curr>=0&&isGood[curr]==1) return 1;
+        visited[curr]=true;
+        bool ans=rec(n,arr,curr+arr[curr],visited,isGood);
+        if(ans) isGood[curr]=1;
+        visited[curr]=false;
+        return ans;
+    }
+    int goodStones(int n,vector<int> &arr){
+        // Code here
+        /*vector<bool> visited(n,false);
+        vector<int> isGood(n,-1);//-1: notgood  1: good
+        int count=0;
+        for(int i=0;i<n;i++){
+          rec(n,arr,i,visited,isGood);
+         if(isGood[i]==1) count++;
+        }
+        return count;*/
+        vector<int> isGood(n,-1);//-1: unvisited 0:visited 1: good
+        int count=0;
+        for(int i=0;i<n;i++){
+         if(isGood[i]==-1) recOptimized(n,arr,i,isGood);
+         if(isGood[i]==1) count++;
+        }
+        return count;
+    } 
 
 
 ARRAYS:
