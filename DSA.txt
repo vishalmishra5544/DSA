@@ -6957,6 +6957,28 @@ void inorder(Node* root,vector<int>& ans){
         }
         
     }
+//Fixing Two swapped nodes of a BST:
+public:
+  //https://discuss.geeksforgeeks.org/comment/8f1249d2dc043778cc3625f184a884d6
+    void inOrder(Node *root,Node *&prev,Node *&first,Node *&second)
+    {
+        if(root==NULL) return;
+        inOrder(root->left,prev,first,second);
+        if(prev!=NULL&&root->data<prev->data)
+        {
+            if(first==NULL) first=prev;
+            second=root;
+        }
+        prev=root;
+        inOrder(root->right,prev,first,second);
+    }
+    struct Node *correctBST(struct Node *root) {
+        // code here
+        Node *prev=NULL,*first=NULL,*second=NULL;
+        inOrder(root,prev,first,second);
+        swap(first->data,second->data);
+        return root;
+    }
 //EXTRA:
 //Kth largest element in BST
 public:
