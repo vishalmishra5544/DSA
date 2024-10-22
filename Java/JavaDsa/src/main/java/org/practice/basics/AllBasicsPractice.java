@@ -49,6 +49,6 @@ public class AllBasicsPractice {
         {
             System.out.println(ex);
         }
-    }
+
     }
 }
