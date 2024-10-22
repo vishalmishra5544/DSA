@@ -13,7 +13,6 @@ public class AllCollectionsPractice {
         }
         Arrays.sort(a1);
 
-
     }
     public static void practiceLists()
     {
