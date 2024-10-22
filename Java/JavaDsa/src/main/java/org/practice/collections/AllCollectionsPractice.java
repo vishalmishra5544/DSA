@@ -12,7 +12,6 @@ public class AllCollectionsPractice {
             System.out.println(ele);
         }
         Arrays.sort(a1);
-
     }
     public static void practiceLists()
     {
